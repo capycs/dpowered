@@ -30,12 +30,16 @@ get_header(); ?>
         <div class="portfolio-grid">
             <?php while ($projects->have_posts()): $projects->the_post();
                 $url      = get_post_meta(get_the_ID(), '_project_url', true);
+                $client   = get_post_meta(get_the_ID(), '_project_client', true);
+                $service  = get_post_meta(get_the_ID(), '_project_service', true);
+                $year     = get_post_meta(get_the_ID(), '_project_year', true);
                 $review   = get_post_meta(get_the_ID(), '_project_review', true);
                 $rev_name = get_post_meta(get_the_ID(), '_project_reviewer_name', true);
                 $rev_role = get_post_meta(get_the_ID(), '_project_reviewer_role', true);
                 $rating   = get_post_meta(get_the_ID(), '_project_rating', true) ?: 5;
                 $name     = get_the_title();
                 $desc     = wp_strip_all_tags(get_the_content());
+                $display_url = $url ? untrailingslashit(preg_replace('#^https?://#', '', $url)) : '';
 
                 $name_parts = array_slice(explode(' ', trim($rev_name ?: $name)), 0, 2);
                 $initials   = '';
@@ -62,8 +66,21 @@ get_header(); ?>
 
                 <div class="project-body">
                     <h3 class="project-name"><?php echo esc_html($name); ?></h3>
+                    <?php if ($client || $service || $year): ?>
+                    <div class="project-meta">
+                        <?php if ($client): ?><span><?php echo esc_html($client); ?></span><?php endif; ?>
+                        <?php if ($service): ?><span><?php echo esc_html($service); ?></span><?php endif; ?>
+                        <?php if ($year): ?><span><?php echo esc_html($year); ?></span><?php endif; ?>
+                    </div>
+                    <?php endif; ?>
                     <?php if ($desc): ?>
                     <p class="project-desc"><?php echo esc_html($desc); ?></p>
+                    <?php endif; ?>
+                    <?php if ($url): ?>
+                    <a href="<?php echo esc_url($url); ?>" class="project-site-link" target="_blank" rel="noopener noreferrer" aria-label="Open <?php echo esc_attr($name); ?> website">
+                        <span><?php echo esc_html($display_url); ?></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                    </a>
                     <?php endif; ?>
                 </div>
 

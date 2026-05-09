@@ -31,11 +31,9 @@
     <!-- Hero body -->
     <div class="hero-v2-body">
 
-        <div class="hero-section-mark" aria-hidden="true">H/01 &mdash; HERO</div>
-
         <div class="hero-quip" role="note">
             <span class="hero-quip-blip" aria-hidden="true"></span>
-            Your competitors have a terrible website. Let&rsquo;s keep it that way.
+            <span class="hero-quip-text">Your competitors have a terrible website. Let&rsquo;s keep it that way.</span>
         </div>
 
         <!-- 12-column display grid -->
@@ -44,9 +42,20 @@
             <!-- Headline — full 12 cols -->
             <div class="hero-v2-headline">
                 <h1 class="hero-display">
-                    <span class="hd-l1">We Build Websites</span>
-                    <span class="hd-l2"><span class="hd-blue">That Convert</span><span class="hd-dash"> &mdash;</span><em class="hd-stroke"> not</em></span>
-                    <span class="hd-l3">lazy.</span>
+                    <span class="screen-reader-text">DPowered makes your website, business, brand, bookings, and growth look unfairly good.</span>
+                    <span class="hd-visual" aria-hidden="true">
+                        <span class="hd-l1">DPowered makes</span>
+                            <span class="hd-l2">
+                                <span class="hd-your">your</span>
+                                <span class="hd-word-reel" data-reel-words="website,business,brand,bookings,growth,comeback">
+                                <span class="hd-word-stage">
+                                    <span class="hd-word-current hd-blue">website</span>
+                                    <span class="hd-word-next hd-blue">business</span>
+                                </span>
+                            </span>
+                        </span>
+                        <span class="hd-l3">look unfairly good.</span>
+                    </span>
                 </h1>
             </div>
 
@@ -214,7 +223,7 @@
                 </div>
             </div>
 
-            <!-- Right: CPU architecture visual -->
+            <!-- Right: website performance visual -->
             <div class="perf-terminal reveal">
                 <div class="perf-terminal-bar">
                     <span class="terminal-dot td-red"></span>
@@ -222,81 +231,30 @@
                     <span class="terminal-dot td-green"></span>
                     <span class="terminal-label">server.dpowered.online</span>
                 </div>
-                <div class="perf-svg-wrap">
-                    <svg style="color:rgba(255,255,255,0.18);" width="100%" height="100%" viewBox="0 0 200 100" aria-hidden="true">
-                        <!-- Paths -->
-                        <g stroke="currentColor" fill="none" stroke-width="0.3" stroke-dasharray="100 100" pathLength="100" marker-start="url(#cpu-circle-marker)">
-                            <path stroke-dasharray="100 100" pathLength="100" d="M 10 20 h 79.5 q 5 0 5 5 v 30"/>
-                            <path stroke-dasharray="100 100" pathLength="100" d="M 180 10 h -69.7 q -5 0 -5 5 v 30"/>
-                            <path d="M 130 20 v 21.8 q 0 5 -5 5 h -10"/>
-                            <path d="M 170 80 v -21.8 q 0 -5 -5 -5 h -50"/>
-                            <path stroke-dasharray="100 100" pathLength="100" d="M 135 65 h 15 q 5 0 5 5 v 10 q 0 5 -5 5 h -39.8 q -5 0 -5 -5 v -20"/>
-                            <path d="M 94.8 95 v -36"/>
-                            <path d="M 88 88 v -15 q 0 -5 -5 -5 h -10 q -5 0 -5 -5 v -5 q 0 -5 5 -5 h 14"/>
-                            <path d="M 30 30 h 25 q 5 0 5 5 v 6.5 q 0 5 5 5 h 20"/>
-                            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="1s" fill="freeze" calcMode="spline" keySplines="0.25,0.1,0.5,1" keyTimes="0; 1"/>
-                        </g>
-                        <!-- Coloured light pulses -->
-                        <g mask="url(#cpu-mask-1)"><circle class="cpu-architecture cpu-line-1" cx="0" cy="0" r="8" fill="url(#cpu-blue-grad)"/></g>
-                        <g mask="url(#cpu-mask-2)"><circle class="cpu-architecture cpu-line-2" cx="0" cy="0" r="8" fill="url(#cpu-yellow-grad)"/></g>
-                        <g mask="url(#cpu-mask-3)"><circle class="cpu-architecture cpu-line-3" cx="0" cy="0" r="8" fill="url(#cpu-pinkish-grad)"/></g>
-                        <g mask="url(#cpu-mask-4)"><circle class="cpu-architecture cpu-line-4" cx="0" cy="0" r="8" fill="url(#cpu-white-grad)"/></g>
-                        <g mask="url(#cpu-mask-5)"><circle class="cpu-architecture cpu-line-5" cx="0" cy="0" r="8" fill="url(#cpu-green-grad)"/></g>
-                        <g mask="url(#cpu-mask-6)"><circle class="cpu-architecture cpu-line-6" cx="0" cy="0" r="8" fill="url(#cpu-orange-grad)"/></g>
-                        <g mask="url(#cpu-mask-7)"><circle class="cpu-architecture cpu-line-7" cx="0" cy="0" r="8" fill="url(#cpu-cyan-grad)"/></g>
-                        <g mask="url(#cpu-mask-8)"><circle class="cpu-architecture cpu-line-8" cx="0" cy="0" r="8" fill="url(#cpu-rose-grad)"/></g>
-                        <!-- CPU chip -->
-                        <g>
-                            <g fill="url(#cpu-connection-gradient)">
-                                <rect x="93" y="37" width="2.5" height="5" rx="0.7"/>
-                                <rect x="104" y="37" width="2.5" height="5" rx="0.7"/>
-                                <rect x="116.3" y="44" width="2.5" height="5" rx="0.7" transform="rotate(90 116.25 45.5)"/>
-                                <rect x="122.8" y="44" width="2.5" height="5" rx="0.7" transform="rotate(90 116.25 45.5)"/>
-                                <rect x="104" y="16" width="2.5" height="5" rx="0.7" transform="rotate(180 105.25 39.5)"/>
-                                <rect x="114.5" y="16" width="2.5" height="5" rx="0.7" transform="rotate(180 105.25 39.5)"/>
-                                <rect x="80" y="-13.6" width="2.5" height="5" rx="0.7" transform="rotate(270 115.25 19.5)"/>
-                                <rect x="87" y="-13.6" width="2.5" height="5" rx="0.7" transform="rotate(270 115.25 19.5)"/>
-                            </g>
-                            <rect x="85" y="40" width="30" height="20" rx="2" fill="#181818" filter="url(#cpu-light-shadow)"/>
-                            <text x="89.5" y="52.5" font-size="7" fill="url(#cpu-text-gradient)" font-weight="600" letter-spacing="0.05em">WEB</text>
-                        </g>
-                        <!-- Defs -->
-                        <defs>
-                            <mask id="cpu-mask-1"><path d="M 10 20 h 79.5 q 5 0 5 5 v 24" stroke-width="0.5" stroke="white"/></mask>
-                            <mask id="cpu-mask-2"><path d="M 180 10 h -69.7 q -5 0 -5 5 v 24" stroke-width="0.5" stroke="white"/></mask>
-                            <mask id="cpu-mask-3"><path d="M 130 20 v 21.8 q 0 5 -5 5 h -10" stroke-width="0.5" stroke="white"/></mask>
-                            <mask id="cpu-mask-4"><path d="M 170 80 v -21.8 q 0 -5 -5 -5 h -50" stroke-width="0.5" stroke="white"/></mask>
-                            <mask id="cpu-mask-5"><path d="M 135 65 h 15 q 5 0 5 5 v 10 q 0 5 -5 5 h -39.8 q -5 0 -5 -5 v -20" stroke-width="0.5" stroke="white"/></mask>
-                            <mask id="cpu-mask-6"><path d="M 94.8 95 v -36" stroke-width="0.5" stroke="white"/></mask>
-                            <mask id="cpu-mask-7"><path d="M 88 88 v -15 q 0 -5 -5 -5 h -10 q -5 0 -5 -5 v -5 q 0 -5 5 -5 h 14" stroke-width="0.5" stroke="white"/></mask>
-                            <mask id="cpu-mask-8"><path d="M 30 30 h 25 q 5 0 5 5 v 6.5 q 0 5 5 5 h 20" stroke-width="0.5" stroke="white"/></mask>
-                            <radialGradient id="cpu-blue-grad" fx="1"><stop offset="0%" stop-color="#00E8ED"/><stop offset="50%" stop-color="#0088ff"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-                            <radialGradient id="cpu-yellow-grad" fx="1"><stop offset="0%" stop-color="#FFD800"/><stop offset="50%" stop-color="#FFD800"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-                            <radialGradient id="cpu-pinkish-grad" fx="1"><stop offset="0%" stop-color="#830CD1"/><stop offset="50%" stop-color="#FF008B"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-                            <radialGradient id="cpu-white-grad" fx="1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-                            <radialGradient id="cpu-green-grad" fx="1"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-                            <radialGradient id="cpu-orange-grad" fx="1"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-                            <radialGradient id="cpu-cyan-grad" fx="1"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-                            <radialGradient id="cpu-rose-grad" fx="1"><stop offset="0%" stop-color="#f43f5e"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-                            <filter id="cpu-light-shadow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feDropShadow dx="1.5" dy="1.5" stdDeviation="1" flood-color="black" flood-opacity="0.1"/>
-                            </filter>
-                            <marker id="cpu-circle-marker" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="18" markerHeight="18">
-                                <circle cx="5" cy="5" r="2" fill="black" stroke="#232323" stroke-width="0.5">
-                                    <animate attributeName="r" values="0; 3; 2" dur="0.5s"/>
-                                </circle>
-                            </marker>
-                            <linearGradient id="cpu-connection-gradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#4F4F4F"/>
-                                <stop offset="60%" stop-color="#121214"/>
-                            </linearGradient>
-                            <linearGradient id="cpu-text-gradient" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stop-color="#666666"><animate attributeName="offset" values="-2; -1; 0" dur="5s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.5; 1" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"/></stop>
-                                <stop offset="25%" stop-color="white"><animate attributeName="offset" values="-1; 0; 1" dur="5s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.5; 1" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"/></stop>
-                                <stop offset="50%" stop-color="#666666"><animate attributeName="offset" values="0; 1; 2" dur="5s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.5; 1" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"/></stop>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                <div class="perf-site-preview">
+                    <div class="perf-preview-glow" aria-hidden="true"></div>
+                    <div class="perf-preview-top">
+                        <span class="perf-url-pill">dpowered.online</span>
+                        <span class="perf-live-pill"><span></span> Live</span>
+                    </div>
+                    <div class="perf-preview-hero">
+                        <span></span>
+                        <strong>Fast local website</strong>
+                        <em>Loaded in 0.48s</em>
+                    </div>
+                    <div class="perf-preview-grid">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="perf-load-row">
+                        <span>Performance</span>
+                        <strong>99</strong>
+                    </div>
+                    <div class="perf-load-bar" aria-hidden="true"><span></span></div>
+                    <div class="perf-preview-badges">
+                        <span>SSL</span>
+                        <span>CDN</span>
+                        <span>UK Edge</span>
+                    </div>
                 </div>
             </div>
 
@@ -649,7 +607,7 @@ if ($reviews->have_posts()):
                 <span class="section-tag">FAQ</span>
                 <h2>Common Questions</h2>
                 <p>Everything you need to know before getting started.</p>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-outline" style="margin-top:20px">Ask us anything →</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary" style="margin-top:20px">Ask us anything →</a>
             </div>
             <div class="faq-list">
                 <?php
@@ -695,7 +653,7 @@ if ($reviews->have_posts()):
             <h2>Let's Build Something<br><span class="gradient-text">Amazing Together</span></h2>
             <p>Get in touch today and let's talk about how we can help your business grow online.</p>
             <div class="cta-actions">
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-shine btn-lg"><span>Get a Free Quote</span></a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg"><span>Get a Free Quote</span></a>
                 <a href="<?php echo esc_url(home_url('/services')); ?>" class="btn btn-outline btn-lg">View Services</a>
             </div>
         </div>

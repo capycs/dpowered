@@ -112,12 +112,19 @@ function dpowered_register_portfolio() {
             'add_new'            => 'Add New Project',
             'add_new_item'       => 'Add New Project',
             'edit_item'          => 'Edit Project',
+            'new_item'           => 'New Project',
+            'view_item'          => 'View Project',
             'not_found'          => 'No projects found',
             'not_found_in_trash' => 'No projects found in trash',
+            'featured_image'     => 'Homepage Screenshot',
+            'set_featured_image' => 'Upload homepage screenshot',
+            'remove_featured_image' => 'Remove homepage screenshot',
+            'use_featured_image' => 'Use as homepage screenshot',
         ],
         'public'          => false,
         'show_ui'         => true,
         'show_in_menu'    => true,
+        'show_in_rest'    => true,
         'supports'        => ['title', 'editor', 'thumbnail'],
         'menu_icon'       => 'dashicons-portfolio',
         'capability_type' => 'post',
@@ -133,20 +140,72 @@ add_action('add_meta_boxes', 'dpowered_project_meta_box');
 function dpowered_project_meta_box_html($post) {
     wp_nonce_field('dpowered_project_meta', 'project_meta_nonce');
     $url      = get_post_meta($post->ID, '_project_url', true);
+    $client   = get_post_meta($post->ID, '_project_client', true);
+    $service  = get_post_meta($post->ID, '_project_service', true);
+    $year     = get_post_meta($post->ID, '_project_year', true);
     $review   = get_post_meta($post->ID, '_project_review', true);
     $rev_name = get_post_meta($post->ID, '_project_reviewer_name', true);
     $rev_role = get_post_meta($post->ID, '_project_reviewer_role', true);
     $rating   = get_post_meta($post->ID, '_project_rating', true) ?: 5;
     ?>
-    <p style="margin-bottom:12px;color:#555">
-        Set the <strong>Featured Image</strong> (sidebar) as the site screenshot.
-        The <strong>title</strong> is the business/project name.
-        The <strong>content editor</strong> is a brief description of what you built.
+    <p style="margin-bottom:12px;color:#555;max-width:760px">
+        Add a project by setting the <strong>title</strong> to the business/project name, writing a short summary in the editor, and using <strong>Homepage Screenshot</strong> in the sidebar to upload a picture of the front page. That screenshot and the details below appear automatically on the Portfolio page.
     </p>
+    <style>
+        .dpowered-star-rating {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .dpowered-star-rating input {
+            position: absolute;
+            opacity: 0;
+        }
+        .dpowered-star-rating label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 11px;
+            border: 1px solid #c3c4c7;
+            border-radius: 999px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .dpowered-star-rating label span {
+            color: #dba617;
+            letter-spacing: 1px;
+        }
+        .dpowered-star-rating input:checked + label {
+            border-color: #2271b1;
+            background: #f0f6fc;
+            box-shadow: 0 0 0 1px #2271b1;
+        }
+        .dpowered-field-help {
+            margin: 6px 0 0;
+            color: #646970;
+        }
+    </style>
     <table class="form-table">
         <tr>
+            <th><label for="project_client">Client / Business Name</label></th>
+            <td><input type="text" id="project_client" name="project_client" value="<?php echo esc_attr($client); ?>" class="regular-text" placeholder="e.g. Smith Plumbing"></td>
+        </tr>
+        <tr>
+            <th><label for="project_service">Project Type</label></th>
+            <td><input type="text" id="project_service" name="project_service" value="<?php echo esc_attr($service); ?>" class="regular-text" placeholder="e.g. Website redesign, local SEO, care plan"></td>
+        </tr>
+        <tr>
+            <th><label for="project_year">Launch Year</label></th>
+            <td><input type="number" id="project_year" name="project_year" value="<?php echo esc_attr($year); ?>" class="small-text" min="2000" max="2100" placeholder="<?php echo esc_attr(date('Y')); ?>"></td>
+        </tr>
+        <tr>
             <th><label for="project_url">Live Website URL</label></th>
-            <td><input type="url" id="project_url" name="project_url" value="<?php echo esc_attr($url); ?>" class="regular-text" placeholder="https://clientsite.com"></td>
+            <td>
+                <input type="url" id="project_url" name="project_url" value="<?php echo esc_attr($url); ?>" class="regular-text" placeholder="https://clientsite.com">
+                <p class="dpowered-field-help">This becomes the visible clickable website link on the Portfolio page.</p>
+            </td>
         </tr>
         <tr>
             <th><label for="project_review">Client Review Quote</label></th>
@@ -163,13 +222,16 @@ function dpowered_project_meta_box_html($post) {
         <tr>
             <th><label for="project_rating">Star Rating</label></th>
             <td>
-                <select id="project_rating" name="project_rating">
+                <div class="dpowered-star-rating" id="project_rating">
                     <?php for ($i = 5; $i >= 1; $i--): ?>
-                    <option value="<?php echo $i; ?>" <?php selected($rating, $i); ?>>
-                        <?php echo $i; ?> Star<?php echo $i > 1 ? 's' : ''; ?>
-                    </option>
+                        <input type="radio" id="project_rating_<?php echo $i; ?>" name="project_rating" value="<?php echo $i; ?>" <?php checked((int) $rating, $i); ?>>
+                        <label for="project_rating_<?php echo $i; ?>">
+                            <span aria-hidden="true"><?php echo str_repeat('&#9733;', $i); ?></span>
+                            <?php echo $i; ?> star<?php echo $i > 1 ? 's' : ''; ?>
+                        </label>
                     <?php endfor; ?>
-                </select>
+                </div>
+                <p class="dpowered-field-help">Pick the stars here. They only show on the card when you add a client review quote.</p>
             </td>
         </tr>
     </table>
@@ -183,6 +245,16 @@ function dpowered_save_project_meta($post_id) {
 
     if (isset($_POST['project_url'])) {
         update_post_meta($post_id, '_project_url', esc_url_raw($_POST['project_url']));
+    }
+    if (isset($_POST['project_client'])) {
+        update_post_meta($post_id, '_project_client', sanitize_text_field($_POST['project_client']));
+    }
+    if (isset($_POST['project_service'])) {
+        update_post_meta($post_id, '_project_service', sanitize_text_field($_POST['project_service']));
+    }
+    if (isset($_POST['project_year'])) {
+        $year = absint($_POST['project_year']);
+        update_post_meta($post_id, '_project_year', $year ? min(2100, max(2000, $year)) : '');
     }
     if (isset($_POST['project_review'])) {
         update_post_meta($post_id, '_project_review', sanitize_textarea_field($_POST['project_review']));
@@ -198,6 +270,50 @@ function dpowered_save_project_meta($post_id) {
     }
 }
 add_action('save_post_project', 'dpowered_save_project_meta');
+
+function dpowered_project_title_placeholder($title, $post) {
+    if ($post && $post->post_type === 'project') {
+        return 'Business or project name';
+    }
+
+    return $title;
+}
+add_filter('enter_title_here', 'dpowered_project_title_placeholder', 10, 2);
+
+function dpowered_project_admin_columns($columns) {
+    $new = [];
+    $new['cb'] = $columns['cb'] ?? '';
+    $new['project_screenshot'] = 'Screenshot';
+    $new['title'] = 'Project';
+    $new['project_type'] = 'Type';
+    $new['project_url'] = 'Live URL';
+    $new['date'] = $columns['date'] ?? 'Date';
+    return $new;
+}
+add_filter('manage_project_posts_columns', 'dpowered_project_admin_columns');
+
+function dpowered_project_admin_column_content($column, $post_id) {
+    if ($column === 'project_screenshot') {
+        if (has_post_thumbnail($post_id)) {
+            echo get_the_post_thumbnail($post_id, [90, 54], ['style' => 'width:90px;height:54px;object-fit:cover;object-position:top;border-radius:4px']);
+        } else {
+            echo '<span style="color:#777">No screenshot</span>';
+        }
+    }
+    if ($column === 'project_type') {
+        echo esc_html(get_post_meta($post_id, '_project_service', true) ?: '—');
+    }
+    if ($column === 'project_url') {
+        $url = get_post_meta($post_id, '_project_url', true);
+        if ($url) {
+            $display_url = preg_replace('#^https?://#', '', $url);
+            echo '<a href="' . esc_url($url) . '" target="_blank" rel="noopener noreferrer" style="display:block;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' . esc_html(untrailingslashit($display_url)) . '</a>';
+        } else {
+            echo '<span style="color:#777">No URL</span>';
+        }
+    }
+}
+add_action('manage_project_posts_custom_column', 'dpowered_project_admin_column_content', 10, 2);
 
 // ── CONTACT FORM PROCESSING ──────────────────────────────────────────────────
 

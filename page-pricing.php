@@ -39,7 +39,7 @@ get_header(); ?>
                     <li><?php echo dpowered_check_icon(); ?>1 revision round</li>
                     <li><?php echo dpowered_check_icon(); ?>7-day delivery</li>
                 </ul>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-outline btn-full">Get Started</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Get Started</a>
             </div>
 
             <!-- Growth -->
@@ -76,7 +76,7 @@ get_header(); ?>
                     <li><?php echo dpowered_check_icon(); ?>3 revision rounds</li>
                     <li><?php echo dpowered_check_icon(); ?>14-day delivery</li>
                 </ul>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-outline btn-full">Get Started</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Get Started</a>
             </div>
 
         </div>
@@ -110,7 +110,7 @@ get_header(); ?>
                     <li><?php echo dpowered_check_icon(); ?>Minor edits (up to 30 mins/month)</li>
                 </ul>
                 <p class="plan-note">Up to 30 minutes of edits per month — text changes, image swaps, small tweaks.</p>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-outline btn-full">Add to My Site</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Add to My Site</a>
             </div>
 
             <!-- Growth -->

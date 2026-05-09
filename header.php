@@ -59,7 +59,6 @@
 <body <?php body_class(); ?>>
 
 <div id="celestial-bg" aria-hidden="true"></div>
-
 <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -86,13 +85,17 @@
             <span></span><span></span><span></span>
         </button>
         <ul class="nav-links" id="navLinks">
-            <li><a href="<?php echo esc_url(home_url('/')); ?>">Home</a></li>
-            <li><a href="<?php echo esc_url(home_url('/services')); ?>">Services</a></li>
-            <li><a href="<?php echo esc_url(home_url('/portfolio')); ?>">Portfolio</a></li>
-            <li><a href="<?php echo esc_url(home_url('/reviews')); ?>">Reviews</a></li>
-            <li><a href="<?php echo esc_url(home_url('/about')); ?>">About</a></li>
-            <li><a href="<?php echo esc_url(home_url('/pricing')); ?>">Pricing</a></li>
-            <li><a href="<?php echo esc_url(home_url('/contact')); ?>" class="nav-cta">Get a Quote</a></li>
+            <li class="mobile-menu-header" aria-hidden="true">
+                <span>Menu</span>
+                <small>Navigate DPowered.online</small>
+            </li>
+            <li><a href="<?php echo esc_url(home_url('/')); ?>"><span class="nav-text">Home</span><span class="nav-desc">Start here</span></a></li>
+            <li><a href="<?php echo esc_url(home_url('/services')); ?>"><span class="nav-text">Services</span><span class="nav-desc">What we build</span></a></li>
+            <li><a href="<?php echo esc_url(home_url('/portfolio')); ?>"><span class="nav-text">Portfolio</span><span class="nav-desc">Recent work</span></a></li>
+            <li><a href="<?php echo esc_url(home_url('/reviews')); ?>"><span class="nav-text">Reviews</span><span class="nav-desc">Client proof</span></a></li>
+            <li><a href="<?php echo esc_url(home_url('/about')); ?>"><span class="nav-text">About</span><span class="nav-desc">The studio</span></a></li>
+            <li><a href="<?php echo esc_url(home_url('/pricing')); ?>"><span class="nav-text">Pricing</span><span class="nav-desc">Packages &amp; plans</span></a></li>
+            <li><a href="<?php echo esc_url(home_url('/contact')); ?>" class="nav-cta"><span class="nav-text">Get a Quote</span><span class="nav-desc">Free project call</span></a></li>
         </ul>
     </nav>
 </header>

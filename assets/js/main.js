@@ -94,19 +94,15 @@ function closeNav() {
         navToggle.classList.remove('is-open');
         navToggle.setAttribute('aria-expanded', 'false');
     }
-    if (header) header.classList.remove('nav-hidden');
     if (navOverlay) navOverlay.classList.remove('open');
-    document.body.classList.remove('nav-open');
     document.body.style.overflow = '';
 }
 
 if (navToggle && navLinks) {
     navToggle.addEventListener('click', () => {
-        if (header) header.classList.remove('nav-hidden');
         const isOpen = navLinks.classList.toggle('open');
         navToggle.classList.toggle('is-open', isOpen);
         navToggle.setAttribute('aria-expanded', String(isOpen));
-        document.body.classList.toggle('nav-open', isOpen);
         if (navOverlay) navOverlay.classList.toggle('open', isOpen);
         document.body.style.overflow = isOpen ? 'hidden' : '';
     });
@@ -114,6 +110,12 @@ if (navToggle && navLinks) {
         a.addEventListener('click', closeNav);
     });
     if (navOverlay) navOverlay.addEventListener('click', closeNav);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeNav();
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 900) closeNav();
+    }, { passive: true });
 }
 
 // Scroll story
@@ -138,10 +140,9 @@ if (navToggle && navLinks) {
     const RING_TARGET    = 90;
     const N = textChapters.length;
     let current = -1;
-    let ticking = false;
 
-    const isMobile = () => window.innerWidth <= 900;
-    const pinOffset = () => Math.max(92, Math.min(124, window.innerWidth * 0.08));
+    const isMobile = () => window.innerWidth <= 600;
+    if (!N || !stickyEl) return;
 
     function easeOut(t) { return 1 - Math.pow(1 - t, 2); }
 
@@ -163,50 +164,23 @@ if (navToggle && navLinks) {
         ringArc.style.strokeDashoffset = RING_FULL - (RING_FULL - RING_TARGET) * easeOut(p);
     }
 
-    function clearStoryPin() {
-        stickyEl.classList.remove('story-pinned', 'story-released');
-        stickyEl.style.removeProperty('--story-left');
-        stickyEl.style.removeProperty('--story-width');
-        stickyEl.style.removeProperty('--story-top');
-    }
-
-    function syncStoryPin(pageY, start, end) {
-        clearStoryPin();
-    }
-
     // Scroll-driven (desktop)
     function updateStory() {
-        ticking = false;
-        if (isMobile()) {
-            clearStoryPin();
-            if (current < 0) goTo(0);
-            return;
-        }
-
+        if (isMobile()) return;
         const rect       = track.getBoundingClientRect();
-        const pageY      = window.scrollY || window.pageYOffset;
-        const trackTop   = rect.top + pageY;
-        const stickyTop  = pinOffset();
-        const start      = trackTop - stickyTop;
-        const end        = trackTop + track.offsetHeight - window.innerHeight + stickyTop;
-        const scrollable = Math.max(1, end - start);
+        const scrolled   = -rect.top;
+        const scrollable = rect.height - window.innerHeight;
+        if (scrollable <= 0) return;
 
-        const progress = Math.max(0, Math.min(1, (pageY - start) / scrollable));
+        const progress = Math.max(0, Math.min(1, scrolled / scrollable));
         const idx      = Math.min(Math.floor(progress * N), N - 1);
 
-        syncStoryPin(pageY, start, end);
-        setRingProgress(progress);
+        setRingProgress(Math.max(0, Math.min(1, progress * N)));
         if (progressFill) progressFill.style.width = (progress * 100) + '%';
         setChapter(idx);
     }
 
-    function requestStoryUpdate() {
-        if (ticking) return;
-        ticking = true;
-        window.requestAnimationFrame(updateStory);
-    }
-
-    window.addEventListener('scroll', requestStoryUpdate, { passive: true });
+    window.addEventListener('scroll', updateStory, { passive: true });
     updateStory();
 
     function syncCnav(idx) {
@@ -269,8 +243,11 @@ if (navToggle && navLinks) {
 
     // Init mobile on load and resize
     function initMobile() {
-        if (isMobile() && current < 0) goTo(0);
-        if (!isMobile()) updateStory();
+        if (isMobile()) {
+            goTo(Math.max(current, 0));
+            return;
+        }
+        updateStory();
     }
     initMobile();
     window.addEventListener('resize', initMobile, { passive: true });
@@ -383,15 +360,18 @@ document.querySelectorAll('.faq-question').forEach(btn => {
     const container = document.getElementById('celestial-bg');
     if (!container || typeof THREE === 'undefined') return;
 
-    const HUE           = 210.0;
-    const SPEED         = 0.4;
-    const ZOOM          = 1.2;
-    const PARTICLE_SIZE = 4.0;
+    const mobileShader = window.matchMedia('(max-width: 600px)').matches;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const touchShader  = mobileShader || window.matchMedia('(pointer: coarse)').matches;
+    const HUE           = 218.0;
+    const SPEED         = touchShader || reduceMotion ? 0.85 : 0.4;
+    const ZOOM          = touchShader ? 1.36 : 1.2;
+    const PARTICLE_SIZE = mobileShader ? 3.0 : 4.0;
 
     const scene    = new THREE.Scene();
     const camera   = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const renderer = new THREE.WebGLRenderer({ antialias: !mobileShader, powerPreference: 'low-power' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileShader ? 1.25 : 2));
     container.appendChild(renderer.domElement);
 
     const vertexShader = `
@@ -443,24 +423,38 @@ document.querySelectorAll('.faq-question').forEach(btn => {
             uv *= u_zoom;
 
             vec2 mn = u_mouse / u_resolution;
-            uv += (mn - 0.5) * 0.8;
+            uv += (mn - 0.5) * 0.42;
 
-            float f = fbm(uv + vec2(u_time * 0.1,  u_time * 0.05));
-            float t = fbm(uv + f + vec2(u_time * 0.05, u_time * 0.02));
+            float f = fbm(uv + vec2(u_time * 0.12,  u_time * 0.055));
+            float t = fbm(uv + f + vec2(u_time * 0.07, u_time * 0.032));
 
             float nebula = pow(t, 2.0);
-            vec3 color = hsl2rgb(vec3(u_hue / 360.0 + nebula * 0.2, 0.7, 0.5));
-            color *= nebula * 2.5;
+            vec3 deepInk = vec3(0.012, 0.018, 0.055);
+            vec3 indigo  = vec3(0.045, 0.075, 0.22);
+            vec3 blue    = vec3(0.10, 0.20, 0.62);
+            vec3 cyan    = vec3(0.18, 0.62, 0.78);
+            vec3 violet  = vec3(0.22, 0.18, 0.54);
+            vec3 color = mix(deepInk, indigo, smoothstep(0.08, 0.72, nebula));
+            color += blue * pow(nebula, 1.3) * 0.58;
+            color += cyan * pow(max(0.0, f - 0.34), 1.8) * 0.24;
+            color += violet * pow(max(0.0, t - 0.48), 1.6) * 0.22;
 
             vec2 starUv = gl_FragCoord.xy / min(u_resolution.x, u_resolution.y);
-            vec2 starGrid = starUv * 430.0;
+            starUv = mat2(0.96, 0.18, -0.14, 1.03) * starUv;
+            vec2 starGrid = starUv * 390.0;
             vec2 starCell = floor(starGrid);
-            vec2 starLocal = fract(starGrid) - 0.5;
             float sv = random(starCell);
-            float starMask = smoothstep(0.12, 0.0, length(starLocal));
+            vec2 starPos = vec2(
+                random(starCell + vec2(19.17, 73.31)),
+                random(starCell + vec2(61.23, 11.79))
+            );
+            starPos = 0.12 + starPos * 0.76;
+            vec2 starLocal = fract(starGrid) - starPos;
+            float starRadius = mix(0.035, 0.115, random(starCell + vec2(7.13, 41.91)));
+            float starMask = smoothstep(starRadius, 0.0, length(starLocal));
             float twinkle = 0.72 + 0.28 * sin(u_time * 2.0 + sv * 6.28318);
-            float star = step(0.986, sv) * starMask * twinkle * u_particle_size;
-            color += vec3(star);
+            float star = step(0.982, sv) * starMask * twinkle * u_particle_size;
+            color += vec3(star * 0.86);
 
             gl_FragColor = vec4(color, 1.0);
         }
@@ -483,13 +477,15 @@ document.querySelectorAll('.faq-question').forEach(btn => {
     scene.add(mesh);
 
     function resize() {
-        const w = window.innerWidth, h = window.innerHeight;
+        const w = window.innerWidth, h = Math.max(window.innerHeight, document.documentElement.clientHeight || 0);
         renderer.setSize(w, h);
         material.uniforms.u_resolution.value.set(w, h);
+        if (touchShader) material.uniforms.u_mouse.value.set(w * 0.5, h * 0.58);
     }
 
     window.addEventListener('resize', resize, { passive: true });
     window.addEventListener('mousemove', function (e) {
+        if (touchShader) return;
         material.uniforms.u_mouse.value.set(e.clientX, window.innerHeight - e.clientY);
     }, { passive: true });
 
@@ -497,9 +493,63 @@ document.querySelectorAll('.faq-question').forEach(btn => {
 
     (function animate() {
         material.uniforms.u_time.value += 0.005 * SPEED;
+        if (touchShader) {
+            const t = material.uniforms.u_time.value;
+            material.uniforms.u_mouse.value.set(
+                window.innerWidth * (0.5 + Math.sin(t * 1.1) * 0.24),
+                window.innerHeight * (0.58 + Math.cos(t * 0.78) * 0.2)
+            );
+        }
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
     })();
+})();
+
+// Professional word-reel animation in the front-page hero headline
+(function () {
+    const root = document.querySelector('.hd-word-reel[data-reel-words]');
+    if (!root) return;
+
+    const words = root.dataset.reelWords
+        .split(',')
+        .map(word => word.trim())
+        .filter(Boolean);
+    const current = root.querySelector('.hd-word-current');
+    const next = root.querySelector('.hd-word-next');
+    if (words.length < 2 || !current || !next) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let index = 0;
+    current.textContent = words[index];
+    next.textContent = words[(index + 1) % words.length];
+
+    if (reduceMotion) {
+        return;
+    }
+
+    let timer = null;
+
+    function cycleWord() {
+        if (root.classList.contains('is-changing')) return;
+
+        const upcoming = (index + 1) % words.length;
+        next.textContent = words[upcoming];
+        root.classList.add('is-changing');
+
+        window.setTimeout(() => {
+            index = upcoming;
+            current.textContent = words[index];
+            next.textContent = words[(index + 1) % words.length];
+            root.classList.remove('is-changing');
+        }, 640);
+    }
+
+    timer = window.setInterval(cycleWord, 2300);
+
+    window.addEventListener('pagehide', () => {
+        if (timer) window.clearInterval(timer);
+    }, { once: true });
 })();
 
 // Typewriter cycling animation on hero headline
