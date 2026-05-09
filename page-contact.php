@@ -14,6 +14,34 @@ get_header(); ?>
     </div>
 </section>
 
+<section class="section quote-flow-section">
+    <div class="container">
+        <div class="quote-flow reveal">
+            <div>
+                <span class="section-tag">Before the Quote</span>
+                <h2>What happens after you message us.</h2>
+            </div>
+            <div class="quote-flow-steps">
+                <div>
+                    <span>01</span>
+                    <strong>We read the brief</strong>
+                    <p>We look at what you need, your deadline, and whether a package or custom quote fits best.</p>
+                </div>
+                <div>
+                    <span>02</span>
+                    <strong>We ask the useful questions</strong>
+                    <p>No jargon. Just the bits that affect price, timeline, and what your customers need to see.</p>
+                </div>
+                <div>
+                    <span>03</span>
+                    <strong>You get a clear next step</strong>
+                    <p>Usually a fixed quote, a recommended package, or a quick call if the project needs more detail.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="section">
     <div class="container">
         <div class="contact-layout">

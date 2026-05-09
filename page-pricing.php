@@ -15,6 +15,32 @@ get_header(); ?>
 </section>
 
 <!-- ── WEBSITE PACKAGES ──────────────────────────────── -->
+<section class="section narrative-section pricing-guide-section">
+    <div class="container">
+        <div class="pricing-guide reveal">
+            <div class="pricing-guide-main">
+                <span class="section-tag">How to Choose</span>
+                <h2>Pick the package by what your business needs to prove.</h2>
+                <p>Pricing makes more sense when it is tied to the job your website needs to do. A simple local business usually needs trust and enquiries. A growing business needs stronger SEO, more content, and a reason for customers to keep clicking.</p>
+            </div>
+            <div class="pricing-guide-list">
+                <div>
+                    <strong>Launch</strong>
+                    <p>Best when you need a professional presence fast.</p>
+                </div>
+                <div>
+                    <strong>Growth</strong>
+                    <p>Best when you want more pages, SEO structure, and room to grow.</p>
+                </div>
+                <div>
+                    <strong>Pro</strong>
+                    <p>Best when your site needs advanced pages, forms, or integrations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="section pricing-section">
     <div class="container">
         <div class="section-header">
@@ -84,6 +110,23 @@ get_header(); ?>
 </section>
 
 <!-- ── MONTHLY CARE PLANS ────────────────────────────── -->
+<section class="section insight-section">
+    <div class="container">
+        <div class="pricing-reality reveal">
+            <div>
+                <span class="section-tag">No Guesswork</span>
+                <h2>What happens before you pay.</h2>
+                <p>We confirm the pages, features, timeline, and payment split before anything starts. If your project does not fit a package cleanly, we tell you and quote it properly.</p>
+            </div>
+            <ol class="pricing-steps">
+                <li><span>01</span>Tell us what you need.</li>
+                <li><span>02</span>We recommend the right route.</li>
+                <li><span>03</span>You get a clear fixed quote.</li>
+            </ol>
+        </div>
+    </div>
+</section>
+
 <section class="section plans-section">
     <div class="container">
         <div class="section-header">

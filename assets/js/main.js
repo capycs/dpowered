@@ -279,6 +279,69 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 });
 reveals.forEach(el => revealObserver.observe(el));
 
+// Homepage scroll choreography
+(function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const sectionSelectors = [
+        '.platforms-section',
+        '.service-strip',
+        '.process-section',
+        '.perf-section',
+        '.scroll-story',
+        '.testimonials-section',
+        '.faq-section',
+        '.cta-section'
+    ];
+    const itemSelectors = [
+        '.platforms-label',
+        '.sstrip-item',
+        '.section-header',
+        '.process-step',
+        '.process-connector',
+        '.perf-text',
+        '.perf-stat',
+        '.perf-terminal',
+        '.story-card',
+        '.story-meta',
+        '.testimonial-card',
+        '.faq-header',
+        '.faq-item',
+        '.cta-inner'
+    ];
+
+    const sections = document.querySelectorAll(sectionSelectors.join(','));
+    if (!sections.length) return;
+
+    document.body.classList.add('motion-ready');
+
+    sections.forEach(section => {
+        section.classList.add('motion-section');
+
+        const items = section.matches('.service-strip')
+            ? section.querySelectorAll('.sstrip-item')
+            : section.querySelectorAll(itemSelectors.join(','));
+
+        items.forEach((item, index) => {
+            item.classList.add('motion-item');
+            item.style.setProperty('--motion-i', index);
+        });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('motion-in');
+            observer.unobserve(entry.target);
+        });
+    }, {
+        rootMargin: '0px 0px -14% 0px',
+        threshold: 0.12
+    });
+
+    sections.forEach(section => observer.observe(section));
+})();
+
 // Smooth anchor scroll
 document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
@@ -523,6 +586,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
     let index = 0;
     current.textContent = words[index];
     next.textContent = words[(index + 1) % words.length];
+    root.style.setProperty('--word-chars', Math.max(...words.map(word => word.length)));
 
     if (reduceMotion) {
         return;
@@ -542,10 +606,10 @@ document.querySelectorAll('.faq-question').forEach(btn => {
             current.textContent = words[index];
             next.textContent = words[(index + 1) % words.length];
             root.classList.remove('is-changing');
-        }, 640);
+        }, 720);
     }
 
-    timer = window.setInterval(cycleWord, 2300);
+    timer = window.setInterval(cycleWord, 2650);
 
     window.addEventListener('pagehide', () => {
         if (timer) window.clearInterval(timer);

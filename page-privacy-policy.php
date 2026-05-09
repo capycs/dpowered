@@ -14,6 +14,21 @@ get_header(); ?>
     </div>
 </section>
 
+<section class="section privacy-summary-section">
+    <div class="container">
+        <div class="privacy-summary reveal">
+            <div>
+                <span class="section-tag">Plain English Version</span>
+                <h2>Your details are used to reply, quote, deliver work, and process payments securely.</h2>
+            </div>
+            <div class="privacy-summary-points">
+                <p><strong>We do not sell your data.</strong> We only use it to handle enquiries, projects, support, accounting, and site improvement.</p>
+                <p><strong>Card payments stay with Stripe.</strong> We never store your full card number, CVC, or expiry date.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="section">
     <div class="container">
         <div class="privacy-layout">

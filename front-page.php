@@ -223,37 +223,40 @@
                 </div>
             </div>
 
-            <!-- Right: website performance visual -->
-            <div class="perf-terminal reveal">
-                <div class="perf-terminal-bar">
-                    <span class="terminal-dot td-red"></span>
-                    <span class="terminal-dot td-yellow"></span>
-                    <span class="terminal-dot td-green"></span>
-                    <span class="terminal-label">server.dpowered.online</span>
-                </div>
-                <div class="perf-site-preview">
-                    <div class="perf-preview-glow" aria-hidden="true"></div>
-                    <div class="perf-preview-top">
-                        <span class="perf-url-pill">dpowered.online</span>
-                        <span class="perf-live-pill"><span></span> Live</span>
+            <!-- Right: rocket performance visual -->
+            <div class="perf-terminal perf-rocket-wrap reveal">
+                <div class="rocket-launch-card" aria-label="Fast hosting visual">
+                    <div class="rocket-speed-lines" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span>
                     </div>
-                    <div class="perf-preview-hero">
-                        <span></span>
-                        <strong>Fast local website</strong>
-                        <em>Loaded in 0.48s</em>
+                    <div class="rocket-orbit-ring ring-one" aria-hidden="true"></div>
+                    <div class="rocket-orbit-ring ring-two" aria-hidden="true"></div>
+                    <div class="rocket-stage" aria-hidden="true">
+                        <div class="rocket-ship">
+                            <div class="rocket-nose"></div>
+                            <div class="rocket-body">
+                                <span class="rocket-window"></span>
+                                <span class="rocket-stripe"></span>
+                            </div>
+                            <div class="rocket-fin rocket-fin-left"></div>
+                            <div class="rocket-fin rocket-fin-right"></div>
+                            <div class="rocket-flame">
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="rocket-plume">
+                            <span></span><span></span><span></span>
+                        </div>
                     </div>
-                    <div class="perf-preview-grid">
-                        <span></span><span></span><span></span>
+                    <div class="rocket-info">
+                        <span class="rocket-kicker">Performance launch</span>
+                        <strong>Loaded in 0.48s</strong>
+                        <p>UK edge hosting, SSL, and CDN tuned for quick first visits.</p>
                     </div>
-                    <div class="perf-load-row">
-                        <span>Performance</span>
-                        <strong>99</strong>
-                    </div>
-                    <div class="perf-load-bar" aria-hidden="true"><span></span></div>
-                    <div class="perf-preview-badges">
-                        <span>SSL</span>
-                        <span>CDN</span>
-                        <span>UK Edge</span>
+                    <div class="rocket-metrics">
+                        <span><strong>99</strong> score</span>
+                        <span><strong>&lt;500ms</strong> response</span>
+                        <span><strong>99.9%</strong> uptime</span>
                     </div>
                 </div>
             </div>

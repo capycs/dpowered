@@ -56,6 +56,34 @@ get_header(); ?>
     </div>
 </section>
 
+<section class="section studio-section">
+    <div class="container">
+        <div class="studio-manifesto reveal">
+            <span class="section-tag">How We Think</span>
+            <h2>Good websites feel simple because the hard decisions have already been made.</h2>
+            <p>We care about the details visitors notice without being able to name them: the first impression, the way sections flow, the confidence a form gives them, and whether your business feels alive enough to contact.</p>
+        </div>
+        <div class="about-timeline reveal">
+            <div class="timeline-line" aria-hidden="true"></div>
+            <div class="timeline-item">
+                <span>01</span>
+                <strong>Listen first</strong>
+                <p>We start by understanding your business, your customers, and what your current online presence is missing.</p>
+            </div>
+            <div class="timeline-item">
+                <span>02</span>
+                <strong>Build with purpose</strong>
+                <p>Design, copy, speed, mobile layout, and SEO are treated as one connected system.</p>
+            </div>
+            <div class="timeline-item">
+                <span>03</span>
+                <strong>Stay useful</strong>
+                <p>After launch, you can edit your site yourself or ask us to keep improving it for you.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="section cta-section">
     <div class="container">
         <div class="cta-inner reveal">

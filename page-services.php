@@ -14,6 +14,35 @@ get_header(); ?>
     </div>
 </section>
 
+<section class="section narrative-section">
+    <div class="container">
+        <div class="narrative-split reveal">
+            <div class="narrative-copy">
+                <span class="section-tag">Built Around Outcomes</span>
+                <h2>Not just a website. A sharper way for people to choose you.</h2>
+                <p>Most business websites fail because they are treated like online leaflets. We build pages around the decisions your customers are actually making: can they trust you, do you solve their problem, and is it easy to take the next step?</p>
+            </div>
+            <div class="narrative-flow">
+                <div class="flow-step">
+                    <span>01</span>
+                    <strong>Clarify the offer</strong>
+                    <p>We turn your services, prices, and proof into a clean structure visitors can understand quickly.</p>
+                </div>
+                <div class="flow-step">
+                    <span>02</span>
+                    <strong>Design for action</strong>
+                    <p>Every section has a job, from the first headline to the quote button at the bottom.</p>
+                </div>
+                <div class="flow-step">
+                    <span>03</span>
+                    <strong>Launch and improve</strong>
+                    <p>You get a site you can edit, with support available when you want changes handled for you.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="section">
     <div class="container">
         <div class="services-detail-grid">
@@ -96,6 +125,27 @@ get_header(); ?>
                     <li>Quick turnaround, honest pricing</li>
                 </ul>
                 <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary">Get in Touch</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section insight-section">
+    <div class="container">
+        <div class="insight-band reveal">
+            <div>
+                <span class="section-tag">What Changes</span>
+                <h2>Before and after your site starts doing its job.</h2>
+            </div>
+            <div class="insight-compare">
+                <div>
+                    <span>Before</span>
+                    <p>People ask the same questions, your offer feels unclear, and your website does not help you sell.</p>
+                </div>
+                <div>
+                    <span>After</span>
+                    <p>Visitors understand what you do, trust you faster, and have a clear reason to get in touch.</p>
+                </div>
             </div>
         </div>
     </div>
