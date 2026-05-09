@@ -1,0 +1,20 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/dpowered.online/wp-content/themes/dpowered-theme/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -R assets $DEPLOYPATH
+    - /bin/cp footer.php $DEPLOYPATH
+    - /bin/cp front-page.php $DEPLOYPATH
+    - /bin/cp functions.php $DEPLOYPATH
+    - /bin/cp header.php $DEPLOYPATH
+    - /bin/cp index.php $DEPLOYPATH
+    - /bin/cp page-about.php $DEPLOYPATH
+    - /bin/cp page-contact.php $DEPLOYPATH
+    - /bin/cp page-portfolio.php $DEPLOYPATH
+    - /bin/cp page-pricing.php $DEPLOYPATH
+    - /bin/cp page-privacy-policy.php $DEPLOYPATH
+    - /bin/cp page-reviews.php $DEPLOYPATH
+    - /bin/cp page-services.php $DEPLOYPATH
+    - /bin/cp page.php $DEPLOYPATH
+    - /bin/cp style.css $DEPLOYPATH
