@@ -1,0 +1,310 @@
+<?php
+function dpowered_check_icon() {
+    return '<svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+}
+function dpowered_x_icon() {
+    return '<svg class="x-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+}
+
+function dpowered_setup() {
+    add_theme_support('title-tag');
+    add_theme_support('post-thumbnails');
+    add_theme_support('custom-logo');
+    register_nav_menus(['primary' => 'Primary Menu']);
+}
+add_action('after_setup_theme', 'dpowered_setup');
+
+function dpowered_enqueue() {
+    wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap', [], null);
+    wp_enqueue_style('dpowered-style', get_template_directory_uri() . '/assets/css/style.css', [], filemtime(get_template_directory() . '/assets/css/style.css'));
+    wp_enqueue_script('three-js', 'https://unpkg.com/three@0.160.0/build/three.min.js', [], '0.160.0', true);
+    wp_enqueue_script('dpowered-script', get_template_directory_uri() . '/assets/js/main.js', ['three-js'], filemtime(get_template_directory() . '/assets/js/main.js'), true);
+}
+add_action('wp_enqueue_scripts', 'dpowered_enqueue');
+
+// ── REVIEWS CUSTOM POST TYPE ─────────────────────────────────────────────────
+
+function dpowered_register_reviews() {
+    register_post_type('review', [
+        'labels' => [
+            'name'               => 'Reviews',
+            'singular_name'      => 'Review',
+            'add_new'            => 'Add New Review',
+            'add_new_item'       => 'Add New Review',
+            'edit_item'          => 'Edit Review',
+            'new_item'           => 'New Review',
+            'view_item'          => 'View Review',
+            'search_items'       => 'Search Reviews',
+            'not_found'          => 'No reviews found',
+            'not_found_in_trash' => 'No reviews found in trash',
+        ],
+        'public'          => false,
+        'show_ui'         => true,
+        'show_in_menu'    => true,
+        'supports'        => ['title', 'editor'],
+        'menu_icon'       => 'dashicons-star-filled',
+        'capability_type' => 'post',
+    ]);
+}
+add_action('init', 'dpowered_register_reviews');
+
+function dpowered_review_meta_box() {
+    add_meta_box('dpowered_review_details', 'Review Details', 'dpowered_review_meta_box_html', 'review', 'normal', 'high');
+}
+add_action('add_meta_boxes', 'dpowered_review_meta_box');
+
+function dpowered_review_meta_box_html($post) {
+    wp_nonce_field('dpowered_review_meta', 'review_meta_nonce');
+    $company = get_post_meta($post->ID, '_review_company', true);
+    $rating  = get_post_meta($post->ID, '_review_rating', true) ?: 5;
+    ?>
+    <p style="margin-bottom:12px;color:#555">
+        Enter the <strong>reviewer's name</strong> as the post title above.
+        Write the <strong>review quote</strong> in the content editor below.
+    </p>
+    <table class="form-table">
+        <tr>
+            <th><label for="review_company">Company / Role</label></th>
+            <td>
+                <input type="text" id="review_company" name="review_company"
+                    value="<?php echo esc_attr($company); ?>"
+                    class="regular-text"
+                    placeholder="e.g. Owner, Smith's Plumbing">
+            </td>
+        </tr>
+        <tr>
+            <th><label for="review_rating">Star Rating</label></th>
+            <td>
+                <select id="review_rating" name="review_rating">
+                    <?php for ($i = 5; $i >= 1; $i--): ?>
+                    <option value="<?php echo $i; ?>" <?php selected($rating, $i); ?>>
+                        <?php echo $i; ?> Star<?php echo $i > 1 ? 's' : ''; ?>
+                    </option>
+                    <?php endfor; ?>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+
+function dpowered_save_review_meta($post_id) {
+    if (!isset($_POST['review_meta_nonce']) || !wp_verify_nonce($_POST['review_meta_nonce'], 'dpowered_review_meta')) return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    if (isset($_POST['review_company'])) {
+        update_post_meta($post_id, '_review_company', sanitize_text_field($_POST['review_company']));
+    }
+    if (isset($_POST['review_rating'])) {
+        update_post_meta($post_id, '_review_rating', min(5, max(1, absint($_POST['review_rating']))));
+    }
+}
+add_action('save_post_review', 'dpowered_save_review_meta');
+
+// ── PORTFOLIO CUSTOM POST TYPE ───────────────────────────────────────────────
+
+function dpowered_register_portfolio() {
+    register_post_type('project', [
+        'labels' => [
+            'name'               => 'Portfolio',
+            'singular_name'      => 'Project',
+            'add_new'            => 'Add New Project',
+            'add_new_item'       => 'Add New Project',
+            'edit_item'          => 'Edit Project',
+            'not_found'          => 'No projects found',
+            'not_found_in_trash' => 'No projects found in trash',
+        ],
+        'public'          => false,
+        'show_ui'         => true,
+        'show_in_menu'    => true,
+        'supports'        => ['title', 'editor', 'thumbnail'],
+        'menu_icon'       => 'dashicons-portfolio',
+        'capability_type' => 'post',
+    ]);
+}
+add_action('init', 'dpowered_register_portfolio');
+
+function dpowered_project_meta_box() {
+    add_meta_box('dpowered_project_details', 'Project Details', 'dpowered_project_meta_box_html', 'project', 'normal', 'high');
+}
+add_action('add_meta_boxes', 'dpowered_project_meta_box');
+
+function dpowered_project_meta_box_html($post) {
+    wp_nonce_field('dpowered_project_meta', 'project_meta_nonce');
+    $url      = get_post_meta($post->ID, '_project_url', true);
+    $review   = get_post_meta($post->ID, '_project_review', true);
+    $rev_name = get_post_meta($post->ID, '_project_reviewer_name', true);
+    $rev_role = get_post_meta($post->ID, '_project_reviewer_role', true);
+    $rating   = get_post_meta($post->ID, '_project_rating', true) ?: 5;
+    ?>
+    <p style="margin-bottom:12px;color:#555">
+        Set the <strong>Featured Image</strong> (sidebar) as the site screenshot.
+        The <strong>title</strong> is the business/project name.
+        The <strong>content editor</strong> is a brief description of what you built.
+    </p>
+    <table class="form-table">
+        <tr>
+            <th><label for="project_url">Live Website URL</label></th>
+            <td><input type="url" id="project_url" name="project_url" value="<?php echo esc_attr($url); ?>" class="regular-text" placeholder="https://clientsite.com"></td>
+        </tr>
+        <tr>
+            <th><label for="project_review">Client Review Quote</label></th>
+            <td><textarea id="project_review" name="project_review" rows="3" class="large-text"><?php echo esc_textarea($review); ?></textarea></td>
+        </tr>
+        <tr>
+            <th><label for="project_reviewer_name">Reviewer Name</label></th>
+            <td><input type="text" id="project_reviewer_name" name="project_reviewer_name" value="<?php echo esc_attr($rev_name); ?>" class="regular-text" placeholder="e.g. Sarah Khan"></td>
+        </tr>
+        <tr>
+            <th><label for="project_reviewer_role">Reviewer Role / Company</label></th>
+            <td><input type="text" id="project_reviewer_role" name="project_reviewer_role" value="<?php echo esc_attr($rev_role); ?>" class="regular-text" placeholder="e.g. Director, SK Consultancy"></td>
+        </tr>
+        <tr>
+            <th><label for="project_rating">Star Rating</label></th>
+            <td>
+                <select id="project_rating" name="project_rating">
+                    <?php for ($i = 5; $i >= 1; $i--): ?>
+                    <option value="<?php echo $i; ?>" <?php selected($rating, $i); ?>>
+                        <?php echo $i; ?> Star<?php echo $i > 1 ? 's' : ''; ?>
+                    </option>
+                    <?php endfor; ?>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <?php
+}
+
+function dpowered_save_project_meta($post_id) {
+    if (!isset($_POST['project_meta_nonce']) || !wp_verify_nonce($_POST['project_meta_nonce'], 'dpowered_project_meta')) return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    if (isset($_POST['project_url'])) {
+        update_post_meta($post_id, '_project_url', esc_url_raw($_POST['project_url']));
+    }
+    if (isset($_POST['project_review'])) {
+        update_post_meta($post_id, '_project_review', sanitize_textarea_field($_POST['project_review']));
+    }
+    if (isset($_POST['project_reviewer_name'])) {
+        update_post_meta($post_id, '_project_reviewer_name', sanitize_text_field($_POST['project_reviewer_name']));
+    }
+    if (isset($_POST['project_reviewer_role'])) {
+        update_post_meta($post_id, '_project_reviewer_role', sanitize_text_field($_POST['project_reviewer_role']));
+    }
+    if (isset($_POST['project_rating'])) {
+        update_post_meta($post_id, '_project_rating', min(5, max(1, absint($_POST['project_rating']))));
+    }
+}
+add_action('save_post_project', 'dpowered_save_project_meta');
+
+// ── CONTACT FORM PROCESSING ──────────────────────────────────────────────────
+
+function dpowered_handle_contact_form() {
+    if (!isset($_POST['dpowered_contact_submit'])) return;
+
+    $referer = wp_get_referer() ?: home_url('/contact');
+
+    if (!isset($_POST['contact_nonce']) || !wp_verify_nonce($_POST['contact_nonce'], 'dpowered_contact')) {
+        wp_redirect(add_query_arg('form_error', 'security', $referer));
+        exit;
+    }
+
+    $name     = sanitize_text_field($_POST['contact_name'] ?? '');
+    $email    = sanitize_email($_POST['contact_email'] ?? '');
+    $business = sanitize_text_field($_POST['contact_business'] ?? '');
+    $service  = sanitize_text_field($_POST['contact_service'] ?? '');
+    $message  = sanitize_textarea_field($_POST['contact_message'] ?? '');
+
+    if (empty($name) || empty($email) || empty($message) || !is_email($email)) {
+        wp_redirect(add_query_arg('form_error', 'validation', $referer));
+        exit;
+    }
+
+    $to      = 'support@dpowered.online';
+    $subject = "New Quote Request from {$name}";
+    $body = '<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+body{font-family:Inter,Arial,sans-serif;background:#f4f4f5;margin:0;padding:0}
+.wrap{max-width:560px;margin:32px auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.hdr{background:#060612;padding:24px 32px}
+.hdr h1{color:#fff;font-size:17px;margin:0;font-weight:600}
+.hdr span{color:#00d4ff}
+.bod{padding:28px 32px}
+.row{margin-bottom:18px}
+.lbl{font-size:11px;font-weight:700;text-transform:uppercase;color:#888;letter-spacing:.06em;margin-bottom:4px}
+.val{font-size:15px;color:#111}
+.msg{background:#f4f4f5;border-radius:6px;padding:14px 16px;color:#333;white-space:pre-wrap;font-size:14px;line-height:1.6}
+.ftr{padding:14px 32px;background:#f4f4f5;font-size:12px;color:#999;border-top:1px solid #e5e5e5}
+a{color:#1A4DFF}
+</style></head><body>
+<div class="wrap">
+<div class="hdr"><h1>DPowered<span>.</span>online &mdash; New Quote Request</h1></div>
+<div class="bod">
+<div class="row"><div class="lbl">Name</div><div class="val">' . esc_html($name) . '</div></div>
+<div class="row"><div class="lbl">Email</div><div class="val"><a href="mailto:' . esc_attr($email) . '">' . esc_html($email) . '</a></div></div>'
+. ($business ? '<div class="row"><div class="lbl">Business</div><div class="val">' . esc_html($business) . '</div></div>' : '')
+. ($service  ? '<div class="row"><div class="lbl">Service</div><div class="val">' . esc_html($service)  . '</div></div>' : '') .
+'<div class="row"><div class="lbl">Message</div><div class="msg">' . esc_html($message) . '</div></div>
+</div>
+<div class="ftr">Sent via the contact form on DPowered.online</div>
+</div></body></html>';
+    $headers = ["Content-Type: text/html; charset=UTF-8", "Reply-To: {$name} <{$email}>"];
+
+    if (wp_mail($to, $subject, $body, $headers)) {
+        wp_redirect(add_query_arg('sent', '1', $referer));
+    } else {
+        wp_redirect(add_query_arg('form_error', 'send', $referer));
+    }
+    exit;
+}
+add_action('template_redirect', 'dpowered_handle_contact_form');
+
+// ── CUSTOMER REVIEW SUBMISSION ───────────────────────────────────────────────
+
+function dpowered_handle_review_submission() {
+    if (!isset($_POST['dpowered_review_submit'])) return;
+
+    $referer = wp_get_referer() ?: home_url('/reviews');
+
+    if (!isset($_POST['review_nonce']) || !wp_verify_nonce($_POST['review_nonce'], 'dpowered_submit_review')) {
+        wp_redirect(add_query_arg('review_error', 'security', $referer));
+        exit;
+    }
+
+    $name    = sanitize_text_field($_POST['reviewer_name'] ?? '');
+    $company = sanitize_text_field($_POST['reviewer_company'] ?? '');
+    $rating  = min(5, max(1, absint($_POST['reviewer_rating'] ?? 5)));
+    $text    = sanitize_textarea_field($_POST['reviewer_text'] ?? '');
+
+    if (empty($name) || empty($text)) {
+        wp_redirect(add_query_arg('review_error', 'validation', $referer));
+        exit;
+    }
+
+    $post_id = wp_insert_post([
+        'post_title'   => $name,
+        'post_content' => $text,
+        'post_type'    => 'review',
+        'post_status'  => 'pending',
+    ]);
+
+    if ($post_id && !is_wp_error($post_id)) {
+        update_post_meta($post_id, '_review_company', $company);
+        update_post_meta($post_id, '_review_rating', $rating);
+
+        wp_mail(
+            'support@dpowered.online',
+            "New Review from {$name} — Awaiting Approval",
+            "A new review has been submitted and is waiting for your approval.\n\nFrom: {$name}" . ($company ? " ({$company})" : '') . "\nRating: {$rating}/5\n\nReview:\n{$text}\n\nApprove it here:\n" . admin_url('edit.php?post_status=pending&post_type=review'),
+            ['Content-Type: text/plain; charset=UTF-8']
+        );
+
+        wp_redirect(add_query_arg('review_sent', '1', $referer));
+    } else {
+        wp_redirect(add_query_arg('review_error', 'save', $referer));
+    }
+    exit;
+}
+add_action('template_redirect', 'dpowered_handle_review_submission');
