@@ -233,16 +233,53 @@
                     <div class="rocket-orbit-ring ring-two" aria-hidden="true"></div>
                     <div class="rocket-stage" aria-hidden="true">
                         <div class="rocket-ship">
-                            <div class="rocket-nose"></div>
-                            <div class="rocket-body">
-                                <span class="rocket-window"></span>
-                                <span class="rocket-stripe"></span>
-                            </div>
-                            <div class="rocket-fin rocket-fin-left"></div>
-                            <div class="rocket-fin rocket-fin-right"></div>
-                            <div class="rocket-flame">
-                                <span></span>
-                            </div>
+                            <svg class="rocket-svg" viewBox="0 0 160 260" role="img" aria-label="Rocket taking off">
+                                <defs>
+                                    <linearGradient id="rocketBodyGrad" x1="48" y1="16" x2="112" y2="170" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0" stop-color="#f7fbff"/>
+                                        <stop offset="0.52" stop-color="#a9c7ff"/>
+                                        <stop offset="1" stop-color="#3156d8"/>
+                                    </linearGradient>
+                                    <linearGradient id="rocketNoseGrad" x1="80" y1="8" x2="80" y2="76" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0" stop-color="#f7fdff"/>
+                                        <stop offset="1" stop-color="#5ce5ff"/>
+                                    </linearGradient>
+                                    <linearGradient id="rocketFinGrad" x1="30" y1="128" x2="58" y2="190" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0" stop-color="#7ea2ff"/>
+                                        <stop offset="1" stop-color="#2558ff"/>
+                                    </linearGradient>
+                                    <linearGradient id="rocketNozzleGrad" x1="80" y1="154" x2="80" y2="190" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0" stop-color="#3b4f87"/>
+                                        <stop offset="0.58" stop-color="#18234c"/>
+                                        <stop offset="1" stop-color="#070b1d"/>
+                                    </linearGradient>
+                                    <radialGradient id="rocketWindowGrad" cx="0.36" cy="0.28" r="0.72">
+                                        <stop offset="0" stop-color="#ffffff"/>
+                                        <stop offset="0.42" stop-color="#52d7f7"/>
+                                        <stop offset="1" stop-color="#3156d8"/>
+                                    </radialGradient>
+                                    <linearGradient id="rocketFlameGrad" x1="80" y1="168" x2="80" y2="250" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0" stop-color="#fff7ac"/>
+                                        <stop offset="0.25" stop-color="#52d7f7"/>
+                                        <stop offset="0.68" stop-color="#2558ff"/>
+                                        <stop offset="1" stop-color="#2558ff" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                                <g class="rocket-svg-flame">
+                                    <path d="M80 164 C58 192 58 226 80 252 C102 226 102 192 80 164Z" fill="url(#rocketFlameGrad)"/>
+                                    <path d="M80 176 C69 196 70 218 80 235 C90 218 91 196 80 176Z" fill="#fff6a9" opacity="0.9"/>
+                                </g>
+                                <path class="rocket-svg-fin rocket-svg-fin-left" d="M52 124 C28 134 26 176 42 194 C54 182 60 158 60 136Z" fill="url(#rocketFinGrad)"/>
+                                <path class="rocket-svg-fin rocket-svg-fin-right" d="M108 124 C132 134 134 176 118 194 C106 182 100 158 100 136Z" fill="url(#rocketFinGrad)"/>
+                                <path class="rocket-svg-body" d="M80 8 C61 31 50 53 48 76 L48 146 C48 162 58 172 80 172 C102 172 112 162 112 146 L112 76 C110 53 99 31 80 8Z" fill="url(#rocketBodyGrad)"/>
+                                <path class="rocket-svg-nose" d="M80 8 C61 31 51 53 48 76 C58 86 102 86 112 76 C109 53 99 31 80 8Z" fill="url(#rocketNoseGrad)"/>
+                                <path class="rocket-svg-shade" d="M96 47 C105 76 106 118 100 150 C96 163 88 170 80 172 C102 172 112 162 112 146 L112 76 C110 53 99 31 80 8 C87 21 92 33 96 47Z" fill="#050713" opacity="0.18"/>
+                                <circle class="rocket-svg-window-ring" cx="80" cy="82" r="17" fill="#101832" opacity="0.82"/>
+                                <circle class="rocket-svg-window" cx="80" cy="82" r="11" fill="url(#rocketWindowGrad)"/>
+                                <rect class="rocket-svg-stripe" x="56" y="128" width="48" height="10" rx="5" fill="url(#rocketFlameGrad)"/>
+                                <path class="rocket-svg-nozzle" d="M62 156 H98 L91 190 Q80 198 69 190Z" fill="url(#rocketNozzleGrad)"/>
+                                <path class="rocket-svg-nozzle-glow" d="M70 171 H90 L86 188 Q80 192 74 188Z" fill="#52d7f7" opacity="0.18"/>
+                            </svg>
                         </div>
                         <div class="rocket-plume">
                             <span></span><span></span><span></span>
