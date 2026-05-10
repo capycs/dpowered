@@ -5332,16 +5332,20 @@ body.motion-ready .faq-list .faq-item.motion-item {
 }
 
 @media (max-width: 600px) {
+    .rocket-stage {
+        inset: 138px 12px 170px 12px;
+    }
+
     .rocket-ship {
-        left: 58%;
-        bottom: 6px;
-        width: 126px;
+        left: 62%;
+        bottom: -4px;
+        width: 76px;
     }
 
     .rocket-plume {
-        left: 58%;
-        bottom: -20px;
-        width: 150px;
+        left: 62%;
+        bottom: -18px;
+        width: 96px;
     }
 }
 
@@ -5389,5 +5393,119 @@ body.motion-ready .faq-list .faq-item.motion-item {
     .hero-quip,
     .hero-v2-grid {
         max-width: calc(100vw - 32px);
+    }
+}
+
+/* Final headline reel: measured width, baseline-safe, and mobile-stable. */
+.hd-l2 {
+    align-items: baseline;
+}
+
+.hd-word-reel {
+    --word-width: auto;
+    position: relative;
+    display: inline-block;
+    width: var(--word-width);
+    min-width: 0;
+    height: 1.2em;
+    margin: 0 0 -0.16em;
+    padding: 0 0.04em 0.2em 0;
+    overflow: visible;
+    contain: none;
+    flex: 0 0 auto;
+    transition: width 360ms cubic-bezier(0.22, 1, 0.36, 1);
+    vertical-align: baseline;
+}
+
+.hd-word-stage {
+    display: block;
+    height: 1.2em;
+    overflow: visible;
+}
+
+.hd-word-current {
+    position: relative;
+    display: inline-block;
+    line-height: 1.16;
+    padding: 0 0.04em 0.18em 0;
+    transform: translateY(0);
+    transform-origin: 50% 65%;
+    transition:
+        opacity 260ms ease,
+        transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 260ms ease;
+}
+
+.hd-word-sizer {
+    position: absolute;
+    inset: 0 auto auto 0;
+    display: inline-block;
+    line-height: 1.16;
+    padding: 0 0.04em 0.18em 0;
+    visibility: hidden;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.hd-word-next {
+    display: none !important;
+}
+
+.hd-word-reel.is-leaving .hd-word-current {
+    opacity: 0;
+    filter: blur(7px);
+    transform: translateY(-0.26em) scale(0.985);
+}
+
+.hd-word-reel.is-entering .hd-word-current {
+    opacity: 0;
+    filter: blur(7px);
+    transform: translateY(0.22em) scale(0.985);
+}
+
+@media (max-width: 600px) {
+    .hero-display {
+        font-size: 47px;
+        line-height: 1.1;
+        letter-spacing: -0.032em;
+    }
+
+    .hd-l2 {
+        display: flex;
+        align-items: baseline;
+        gap: 0.2em;
+        white-space: nowrap;
+    }
+
+    .hd-your {
+        margin-right: 0;
+    }
+
+    .hd-word-reel {
+        height: 1.22em;
+        margin: 0 0 -0.17em 0.02em;
+        padding-bottom: 0.22em;
+    }
+
+    .hd-word-stage {
+        height: 1.22em;
+    }
+
+    .hd-word-current,
+    .hd-word-sizer {
+        line-height: 1.16;
+        padding-bottom: 0.2em;
+    }
+}
+
+@media (max-width: 420px) {
+    .hero-display {
+        font-size: 43px;
+    }
+}
+
+@media (max-width: 360px) {
+    .hero-display {
+        font-size: 38px;
     }
 }

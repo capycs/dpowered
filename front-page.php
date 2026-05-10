@@ -48,9 +48,10 @@
                             <span class="hd-l2">
                                 <span class="hd-your">your</span>
                                 <span class="hd-word-reel" data-reel-words="website,business,brand,bookings,growth,comeback">
-                                <span class="hd-word-stage">
-                                    <span class="hd-word-current hd-blue">website</span>
-                                    <span class="hd-word-next hd-blue">business</span>
+                                    <span class="hd-word-stage">
+                                        <span class="hd-word-current hd-blue">website</span>
+                                    </span>
+                                    <span class="hd-word-sizer hd-blue" aria-hidden="true">website</span>
                                 </span>
                             </span>
                         </span>

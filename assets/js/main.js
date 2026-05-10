@@ -568,7 +568,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
     })();
 })();
 
-// Professional word-reel animation in the front-page hero headline
+// Measured word reel for the front-page headline.
 (function () {
     const root = document.querySelector('.hd-word-reel[data-reel-words]');
     if (!root) return;
@@ -578,38 +578,53 @@ document.querySelectorAll('.faq-question').forEach(btn => {
         .map(word => word.trim())
         .filter(Boolean);
     const current = root.querySelector('.hd-word-current');
-    const next = root.querySelector('.hd-word-next');
-    if (words.length < 2 || !current || !next) return;
+    const sizer = root.querySelector('.hd-word-sizer');
+    if (words.length < 2 || !current || !sizer) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let index = 0;
+    let timer = null;
     current.textContent = words[index];
-    next.textContent = words[(index + 1) % words.length];
-    root.style.setProperty('--word-chars', Math.max(...words.map(word => word.length)));
+
+    function setWordWidth(word) {
+        sizer.textContent = word;
+        const width = Math.ceil(sizer.getBoundingClientRect().width);
+        root.style.setProperty('--word-width', `${width}px`);
+    }
+
+    setWordWidth(words[index]);
 
     if (reduceMotion) {
         return;
     }
 
-    let timer = null;
-
     function cycleWord() {
-        if (root.classList.contains('is-changing')) return;
+        if (root.classList.contains('is-leaving') || root.classList.contains('is-entering')) return;
 
         const upcoming = (index + 1) % words.length;
-        next.textContent = words[upcoming];
-        root.classList.add('is-changing');
+        root.classList.add('is-leaving');
 
         window.setTimeout(() => {
             index = upcoming;
             current.textContent = words[index];
-            next.textContent = words[(index + 1) % words.length];
-            root.classList.remove('is-changing');
-        }, 720);
+            setWordWidth(words[index]);
+            root.classList.remove('is-leaving');
+            root.classList.add('is-entering');
+
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                    root.classList.remove('is-entering');
+                });
+            });
+        }, 280);
     }
 
-    timer = window.setInterval(cycleWord, 2650);
+    timer = window.setInterval(cycleWord, 2450);
+
+    window.addEventListener('resize', () => {
+        setWordWidth(words[index]);
+    });
 
     window.addEventListener('pagehide', () => {
         if (timer) window.clearInterval(timer);
