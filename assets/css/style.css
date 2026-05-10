@@ -5428,12 +5428,12 @@ body.motion-ready .faq-list .faq-item.motion-item {
     display: inline-block;
     line-height: 1.16;
     padding: 0 0.04em 0.18em 0;
+    filter: none !important;
     transform: translateY(0);
     transform-origin: 50% 65%;
     transition:
         opacity 260ms ease,
-        transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
-        filter 260ms ease;
+        transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hd-word-sizer {
@@ -5444,6 +5444,7 @@ body.motion-ready .faq-list .faq-item.motion-item {
     padding: 0 0.04em 0.18em 0;
     visibility: hidden;
     white-space: nowrap;
+    filter: none !important;
     pointer-events: none;
 }
 
@@ -5453,14 +5454,25 @@ body.motion-ready .faq-list .faq-item.motion-item {
 
 .hd-word-reel.is-leaving .hd-word-current {
     opacity: 0;
-    filter: blur(7px);
-    transform: translateY(-0.26em) scale(0.985);
+    filter: none !important;
+    transform: translateY(-0.2em) scale(0.99);
 }
 
 .hd-word-reel.is-entering .hd-word-current {
-    opacity: 0;
-    filter: blur(7px);
-    transform: translateY(0.22em) scale(0.985);
+    filter: none !important;
+    animation: hdWordEnter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hdWordEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(0.16em) scale(0.99);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 @media (max-width: 600px) {

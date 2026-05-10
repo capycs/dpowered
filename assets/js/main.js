@@ -603,6 +603,7 @@ document.querySelectorAll('.faq-question').forEach(btn => {
         if (root.classList.contains('is-leaving') || root.classList.contains('is-entering')) return;
 
         const upcoming = (index + 1) % words.length;
+        root.classList.remove('is-entering');
         root.classList.add('is-leaving');
 
         window.setTimeout(() => {
@@ -612,11 +613,9 @@ document.querySelectorAll('.faq-question').forEach(btn => {
             root.classList.remove('is-leaving');
             root.classList.add('is-entering');
 
-            window.requestAnimationFrame(() => {
-                window.requestAnimationFrame(() => {
-                    root.classList.remove('is-entering');
-                });
-            });
+            window.setTimeout(() => {
+                root.classList.remove('is-entering');
+            }, 420);
         }, 280);
     }
 
