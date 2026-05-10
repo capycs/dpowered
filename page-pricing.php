@@ -10,31 +10,30 @@ get_header(); ?>
     <div class="container inner-hero-content">
         <span class="section-tag">Transparent Pricing</span>
         <h1>Simple Prices,<br><span class="gradient-text">No Surprises</span></h1>
-        <p>One-off website builds and flexible monthly plans — know exactly what you're paying before you commit.</p>
+        <p>Fixed website builds, optional care plans, and clear scope before you pay - no vague agency quote games.</p>
     </div>
 </section>
 
-<!-- ── WEBSITE PACKAGES ──────────────────────────────── -->
 <section class="section narrative-section pricing-guide-section">
     <div class="container">
-        <div class="pricing-guide reveal">
+        <div class="pricing-guide pricing-guide--market reveal">
             <div class="pricing-guide-main">
-                <span class="section-tag">How to Choose</span>
-                <h2>Pick the package by what your business needs to prove.</h2>
-                <p>Pricing makes more sense when it is tied to the job your website needs to do. A simple local business usually needs trust and enquiries. A growing business needs stronger SEO, more content, and a reason for customers to keep clicking.</p>
+                <span class="section-tag">Market Checked</span>
+                <h2>Agency-style clarity, without agency-style guesswork.</h2>
+                <p>UK web packages usually win trust by making scope obvious: pages, SEO, analytics, ownership, turnaround, and support. We keep that same clarity, then price it for local businesses that need a proper site without a massive upfront leap.</p>
             </div>
             <div class="pricing-guide-list">
                 <div>
-                    <strong>Launch</strong>
-                    <p>Best when you need a professional presence fast.</p>
+                    <strong>Fixed build price</strong>
+                    <p>You know the starting cost before a call, with no mystery quote form hiding the basics.</p>
                 </div>
                 <div>
-                    <strong>Growth</strong>
-                    <p>Best when you want more pages, SEO structure, and room to grow.</p>
+                    <strong>Built to be owned</strong>
+                    <p>Your website is yours. We can support it monthly, but you are not trapped in a rental model.</p>
                 </div>
                 <div>
-                    <strong>Pro</strong>
-                    <p>Best when your site needs advanced pages, forms, or integrations.</p>
+                    <strong>Support is optional</strong>
+                    <p>Add care if you want updates, edits, and backups. Skip it if you want the site handed over.</p>
                 </div>
             </div>
         </div>
@@ -45,17 +44,46 @@ get_header(); ?>
     <div class="container">
         <div class="section-header">
             <span class="section-tag">One-Off Website Builds</span>
-            <h2>Get Your Business<br>Online From £399</h2>
-            <p>A professional website built for you, delivered in days — then it's yours, forever.</p>
+            <h2>Choose the Build<br>That Matches the Job</h2>
+            <p>Most small businesses do not need a bloated agency project. They need a fast, credible website that earns trust, takes enquiries, and can grow when the business grows.</p>
+        </div>
+
+        <div class="pricing-market-strip reveal" aria-label="Pricing highlights">
+            <div>
+                <span>Starts lower</span>
+                <strong>&pound;399</strong>
+                <p>Close to budget UK starter offers, but with a proper multi-page scope.</p>
+            </div>
+            <div>
+                <span>Most useful</span>
+                <strong>&pound;599</strong>
+                <p>The sweet spot for local businesses that need more than a holding page.</p>
+            </div>
+            <div>
+                <span>Still fixed</span>
+                <strong>&pound;1,199</strong>
+                <p>For larger builds before you step into custom agency pricing.</p>
+            </div>
         </div>
 
         <div class="pricing-grid">
 
-            <!-- Launch -->
-            <div class="pricing-card reveal">
-                <div class="pricing-tier">Launch</div>
-                <div class="pricing-price"><span class="pricing-currency">£</span>399</div>
-                <p class="pricing-desc">For new businesses that need a clean, professional online presence — fast and affordable.</p>
+            <div class="pricing-card pricing-card--launch reveal">
+                <div class="pricing-card-top">
+                    <div>
+                        <div class="pricing-tier">Launch</div>
+                        <p class="pricing-fit">Best for first websites, trades, local services, and simple brochure sites.</p>
+                    </div>
+                    <span class="pricing-speed">7 days</span>
+                </div>
+                <div class="pricing-price"><span class="pricing-currency">&pound;</span>399</div>
+                <div class="pricing-promise">Professional presence without paying for things you do not need yet.</div>
+                <div class="pricing-includes">
+                    <span>Trust pages</span>
+                    <span>Enquiry ready</span>
+                    <span>SEO basics</span>
+                </div>
+                <p class="pricing-desc">A clean business website that makes you look real, trustworthy, and easy to contact.</p>
                 <ul class="pricing-features">
                     <li><?php echo dpowered_check_icon(); ?>Up to 5 pages</li>
                     <li><?php echo dpowered_check_icon(); ?>Mobile-responsive design</li>
@@ -63,17 +91,28 @@ get_header(); ?>
                     <li><?php echo dpowered_check_icon(); ?>Basic SEO setup</li>
                     <li><?php echo dpowered_check_icon(); ?>Google Maps integration</li>
                     <li><?php echo dpowered_check_icon(); ?>1 revision round</li>
-                    <li><?php echo dpowered_check_icon(); ?>7-day delivery</li>
+                    <li><?php echo dpowered_check_icon(); ?>You own the finished website</li>
                 </ul>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Get Started</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Start Launch</a>
             </div>
 
-            <!-- Growth -->
-            <div class="pricing-card featured reveal">
-                <div class="pricing-badge">Most Popular</div>
-                <div class="pricing-tier">Growth</div>
-                <div class="pricing-price"><span class="pricing-currency">£</span>599</div>
-                <p class="pricing-desc">For businesses ready to grow — more pages, better SEO, and a site built to bring in customers.</p>
+            <div class="pricing-card pricing-card--growth featured reveal">
+                <div class="pricing-badge">Best Fit For Most Businesses</div>
+                <div class="pricing-card-top">
+                    <div>
+                        <div class="pricing-tier">Growth</div>
+                        <p class="pricing-fit">Best for businesses that want search structure, content room, and stronger conversion.</p>
+                    </div>
+                    <span class="pricing-speed">10 days</span>
+                </div>
+                <div class="pricing-price"><span class="pricing-currency">&pound;</span>599</div>
+                <div class="pricing-promise">The practical upgrade: more proof, more pages, better chances of being found.</div>
+                <div class="pricing-includes">
+                    <span>SEO structure</span>
+                    <span>Analytics</span>
+                    <span>Blog ready</span>
+                </div>
+                <p class="pricing-desc">For businesses ready to grow - more pages, better SEO, and a site built to bring in customers.</p>
                 <ul class="pricing-features">
                     <li><?php echo dpowered_check_icon(); ?>Up to 8 pages</li>
                     <li><?php echo dpowered_check_icon(); ?>Everything in Launch</li>
@@ -82,46 +121,56 @@ get_header(); ?>
                     <li><?php echo dpowered_check_icon(); ?>Advanced on-page SEO</li>
                     <li><?php echo dpowered_check_icon(); ?>Social media integration</li>
                     <li><?php echo dpowered_check_icon(); ?>2 revision rounds</li>
-                    <li><?php echo dpowered_check_icon(); ?>10-day delivery</li>
+                    <li><?php echo dpowered_check_icon(); ?>You own the finished website</li>
                 </ul>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Get Started</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Choose Growth</a>
             </div>
 
-            <!-- Pro -->
-            <div class="pricing-card reveal">
-                <div class="pricing-tier">Pro</div>
-                <div class="pricing-price"><span class="pricing-currency">£</span>1,199</div>
-                <p class="pricing-desc">For businesses that need something more — a larger, feature-rich website built to handle anything you throw at it.</p>
+            <div class="pricing-card pricing-card--pro reveal">
+                <div class="pricing-card-top">
+                    <div>
+                        <div class="pricing-tier">Pro</div>
+                        <p class="pricing-fit">Best for serious service businesses, advanced forms, booking flows, and bigger sites.</p>
+                    </div>
+                    <span class="pricing-speed">14 days</span>
+                </div>
+                <div class="pricing-price"><span class="pricing-currency">&pound;</span>1,199</div>
+                <div class="pricing-promise">A larger custom build before you move into fully bespoke agency quotes.</div>
+                <div class="pricing-includes">
+                    <span>Advanced forms</span>
+                    <span>Training</span>
+                    <span>Priority support</span>
+                </div>
+                <p class="pricing-desc">For businesses that need something more - a larger, feature-rich website built to handle serious enquiries.</p>
                 <ul class="pricing-features">
-                    <li><?php echo dpowered_check_icon(); ?>Unlimited pages</li>
+                    <li><?php echo dpowered_check_icon(); ?>Expanded page plan</li>
                     <li><?php echo dpowered_check_icon(); ?>Everything in Growth</li>
                     <li><?php echo dpowered_check_icon(); ?>Custom design &amp; animations</li>
                     <li><?php echo dpowered_check_icon(); ?>Advanced forms &amp; integrations</li>
                     <li><?php echo dpowered_check_icon(); ?>WordPress training session</li>
                     <li><?php echo dpowered_check_icon(); ?>Priority support</li>
                     <li><?php echo dpowered_check_icon(); ?>3 revision rounds</li>
-                    <li><?php echo dpowered_check_icon(); ?>14-day delivery</li>
+                    <li><?php echo dpowered_check_icon(); ?>You own the finished website</li>
                 </ul>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Get Started</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Plan a Pro Build</a>
             </div>
 
         </div>
     </div>
 </section>
 
-<!-- ── MONTHLY CARE PLANS ────────────────────────────── -->
 <section class="section insight-section">
     <div class="container">
         <div class="pricing-reality reveal">
             <div>
-                <span class="section-tag">No Guesswork</span>
-                <h2>What happens before you pay.</h2>
-                <p>We confirm the pages, features, timeline, and payment split before anything starts. If your project does not fit a package cleanly, we tell you and quote it properly.</p>
+                <span class="section-tag">Before You Pay</span>
+                <h2>We confirm the exact scope first.</h2>
+                <p>Competitors often sell packages, then quote extras after discovery. We keep the package simple, check the details, and tell you if your project needs a custom quote before anything starts.</p>
             </div>
             <ol class="pricing-steps">
-                <li><span>01</span>Tell us what you need.</li>
-                <li><span>02</span>We recommend the right route.</li>
-                <li><span>03</span>You get a clear fixed quote.</li>
+                <li><span>01</span>Tell us the pages and features you need.</li>
+                <li><span>02</span>We recommend Launch, Growth, Pro, or custom.</li>
+                <li><span>03</span>You get a fixed scope and price in writing.</li>
             </ol>
         </div>
     </div>
@@ -130,95 +179,91 @@ get_header(); ?>
 <section class="section plans-section">
     <div class="container">
         <div class="section-header">
-            <span class="section-tag">Monthly Care Plans</span>
-            <h2>We Keep Your Site<br>Running Perfectly</h2>
-            <p>You focus on your business — we handle the website. Security, updates, improvements, and results, every month.</p>
+            <span class="section-tag">Optional Monthly Care</span>
+            <h2>Keep the Site Sharp<br>After It Goes Live</h2>
+            <p>Some agencies bundle hosting and support into everything. We keep it optional: choose a one-off build, or add monthly care if you want us handling the technical side.</p>
         </div>
 
         <div class="plans-grid plans-grid--two">
 
-            <!-- Basic -->
             <div class="plan-card reveal">
                 <div class="plan-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
                 <div class="plan-tier">Basic Maintenance</div>
-                <div class="plan-price"><span class="pricing-currency">£</span>39<span class="pricing-per">/mo</span></div>
-                <p class="pricing-desc">Keep your site secure and up to date — the essentials taken care of every month.</p>
+                <div class="plan-price"><span class="pricing-currency">&pound;</span>49<span class="pricing-per">/mo</span></div>
+                <p class="pricing-desc">For businesses that want the site kept safe, backed up, and updated.</p>
                 <ul class="pricing-features">
                     <li><?php echo dpowered_check_icon(); ?>Plugin, theme &amp; CMS updates</li>
                     <li><?php echo dpowered_check_icon(); ?>Security monitoring</li>
                     <li><?php echo dpowered_check_icon(); ?>Regular backups</li>
                     <li><?php echo dpowered_check_icon(); ?>Small bug fixes</li>
-                    <li><?php echo dpowered_check_icon(); ?>Minor edits (up to 30 mins/month)</li>
+                    <li><?php echo dpowered_check_icon(); ?>Minor edits, up to 30 mins/month</li>
                 </ul>
-                <p class="plan-note">Up to 30 minutes of edits per month — text changes, image swaps, small tweaks.</p>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Add to My Site</a>
+                <p class="plan-note">Good for simple sites where you want peace of mind, not constant marketing work.</p>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Add Maintenance</a>
             </div>
 
-            <!-- Growth -->
             <div class="plan-card featured reveal">
                 <div class="pricing-badge">Best Value</div>
                 <div class="plan-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                 </div>
-                <div class="plan-tier">Growth Plan</div>
-                <div class="plan-price"><span class="pricing-currency">£</span>89<span class="pricing-per">/mo</span></div>
-                <p class="pricing-desc">Your site continuously improves every month — more content, better SEO, measurable results.</p>
+                <div class="plan-tier">Growth Care</div>
+                <div class="plan-price"><span class="pricing-currency">&pound;</span>99<span class="pricing-per">/mo</span></div>
+                <p class="pricing-desc">For businesses that want the site improved every month, not just maintained.</p>
                 <ul class="pricing-features">
                     <li><?php echo dpowered_check_icon(); ?>Everything in Basic</li>
-                    <li><?php echo dpowered_check_icon(); ?>1–2 content updates/month</li>
-                    <li><?php echo dpowered_check_icon(); ?>New sections or pages</li>
+                    <li><?php echo dpowered_check_icon(); ?>1-2 content updates/month</li>
+                    <li><?php echo dpowered_check_icon(); ?>New sections or small pages</li>
                     <li><?php echo dpowered_check_icon(); ?>Basic SEO improvements</li>
                     <li><?php echo dpowered_check_icon(); ?>Speed &amp; performance checks</li>
-                    <li><?php echo dpowered_check_icon(); ?>Monthly report (traffic &amp; performance)</li>
+                    <li><?php echo dpowered_check_icon(); ?>Monthly traffic and performance summary</li>
                 </ul>
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Add to My Site</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full">Add Growth Care</a>
             </div>
 
         </div>
     </div>
 </section>
 
-<!-- ── BUNDLE DEAL ───────────────────────────────────── -->
 <section class="section bundle-section">
     <div class="container">
-        <div class="bundle-card reveal">
+        <div class="bundle-card pricing-bundle-card reveal">
             <div class="bundle-glow"></div>
             <div class="bundle-left">
-                <span class="section-tag" style="margin-bottom:16px">Best Way to Start</span>
-                <h2>Website + Hosting + Support<br><span class="gradient-text">All Included</span></h2>
-                <p>The smartest way to get started — a lower upfront cost, with everything handled from day one. Hosting, maintenance, and support are all bundled in so you never have to worry about the technical side.</p>
+                <span class="section-tag" style="margin-bottom:16px">Low-Stress Route</span>
+                <h2>Website + Care<br><span class="gradient-text">Without the Big Agency Bill</span></h2>
+                <p>If you want the site built and looked after, this is the cleanest route. Pay less upfront, launch quickly, and let us handle updates, backups, edits, and support after it goes live.</p>
                 <ul class="bundle-perks">
                     <li><?php echo dpowered_check_icon(); ?>Lower upfront cost</li>
-                    <li><?php echo dpowered_check_icon(); ?>Hosting included</li>
-                    <li><?php echo dpowered_check_icon(); ?>Monthly maintenance included</li>
-                    <li><?php echo dpowered_check_icon(); ?>Priority support included</li>
-                    <li><?php echo dpowered_check_icon(); ?>Cancel anytime</li>
+                    <li><?php echo dpowered_check_icon(); ?>Hosting guidance included</li>
+                    <li><?php echo dpowered_check_icon(); ?>Maintenance included</li>
+                    <li><?php echo dpowered_check_icon(); ?>Support included</li>
+                    <li><?php echo dpowered_check_icon(); ?>Cancel the monthly care anytime</li>
                 </ul>
             </div>
             <div class="bundle-right">
                 <div class="bundle-price-box">
                     <div class="bundle-price-row">
                         <div>
-                            <span class="bundle-label">One-off build</span>
-                            <div class="bundle-amount"><span class="pricing-currency">£</span>399</div>
+                            <span class="bundle-label">Launch build</span>
+                            <div class="bundle-amount"><span class="pricing-currency">&pound;</span>399</div>
                         </div>
                         <div class="bundle-plus">+</div>
                         <div>
-                            <span class="bundle-label">Per month</span>
-                            <div class="bundle-amount"><span class="pricing-currency">£</span>49<span class="pricing-per">/mo</span></div>
+                            <span class="bundle-label">Care from</span>
+                            <div class="bundle-amount"><span class="pricing-currency">&pound;</span>49<span class="pricing-per">/mo</span></div>
                         </div>
                     </div>
-                    <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full" style="margin-top:24px">Start the Bundle</a>
-                    <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;margin-top:12px">No hidden fees. Cancel the monthly plan anytime.</p>
+                    <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full" style="margin-top:24px">Ask About the Bundle</a>
+                    <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;margin-top:12px">No hidden fees. Build scope confirmed before payment.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ── TRANSPARENCY ──────────────────────────────────── -->
 <section class="section" style="background:var(--bg-secondary)">
     <div class="container">
         <div class="transparency-grid">
@@ -226,30 +271,30 @@ get_header(); ?>
             <div class="not-included-card reveal">
                 <div class="not-included-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    What's Not Included
+                    What Is Quoted Separately
                 </div>
-                <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:18px">To keep our prices fair and our quality high, the following are not covered in standard packages:</p>
+                <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:18px">To keep the public package prices fair, these are scoped separately when needed:</p>
                 <ul class="not-included-list">
-                    <li><?php echo dpowered_x_icon(); ?>Unlimited edits</li>
-                    <li><?php echo dpowered_x_icon(); ?>Full redesigns (quoted separately)</li>
-                    <li><?php echo dpowered_x_icon(); ?>Logo or branding work</li>
-                    <li><?php echo dpowered_x_icon(); ?>Daily social media posting</li>
-                    <li><?php echo dpowered_x_icon(); ?>Copywriting (we can refer you)</li>
+                    <li><?php echo dpowered_x_icon(); ?>Logo or full branding work</li>
+                    <li><?php echo dpowered_x_icon(); ?>Large copywriting projects</li>
+                    <li><?php echo dpowered_x_icon(); ?>Booking/payment systems</li>
+                    <li><?php echo dpowered_x_icon(); ?>Complex directories or membership areas</li>
+                    <li><?php echo dpowered_x_icon(); ?>Unlimited edits after approval</li>
                 </ul>
-                <p class="plan-note" style="margin-top:16px">Need something not listed? Just ask — we'll always give you an honest quote.</p>
+                <p class="plan-note" style="margin-top:16px">Need one of these? We can still help - we just quote it honestly instead of hiding it inside a package.</p>
             </div>
 
             <div class="peace-card reveal">
-                <span class="section-tag" style="margin-bottom:20px">Why Choose Us</span>
-                <h3 style="font-size:1.5rem;margin-bottom:24px">We Sell Peace of Mind,<br>Not Tasks</h3>
+                <span class="section-tag" style="margin-bottom:20px">Why It Works</span>
+                <h3 style="font-size:1.5rem;margin-bottom:24px">Cheap can be risky.<br>Agency can be overkill.</h3>
                 <div class="peace-items">
                     <div class="peace-item">
                         <div class="peace-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         </div>
                         <div>
-                            <h4>Secure &amp; Up to Date</h4>
-                            <p>We keep your website secure and running — you never have to think about it.</p>
+                            <h4>Clear ownership</h4>
+                            <p>Your site is handed over properly, with WordPress access and no lock-in trick.</p>
                         </div>
                     </div>
                     <div class="peace-item">
@@ -257,8 +302,8 @@ get_header(); ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                         </div>
                         <div>
-                            <h4>Continuously Improving</h4>
-                            <p>We keep improving your site so it brings in more customers — not just maintaining it.</p>
+                            <h4>Room to grow</h4>
+                            <p>Start with what you need now, then add SEO, content, pages, or support when it makes sense.</p>
                         </div>
                     </div>
                     <div class="peace-item">
@@ -266,8 +311,8 @@ get_header(); ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         </div>
                         <div>
-                            <h4>Zero Technical Stress</h4>
-                            <p>You don't have to worry about anything technical — just run your business.</p>
+                            <h4>Plain English scope</h4>
+                            <p>You know what is included, what costs extra, and what happens before the project starts.</p>
                         </div>
                     </div>
                 </div>
@@ -277,14 +322,13 @@ get_header(); ?>
     </div>
 </section>
 
-<!-- ── CTA ───────────────────────────────────────────── -->
 <section class="section cta-section">
     <div class="container">
         <div class="cta-inner reveal">
             <div class="cta-orb"></div>
             <span class="section-tag">Ready To Get Started?</span>
             <h2>Not Sure Which Plan<br><span class="gradient-text">Is Right For You?</span></h2>
-            <p>Drop us a message and we'll recommend the best option for your budget and goals — no pressure, no hard sell.</p>
+            <p>Drop us a message and we will recommend the best option for your budget and goals - no pressure, no hard sell.</p>
             <div class="cta-actions">
                 <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg">Talk To Us</a>
                 <a href="<?php echo esc_url(home_url('/services')); ?>" class="btn btn-outline btn-lg">View Services</a>

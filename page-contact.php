@@ -125,9 +125,15 @@ get_header(); ?>
                             <input type="email" id="contact-email" name="contact_email" placeholder="john@yourcompany.com" autocomplete="email" required aria-required="true">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="contact-business">Business Name</label>
-                        <input type="text" id="contact-business" name="contact_business" placeholder="Your Business Ltd" autocomplete="organization">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact-business">Business Name</label>
+                            <input type="text" id="contact-business" name="contact_business" placeholder="Your Business Ltd" autocomplete="organization">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-phone">Phone Number</label>
+                            <input type="tel" id="contact-phone" name="contact_phone" placeholder="07123 456789" autocomplete="tel" inputmode="tel">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>What are you interested in? <span style="font-weight:400;color:var(--text-muted);font-size:0.82rem">(select all that apply)</span></label>
@@ -162,14 +168,14 @@ get_header(); ?>
                                 <button type="button" class="pkg-card" data-value="basic-maintenance">
                                     <span class="pkg-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                                     <span class="pkg-name">Basic Maintenance</span>
-                                    <span class="pkg-price">£39<span class="pkg-per">/mo</span></span>
+                                    <span class="pkg-price">£49<span class="pkg-per">/mo</span></span>
                                     <span class="pkg-detail">Security &amp; updates</span>
                                 </button>
                                 <button type="button" class="pkg-card pkg-card--badged" data-value="growth-plan">
                                     <span class="pkg-badge-sm">Best Value</span>
                                     <span class="pkg-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                                     <span class="pkg-name">Growth Plan</span>
-                                    <span class="pkg-price">£89<span class="pkg-per">/mo</span></span>
+                                    <span class="pkg-price">£99<span class="pkg-per">/mo</span></span>
                                     <span class="pkg-detail">Content + SEO monthly</span>
                                 </button>
                             </div>
@@ -179,7 +185,7 @@ get_header(); ?>
                                 <button type="button" class="pkg-card" data-value="bundle">
                                     <span class="pkg-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                                     <span class="pkg-name">The Bundle</span>
-                                    <span class="pkg-price">£399 <span style="color:var(--text-muted);font-size:0.85rem;font-weight:500">+</span> £49<span class="pkg-per">/mo</span></span>
+                                    <span class="pkg-price">&pound;399 <span style="color:var(--text-muted);font-size:0.85rem;font-weight:500">+</span> &pound;49<span class="pkg-per">/mo</span></span>
                                     <span class="pkg-detail">Build + hosting + support</span>
                                 </button>
                                 <button type="button" class="pkg-card" data-value="not-sure">
@@ -195,7 +201,7 @@ get_header(); ?>
                         <label for="contact-message">Tell us about your project <span aria-hidden="true">*</span></label>
                         <textarea id="contact-message" name="contact_message" rows="5" placeholder="Describe what you're looking for, any deadlines, budget range, etc." required aria-required="true"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg btn-full">Send Message →</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-full">Send Message &rarr;</button>
                 </form>
                 <?php endif; ?>
             </div>

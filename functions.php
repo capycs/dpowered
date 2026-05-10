@@ -329,6 +329,7 @@ function dpowered_handle_contact_form() {
 
     $name     = sanitize_text_field($_POST['contact_name'] ?? '');
     $email    = sanitize_email($_POST['contact_email'] ?? '');
+    $phone    = sanitize_text_field($_POST['contact_phone'] ?? '');
     $business = sanitize_text_field($_POST['contact_business'] ?? '');
     $service  = sanitize_text_field($_POST['contact_service'] ?? '');
     $message  = sanitize_textarea_field($_POST['contact_message'] ?? '');
@@ -360,6 +361,7 @@ a{color:#1A4DFF}
 <div class="bod">
 <div class="row"><div class="lbl">Name</div><div class="val">' . esc_html($name) . '</div></div>
 <div class="row"><div class="lbl">Email</div><div class="val"><a href="mailto:' . esc_attr($email) . '">' . esc_html($email) . '</a></div></div>'
+. ($phone    ? '<div class="row"><div class="lbl">Phone</div><div class="val"><a href="tel:' . esc_attr(preg_replace('/[^0-9+]/', '', $phone)) . '">' . esc_html($phone) . '</a></div></div>' : '')
 . ($business ? '<div class="row"><div class="lbl">Business</div><div class="val">' . esc_html($business) . '</div></div>' : '')
 . ($service  ? '<div class="row"><div class="lbl">Service</div><div class="val">' . esc_html($service)  . '</div></div>' : '') .
 '<div class="row"><div class="lbl">Message</div><div class="msg">' . esc_html($message) . '</div></div>
