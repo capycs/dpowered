@@ -34,7 +34,8 @@
         $meta_desc  = 'DPowered.online — modern, affordable web design for small businesses across the UK.';
     }
 
-    $og_image = get_template_directory_uri() . '/assets/images/favicon.svg';
+    $icon_base = get_template_directory_uri() . '/assets/images';
+    $og_image = $icon_base . '/favicon-512.png';
     if (!empty($post) && has_post_thumbnail($post)) {
         $og_image = get_the_post_thumbnail_url($post, 'large');
     }
@@ -52,7 +53,13 @@
     <meta name="twitter:card"        content="summary_large_image">
     <meta name="twitter:title"       content="<?php echo esc_attr($meta_title); ?>">
     <meta name="twitter:description" content="<?php echo esc_attr($meta_desc); ?>">
-    <link rel="icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/favicon.svg" type="image/svg+xml">
+    <meta name="twitter:image"       content="<?php echo esc_url($og_image); ?>">
+    <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon-48.png" type="image/png" sizes="48x48">
+    <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon-96.png" type="image/png" sizes="96x96">
+    <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="shortcut icon" href="<?php echo esc_url($icon_base); ?>/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="<?php echo esc_url($icon_base); ?>/favicon-192.png">
+    <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon.svg" type="image/svg+xml">
     <meta name="theme-color" content="#060612">
     <?php wp_head(); ?>
 </head>

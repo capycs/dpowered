@@ -22,6 +22,20 @@ function dpowered_enqueue() {
 }
 add_action('wp_enqueue_scripts', 'dpowered_enqueue');
 
+function dpowered_serve_favicon_ico() {
+    $favicon = get_template_directory() . '/assets/images/favicon.ico';
+
+    if (!file_exists($favicon)) {
+        return;
+    }
+
+    header('Content-Type: image/x-icon');
+    header('Content-Length: ' . filesize($favicon));
+    readfile($favicon);
+    exit;
+}
+add_action('do_faviconico', 'dpowered_serve_favicon_ico');
+
 // ── REVIEWS CUSTOM POST TYPE ─────────────────────────────────────────────────
 
 function dpowered_register_reviews() {
