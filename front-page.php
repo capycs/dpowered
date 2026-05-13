@@ -12,7 +12,7 @@
             </div>
             <div class="hmb-col">
                 <span class="hmb-label">STUDIO</span>
-                <span class="hmb-val">Manchester, UK <span class="hmb-dim">/ remote-first</span></span>
+                <span class="hmb-val">Liverpool, UK <span class="hmb-dim">/ remote-first</span></span>
             </div>
             <div class="hmb-col">
                 <span class="hmb-label">LOCAL TIME</span>
