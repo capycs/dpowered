@@ -2,4 +2,9 @@
 deployment:
   tasks:
     - export DEPLOYPATH=$HOME/dpowered.online/wp-content/themes/dpowered-theme/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/mkdir -p $DEPLOYPATH/assets/css
+    - /bin/mkdir -p $DEPLOYPATH/assets/js
+    - /bin/mkdir -p $DEPLOYPATH/assets/images
     - /bin/rsync -av --exclude='.git' --exclude='.cpanel.yml' ./ $DEPLOYPATH
+    - /bin/rsync -av assets/ $DEPLOYPATH/assets/
