@@ -8,3 +8,13 @@ deployment:
     - /bin/mkdir -p $DEPLOYPATH/assets/images
     - /bin/rsync -av --exclude='.git' --exclude='.cpanel.yml' ./ $DEPLOYPATH
     - /bin/rsync -av assets/ $DEPLOYPATH/assets/
+    - /bin/cp -f style.css $DEPLOYPATH/style.css
+    - /bin/cp -f assets/css/style.css $DEPLOYPATH/assets/css/style.css
+    - /bin/cp -f assets/js/main.js $DEPLOYPATH/assets/js/main.js
+    - /bin/cp -f assets/images/favicon.svg $DEPLOYPATH/assets/images/favicon.svg
+    - /bin/cp -f assets/images/favicon.ico $DEPLOYPATH/assets/images/favicon.ico
+    - /bin/cp -f assets/images/favicon-48.png $DEPLOYPATH/assets/images/favicon-48.png
+    - /bin/cp -f assets/images/favicon-96.png $DEPLOYPATH/assets/images/favicon-96.png
+    - /bin/cp -f assets/images/favicon-192.png $DEPLOYPATH/assets/images/favicon-192.png
+    - /bin/cp -f assets/images/favicon-512.png $DEPLOYPATH/assets/images/favicon-512.png
+    - /bin/chmod -R u+rwX,go+rX $DEPLOYPATH
