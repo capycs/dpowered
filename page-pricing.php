@@ -48,24 +48,6 @@ get_header(); ?>
             <p>Most small businesses do not need a bloated agency project. They need a fast, credible website that earns trust, takes enquiries, and can grow when the business grows.</p>
         </div>
 
-        <div class="pricing-market-strip reveal" aria-label="Pricing highlights">
-            <div>
-                <span>Starts lower</span>
-                <strong>&pound;399</strong>
-                <p>Close to budget UK starter offers, but with a proper multi-page scope.</p>
-            </div>
-            <div>
-                <span>Most useful</span>
-                <strong>&pound;599</strong>
-                <p>The sweet spot for local businesses that need more than a holding page.</p>
-            </div>
-            <div>
-                <span>Still fixed</span>
-                <strong>&pound;1,199</strong>
-                <p>For larger builds before you step into custom agency pricing.</p>
-            </div>
-        </div>
-
         <div class="pricing-grid">
 
             <div class="pricing-card pricing-card--launch reveal">

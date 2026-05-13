@@ -73,7 +73,7 @@
                         See what we do
                     </a>
                 </div>
-                <p class="hero-v2-note">&mdash; FREE 30-MIN STRATEGY CALL &middot; NO OBLIGATION</p>
+                <p class="hero-v2-note">&mdash; FREE STRATEGY CALL &middot; NO OBLIGATION &middot; NO HARD SELL</p>
             </div>
 
             <!-- Sub text — cols 5–10 -->
