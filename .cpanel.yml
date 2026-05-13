@@ -2,4 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=$HOME/dpowered.online/wp-content/themes/dpowered-theme/
-    - /bin/rsync -av --delete --exclude='.git' --exclude='.cpanel.yml' ./ $DEPLOYPATH
+    - /bin/rsync -av --exclude='.git' --exclude='.cpanel.yml' ./ $DEPLOYPATH
