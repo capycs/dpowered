@@ -174,6 +174,20 @@ $today       = current_time('Y-m-d');
                 <button type="button" class="wa-today" id="waToday">Today</button>
                 <button type="button" class="wa-showall" id="waShowAll">Show all</button>
                 <span class="wa-date-label" id="waDateLabel"></span>
+                <button type="button" class="wa-export" id="waExportBtn" title="Download the leads in view as a CSV">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Export
+                </button>
+            </div>
+
+            <!-- Live stats — reflect the date + team filter in view -->
+            <div class="wa-stats" id="waStats" aria-label="Lead summary">
+                <div class="wa-stat-card" data-tone="new"><span class="wa-stat-num" data-stat="tocall">0</span><span class="wa-stat-lbl">To call</span></div>
+                <div class="wa-stat-card" data-tone="interested"><span class="wa-stat-num" data-stat="interested">0</span><span class="wa-stat-lbl">Interested</span></div>
+                <div class="wa-stat-card" data-tone="quoted"><span class="wa-stat-num" data-stat="quoted">0</span><span class="wa-stat-lbl">Quoted</span></div>
+                <div class="wa-stat-card" data-tone="won"><span class="wa-stat-num" data-stat="won">0</span><span class="wa-stat-lbl">Won</span></div>
+                <div class="wa-stat-card" data-tone="callback"><span class="wa-stat-num" data-stat="callbacks">0</span><span class="wa-stat-lbl">Callbacks due</span></div>
+                <div class="wa-stat-card" data-tone="rate"><span class="wa-stat-num" data-stat="conversion">0%</span><span class="wa-stat-lbl">Win rate</span></div>
             </div>
 
             <div class="wa-tabs" role="tablist">
@@ -194,13 +208,13 @@ $today       = current_time('Y-m-d');
                     <thead>
                         <tr>
                             <th class="wa-col-toggle" aria-label="Expand"></th>
-                            <th>Business</th>
+                            <th><button type="button" class="wa-th-sort" data-sort="business">Business <span class="wa-sort-caret" aria-hidden="true"></span></button></th>
                             <th>Contact</th>
                             <th>Phone</th>
-                            <th>Status</th>
+                            <th><button type="button" class="wa-th-sort" data-sort="status">Status <span class="wa-sort-caret" aria-hidden="true"></span></button></th>
                             <th class="wa-col-center">Called</th>
                             <th class="wa-col-center">Offered</th>
-                            <th>Assigned</th>
+                            <th><button type="button" class="wa-th-sort" data-sort="assigned">Assigned <span class="wa-sort-caret" aria-hidden="true"></span></button></th>
                             <th class="wa-col-center" aria-label="Actions"></th>
                         </tr>
                     </thead>
@@ -224,7 +238,12 @@ $today       = current_time('Y-m-d');
                                 <span class="wa-callback-badge" hidden>📞 Callback</span>
                             </td>
                             <td data-label="Contact"><input type="text" class="wa-input" data-field="contact" value="<?php echo esc_attr($d['contact']); ?>"></td>
-                            <td data-label="Phone"><input type="tel" class="wa-input" data-field="phone" value="<?php echo esc_attr($d['phone']); ?>"></td>
+                            <td data-label="Phone" class="wa-phone-cell">
+                                <input type="tel" class="wa-input" data-field="phone" value="<?php echo esc_attr($d['phone']); ?>">
+                                <button type="button" class="wa-call-btn" aria-label="Call this number" title="Call">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                </button>
+                            </td>
                             <td data-label="Status">
                                 <select class="wa-status status-<?php echo esc_attr($d['status']); ?>" data-field="status">
                                     <?php foreach ($statuses as $key => $label): ?>

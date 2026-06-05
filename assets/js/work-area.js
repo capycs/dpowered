@@ -65,6 +65,51 @@
         el.classList.add('wa-saved');
     }
 
+    /* ── Toasts (replaces blocking alert) ─────────────────── */
+    var toastWrap = null;
+    function toast(msg, type) {
+        if (!toastWrap) {
+            toastWrap = document.createElement('div');
+            toastWrap.className = 'wa-toast-wrap';
+            document.body.appendChild(toastWrap);
+        }
+        var t = document.createElement('div');
+        t.className = 'wa-toast' + (type === 'error' ? ' wa-toast-error' : '');
+        t.textContent = msg;
+        toastWrap.appendChild(t);
+        setTimeout(function () {
+            t.classList.add('is-out');
+            setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 260);
+        }, type === 'error' ? 4200 : 2400);
+    }
+
+    /* ── Confirm dialog (promise, replaces window.confirm) ── */
+    function confirmDialog(messageHtml) {
+        return new Promise(function (resolve) {
+            var overlay = document.createElement('div');
+            overlay.className = 'wa-confirm-overlay';
+            overlay.innerHTML =
+                '<div class="wa-confirm-card" role="dialog" aria-modal="true">'
+              + '<p>' + messageHtml + '</p>'
+              + '<div class="wa-confirm-actions">'
+              + '<button type="button" class="btn btn-secondary wa-confirm-no">Cancel</button>'
+              + '<button type="button" class="wa-confirm-yes">Delete</button>'
+              + '</div></div>';
+            document.body.appendChild(overlay);
+            function close(val) {
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                document.removeEventListener('keydown', onKey);
+                resolve(val);
+            }
+            function onKey(e) { if (e.key === 'Escape') close(false); }
+            overlay.querySelector('.wa-confirm-yes').addEventListener('click', function () { close(true); });
+            overlay.querySelector('.wa-confirm-no').addEventListener('click', function () { close(false); });
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) close(false); });
+            document.addEventListener('keydown', onKey);
+            overlay.querySelector('.wa-confirm-yes').focus();
+        });
+    }
+
     /* ── Filtering ───────────────────────────────────────── */
     function rowMatches(row) {
         if (!allDates && activeDate) {
@@ -113,18 +158,58 @@
 
     function recomputeCounts() {
         var c = { all: 0, tocall: 0, won: 0 };
+        var s = { tocall: 0, interested: 0, quoted: 0, won: 0, callbacks: 0, total: 0 };
+        var today = todayStr();
         Array.prototype.forEach.call(body.querySelectorAll('.wa-row'), function (row) {
-            if (!allDates && activeDate && row.getAttribute('data-date') !== activeDate) return;
-            if (activePerson !== 'everyone' && row.getAttribute('data-assigned') !== String(activePerson)) return;
-            var status = row.getAttribute('data-status');
-            c.all++;
-            if (status === 'new') c.tocall++;
-            if (status === 'won') c.won++;
+            var personOk = activePerson === 'everyone' || row.getAttribute('data-assigned') === String(activePerson);
+            if (!personOk) return;
+            var st = row.getAttribute('data-status');
+            var cb = row.getAttribute('data-callback');
+            var outstanding = st !== 'won' && st !== 'dead';
+
+            // Callbacks due — scheduled for the viewed day, or all outstanding past/today in "show all"
+            if (cb && outstanding) {
+                if (allDates) { if (cb <= today) s.callbacks++; }
+                else if (cb === activeDate) s.callbacks++;
+            }
+
+            var onDate = allDates || !activeDate || row.getAttribute('data-date') === activeDate;
+            if (!onDate) return;
+            c.all++; s.total++;
+            if (st === 'new')        { c.tocall++; s.tocall++; }
+            if (st === 'interested') s.interested++;
+            if (st === 'quoted')     s.quoted++;
+            if (st === 'won')        { c.won++; s.won++; }
         });
         tabs.forEach(function (tab) {
             var span = tab.querySelector('span');
             var key = tab.getAttribute('data-filter');
             if (span && c[key] !== undefined) span.textContent = c[key];
+        });
+        updateStats(s);
+        markOverdue(today);
+    }
+
+    function updateStats(s) {
+        var statsEl = document.getElementById('waStats');
+        if (!statsEl) return;
+        var rate = s.total ? Math.round((s.won / s.total) * 100) : 0;
+        var map = { tocall: s.tocall, interested: s.interested, quoted: s.quoted, won: s.won, callbacks: s.callbacks, conversion: rate + '%' };
+        Object.keys(map).forEach(function (k) {
+            var el = statsEl.querySelector('[data-stat="' + k + '"]');
+            if (el) el.textContent = map[k];
+        });
+        var cbCard = statsEl.querySelector('[data-tone="callback"]');
+        if (cbCard) cbCard.classList.toggle('has-due', s.callbacks > 0);
+    }
+
+    // Flag rows whose callback date has passed and aren't won/dead.
+    function markOverdue(today) {
+        today = today || todayStr();
+        Array.prototype.forEach.call(body.querySelectorAll('.wa-row'), function (row) {
+            var cb = row.getAttribute('data-callback');
+            var st = row.getAttribute('data-status');
+            row.classList.toggle('is-overdue', !!(cb && cb < today && st !== 'won' && st !== 'dead'));
         });
     }
 
@@ -184,7 +269,7 @@
         post({ action: 'dpowered_update_lead', lead_id: id, field: field, value: value })
             .then(function (res) {
                 if (!res || !res.success) {
-                    alert((res && res.data && res.data.msg) || 'Could not save. Try again.');
+                    toast((res && res.data && res.data.msg) || 'Could not save — try again.', 'error');
                     return;
                 }
                 var lead = res.data.lead;
@@ -216,7 +301,7 @@
                     applyFilter();
                 }
             })
-            .catch(function () { alert('Network error — change not saved.'); });
+            .catch(function () { toast('Network error — change not saved.', 'error'); });
     }
 
     body.addEventListener('change', function (e) {
@@ -239,7 +324,7 @@
 
         post({ action: 'dpowered_update_lead', lead_id: id, field: 'private', value: newPrivate })
             .then(function (res) {
-                if (!res || !res.success) { alert('Could not update.'); return; }
+                if (!res || !res.success) { toast('Could not update.', 'error'); return; }
                 row.setAttribute('data-private', newPrivate);
                 row.classList.toggle('is-private-lead', !!newPrivate);
                 btn.classList.toggle('is-private', !!newPrivate);
@@ -254,15 +339,17 @@
         var row = btn.closest('.wa-row');
         var id = row.getAttribute('data-id');
         var name = (row.querySelector('.wa-business') || {}).value || 'this lead';
-        if (!window.confirm('Delete "' + name + '"? This moves it to the trash.')) return;
-
-        post({ action: 'dpowered_delete_lead', lead_id: id }).then(function (res) {
-            if (!res || !res.success) { alert('Could not delete.'); return; }
-            var detail = body.querySelector('.wa-detail[data-id="' + id + '"]');
-            row.remove();
-            if (detail) detail.remove();
-            recomputeCounts();
-            applyFilter();
+        confirmDialog('Delete <strong>' + escHtml(name) + '</strong>? It moves to the trash.').then(function (ok) {
+            if (!ok) return;
+            post({ action: 'dpowered_delete_lead', lead_id: id }).then(function (res) {
+                if (!res || !res.success) { toast('Could not delete.', 'error'); return; }
+                var detail = body.querySelector('.wa-detail[data-id="' + id + '"]');
+                row.remove();
+                if (detail) detail.remove();
+                recomputeCounts();
+                applyFilter();
+                toast('Lead deleted.');
+            });
         });
     });
 
@@ -373,7 +460,7 @@
         var value = el.tagName === 'SELECT' ? el.value : el.value;
         post({ action: 'dpowered_update_meeting', meeting_id: id, field: field, value: value })
             .then(function(res) {
-                if (!res || !res.success) { alert('Could not save.'); return; }
+                if (!res || !res.success) { toast('Could not save.', 'error'); return; }
                 flash(el.closest('td') || el.parentNode);
                 var mc = document.querySelector('.wa-meeting-card[data-id="' + id + '"]');
                 if (mc && field === 'status') mc.setAttribute('data-status', res.data.meeting.status);
@@ -397,7 +484,7 @@
         if (!id) return;
         post({ action: 'dpowered_update_meeting', meeting_id: id, field: 'status', value: 'done' })
             .then(function(res) {
-                if (!res || !res.success) { alert('Could not update.'); return; }
+                if (!res || !res.success) { toast('Could not update.', 'error'); return; }
                 window.location.reload();
             });
     });
@@ -410,10 +497,13 @@
         var id   = card && card.getAttribute('data-id');
         var name = card && card.querySelector('.wa-meeting-business') ? card.querySelector('.wa-meeting-business').value : 'this meeting';
         if (!id) return;
-        if (!window.confirm('Delete "' + name + '"?')) return;
-        post({ action: 'dpowered_delete_meeting', meeting_id: id }).then(function(res) {
-            if (!res || !res.success) { alert('Could not delete.'); return; }
-            card.remove();
+        confirmDialog('Delete the meeting with <strong>' + escHtml(name || 'this client') + '</strong>?').then(function (ok) {
+            if (!ok) return;
+            post({ action: 'dpowered_delete_meeting', meeting_id: id }).then(function(res) {
+                if (!res || !res.success) { toast('Could not delete.', 'error'); return; }
+                card.remove();
+                toast('Meeting deleted.');
+            });
         });
     });
 
@@ -606,11 +696,13 @@
 
     if (pageDeleteBtn) pageDeleteBtn.addEventListener('click', function () {
         if (!activePage) return;
-        if (!window.confirm('Delete "' + (activePage.title || 'Untitled') + '"? This cannot be undone.')) return;
-        post({ action: 'dpowered_delete_page', page_id: activePage.id }).then(function (res) {
-            if (!res || !res.success) { alert('Could not delete.'); return; }
+        var pageId = activePage.id;
+        confirmDialog('Delete <strong>' + escHtml(activePage.title || 'Untitled') + '</strong>? This cannot be undone.').then(function (ok) {
+        if (!ok) return;
+        post({ action: 'dpowered_delete_page', page_id: pageId }).then(function (res) {
+            if (!res || !res.success) { toast('Could not delete.', 'error'); return; }
             var idx = -1;
-            pagesData.forEach(function (p, i) { if (p.id === activePage.id) idx = i; });
+            pagesData.forEach(function (p, i) { if (p.id === pageId) idx = i; });
             if (idx >= 0) pagesData.splice(idx, 1);
             activePage = null;
             renderPageList();
@@ -620,6 +712,8 @@
                 if (pageEditorWrap) pageEditorWrap.hidden = true;
                 if (pageEmptyState) pageEmptyState.hidden = false;
             }
+            toast('Page deleted.');
+        });
         });
     });
 
@@ -672,7 +766,134 @@
         if (modal) modal.hidden = false;
     }, true); // capture so this fires before the existing listener
 
+    /* ── Sortable columns ────────────────────────────────── */
+    var STATUS_ORDER = { new: 0, called: 1, interested: 2, quoted: 3, won: 4, dead: 5 };
+    var sortKey = null, sortDir = 1;
+    function sortValue(row, key) {
+        if (key === 'business') return ((row.querySelector('.wa-business') || {}).value || '').toLowerCase();
+        if (key === 'status') { var st = row.getAttribute('data-status'); return STATUS_ORDER[st] !== undefined ? STATUS_ORDER[st] : 99; }
+        if (key === 'assigned') {
+            var sel = row.querySelector('select[data-field="assigned"]');
+            return sel ? ((sel.options[sel.selectedIndex] || {}).text || '').toLowerCase() : '';
+        }
+        return '';
+    }
+    function applySort() {
+        if (!sortKey) return;
+        var rows = Array.prototype.slice.call(body.querySelectorAll('.wa-row'));
+        rows.sort(function (a, b) {
+            var va = sortValue(a, sortKey), vb = sortValue(b, sortKey);
+            if (va < vb) return -sortDir;
+            if (va > vb) return sortDir;
+            return 0;
+        });
+        rows.forEach(function (row) {
+            var detail = body.querySelector('.wa-detail[data-id="' + row.getAttribute('data-id') + '"]');
+            body.appendChild(row);
+            if (detail) body.appendChild(detail);
+        });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll('.wa-th-sort'), function (th) {
+        th.addEventListener('click', function () {
+            var key = th.getAttribute('data-sort');
+            if (sortKey === key) sortDir = -sortDir; else { sortKey = key; sortDir = 1; }
+            document.querySelectorAll('.wa-th-sort').forEach(function (o) { o.classList.remove('sort-asc', 'sort-desc'); });
+            th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+            applySort();
+        });
+    });
+
+    /* ── CSV export (of the leads currently in view) ─────── */
+    var exportBtn = document.getElementById('waExportBtn');
+    function csvCell(v) { v = String(v == null ? '' : v); return '"' + v.replace(/"/g, '""') + '"'; }
+    function exportCsv() {
+        var headers = ['Business', 'Contact', 'Phone', 'Status', 'Called', 'Offered', 'Assigned', 'Sheet date', 'Callback', 'Email', 'Notes'];
+        var lines = [headers.map(csvCell).join(',')];
+        var count = 0;
+        Array.prototype.forEach.call(body.querySelectorAll('.wa-row'), function (row) {
+            if (row.style.display === 'none') return;
+            var id = row.getAttribute('data-id');
+            var detail = body.querySelector('.wa-detail[data-id="' + id + '"]');
+            function val(sel, ctx) { var el = (ctx || row).querySelector(sel); return el ? el.value : ''; }
+            function selText(sel, ctx) { var el = (ctx || row).querySelector(sel); return el ? ((el.options[el.selectedIndex] || {}).text || '') : ''; }
+            function chk(sel) { var el = row.querySelector(sel); return el && el.checked ? 'Yes' : 'No'; }
+            lines.push([
+                val('.wa-business'),
+                val('[data-field="contact"]'),
+                val('[data-field="phone"]'),
+                selText('select[data-field="status"]'),
+                chk('[data-field="called"]'),
+                chk('[data-field="offered"]'),
+                selText('select[data-field="assigned"]'),
+                row.getAttribute('data-date') || '',
+                row.getAttribute('data-callback') || '',
+                detail ? val('[data-field="email"]', detail) : '',
+                detail ? val('[data-field="notes"]', detail) : ''
+            ].map(csvCell).join(','));
+            count++;
+        });
+        if (!count) { toast('No leads in view to export.', 'error'); return; }
+        var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'dpowered-leads-' + (allDates ? 'all' : (activeDate || todayStr())) + '.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast(count + ' lead' + (count === 1 ? '' : 's') + ' exported.');
+    }
+    if (exportBtn) exportBtn.addEventListener('click', exportCsv);
+
+    /* ── Click-to-call ───────────────────────────────────── */
+    body.addEventListener('click', function (e) {
+        var btn = e.target.closest('.wa-call-btn');
+        if (!btn) return;
+        var cell = btn.closest('.wa-phone-cell');
+        var input = cell && cell.querySelector('input[data-field="phone"]');
+        var num = input ? input.value.trim() : '';
+        if (!num) { toast('No phone number for this lead.', 'error'); return; }
+        window.location.href = 'tel:' + num.replace(/[^\d+]/g, '');
+    });
+    // Dim the call button when the number is empty.
+    function refreshCallButtons() {
+        Array.prototype.forEach.call(body.querySelectorAll('.wa-phone-cell'), function (cell) {
+            var input = cell.querySelector('input[data-field="phone"]');
+            var btn = cell.querySelector('.wa-call-btn');
+            if (input && btn) btn.classList.toggle('is-empty', !input.value.trim());
+        });
+    }
+    body.addEventListener('input', function (e) {
+        if (e.target.matches('input[data-field="phone"]')) {
+            var btn = e.target.closest('.wa-phone-cell');
+            btn = btn && btn.querySelector('.wa-call-btn');
+            if (btn) btn.classList.toggle('is-empty', !e.target.value.trim());
+        }
+    });
+
+    /* ── Keyboard shortcuts ──────────────────────────────── */
+    function typingInField(el) {
+        if (!el) return false;
+        var tag = el.tagName;
+        return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
+    }
+    document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        if (typingInField(e.target)) return;
+        if (leadsView && leadsView.hidden) return;       // only on the leads view
+        if (modal && !modal.hidden) return;               // not while the add modal is open
+        switch (e.key) {
+            case 'n': case 'N': e.preventDefault(); openModal(); break;
+            case '/':           e.preventDefault(); if (searchInput) searchInput.focus(); break;
+            case 'ArrowLeft':   setDate(shiftDate(activeDate, -1)); break;
+            case 'ArrowRight':  setDate(shiftDate(activeDate, 1)); break;
+            case 't': case 'T': setDate(todayStr()); break;
+        }
+    });
+
     /* ── Init ────────────────────────────────────────────── */
     var hashMatch = (window.location.hash || '').match(/d=(\d{4}-\d{2}-\d{2})/);
     setDate(hashMatch ? hashMatch[1] : (activeDate || todayStr()));
+    refreshCallButtons();
 })();
