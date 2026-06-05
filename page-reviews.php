@@ -3,10 +3,6 @@
 get_header(); ?>
 
 <section class="inner-hero" id="main-content">
-    <div class="hero-bg">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
-    </div>
     <div class="container inner-hero-content">
         <span class="section-tag">Client Stories</span>
         <h1>What Our Clients <span class="gradient-text">Say About Us</span></h1>
@@ -70,7 +66,7 @@ get_header(); ?>
 </section>
 
 <!-- LEAVE A REVIEW -->
-<section class="section review-submit-section">
+<section class="section review-submit-section" style="background:var(--bg-alt)">
     <div class="container">
         <div class="review-submit-inner">
 
@@ -91,6 +87,12 @@ get_header(); ?>
             <?php else: ?>
             <form class="review-form reveal" method="post" action="">
                 <?php wp_nonce_field('dpowered_submit_review', 'review_nonce'); ?>
+                <input type="hidden" name="review_time" value="<?php echo esc_attr(time()); ?>">
+                <?php /* Honeypot — hidden from humans, bots autofill it */ ?>
+                <div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+                    <label for="review_website">Website (leave blank)</label>
+                    <input type="text" id="review_website" name="review_website" value="" autocomplete="off" tabindex="-1">
+                </div>
 
                 <?php if (isset($_GET['review_error'])): ?>
                 <div class="form-notice form-notice--error">
@@ -145,7 +147,6 @@ get_header(); ?>
 <section class="section cta-section">
     <div class="container">
         <div class="cta-inner reveal">
-            <div class="cta-orb"></div>
             <span class="section-tag">Ready To Start?</span>
             <h2>Let's Build Something<br><span class="gradient-text">Amazing Together</span></h2>
             <p>Join our growing list of happy clients. Get in touch for a free, no-obligation quote.</p>

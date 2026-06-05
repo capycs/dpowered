@@ -9,7 +9,6 @@
     global $post;
     $site_name = get_bloginfo('name') ?: 'DPowered.online';
     $sep       = ' — ';
-
     if (is_front_page()) {
         $meta_title = $site_name . $sep . 'Web Design Agency UK';
         $meta_desc  = 'DPowered.online builds modern, affordable websites for small businesses across the UK. Professional web design with a 7–14 day turnaround. Get a free quote today.';
@@ -26,19 +25,16 @@
         $meta_title = 'Get a Free Quote' . $sep . $site_name;
         $meta_desc  = 'Contact DPowered.online for a free, no-obligation web design quote. We typically respond within 24 hours.';
     } elseif (is_singular() && !empty($post)) {
-        $meta_title  = get_the_title($post) . $sep . $site_name;
-        $meta_desc   = has_excerpt($post) ? strip_tags(get_the_excerpt($post)) : 'DPowered.online — professional web design for small businesses.';
+        $meta_title = get_the_title($post) . $sep . $site_name;
+        $meta_desc  = has_excerpt($post) ? strip_tags(get_the_excerpt($post)) : 'DPowered.online — professional web design for small businesses.';
     } else {
         $raw_title  = wp_title('', false);
         $meta_title = ($raw_title ? trim($raw_title) . $sep : '') . $site_name;
         $meta_desc  = 'DPowered.online — modern, affordable web design for small businesses across the UK.';
     }
-
     $icon_base = get_template_directory_uri() . '/assets/images';
-    $og_image = $icon_base . '/favicon-512.png';
-    if (!empty($post) && has_post_thumbnail($post)) {
-        $og_image = get_the_post_thumbnail_url($post, 'large');
-    }
+    $og_image  = $icon_base . '/favicon-512.png';
+    if (!empty($post) && has_post_thumbnail($post)) $og_image = get_the_post_thumbnail_url($post, 'large');
     $canonical = is_singular() && !empty($post) ? get_permalink($post) : home_url(add_query_arg([]));
     ?>
     <title><?php echo esc_html($meta_title); ?></title>
@@ -49,31 +45,29 @@
     <meta property="og:type"        content="website">
     <meta property="og:url"         content="<?php echo esc_url($canonical); ?>">
     <meta property="og:site_name"   content="<?php echo esc_attr($site_name); ?>">
-    <meta property="og:image" content="<?php echo esc_url($og_image); ?>">
+    <meta property="og:image"       content="<?php echo esc_url($og_image); ?>">
     <meta name="twitter:card"        content="summary_large_image">
     <meta name="twitter:title"       content="<?php echo esc_attr($meta_title); ?>">
     <meta name="twitter:description" content="<?php echo esc_attr($meta_desc); ?>">
     <meta name="twitter:image"       content="<?php echo esc_url($og_image); ?>">
-    <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon-48.png" type="image/png" sizes="48x48">
-    <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon-96.png" type="image/png" sizes="96x96">
+    <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon-48.png"  type="image/png" sizes="48x48">
+    <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon-96.png"  type="image/png" sizes="96x96">
     <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon-192.png" type="image/png" sizes="192x192">
     <link rel="shortcut icon" href="<?php echo esc_url($icon_base); ?>/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="<?php echo esc_url($icon_base); ?>/favicon-192.png">
+    <link rel="apple-touch-icon"    href="<?php echo esc_url($icon_base); ?>/favicon-192.png">
     <link rel="icon" href="<?php echo esc_url($icon_base); ?>/favicon.svg" type="image/svg+xml">
-    <meta name="theme-color" content="#060612">
+    <meta name="theme-color" content="#F8F7F4">
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
 
-<div id="celestial-bg" aria-hidden="true"></div>
 <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
 <header class="site-header" id="site-header">
     <nav class="nav-container" aria-label="Main">
         <a href="<?php echo esc_url(home_url('/')); ?>" class="nav-logo" aria-label="DPowered.online — Home">
-            <svg width="36" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <svg width="32" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                 <defs>
                     <linearGradient id="dp-grad-h" x1="0" y1="0" x2="0.7" y2="1">
                         <stop offset="0%"   stop-color="#1A4DFF"/>
@@ -81,35 +75,50 @@
                     </linearGradient>
                 </defs>
                 <path fill="url(#dp-grad-h)" fill-rule="evenodd" d="M 16 16 L 100 16 A 84 84 0 0 1 100 184 L 16 184 Z"/>
-                <g fill="#060612" fill-rule="evenodd">
+                <g fill="#F8F7F4" fill-rule="evenodd">
                     <path d="M 56 50 L 100 50 A 36 36 0 0 1 100 122 L 80 122 L 80 210 L 56 210 Z M 80 72 L 100 72 A 14 14 0 0 1 100 100 L 80 100 Z"/>
                     <rect x="0" y="142" width="200" height="6"/>
                 </g>
             </svg>
             <span>DPowered<span class="logo-dot">.</span>online</span>
         </a>
+
         <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
             <span></span><span></span><span></span>
         </button>
+
+        <?php
+        $nav_items = [
+            '/'          => 'Home',
+            '/services'  => 'Services',
+            '/portfolio' => 'Portfolio',
+            '/reviews'   => 'Reviews',
+            '/about'     => 'About',
+            '/pricing'   => 'Pricing',
+        ];
+        ?>
         <ul class="nav-links" id="navLinks">
             <li class="mobile-menu-header" aria-hidden="true">
-                <span>Menu</span>
-                <small>Navigate DPowered.online</small>
+                <div class="mobile-menu-header-text">
+                    <span>Menu</span>
+                    <small>Navigate DPowered.online</small>
+                </div>
+                <button class="nav-close" id="navClose" aria-label="Close menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
             </li>
-            <li><a href="<?php echo esc_url(home_url('/')); ?>"><span class="nav-text">Home</span><span class="nav-desc">Start here</span></a></li>
-            <li><a href="<?php echo esc_url(home_url('/services')); ?>"><span class="nav-text">Services</span><span class="nav-desc">What we build</span></a></li>
-            <li><a href="<?php echo esc_url(home_url('/portfolio')); ?>"><span class="nav-text">Portfolio</span><span class="nav-desc">Recent work</span></a></li>
-            <li><a href="<?php echo esc_url(home_url('/reviews')); ?>"><span class="nav-text">Reviews</span><span class="nav-desc">Client proof</span></a></li>
-            <li><a href="<?php echo esc_url(home_url('/about')); ?>"><span class="nav-text">About</span><span class="nav-desc">The studio</span></a></li>
-            <li><a href="<?php echo esc_url(home_url('/pricing')); ?>"><span class="nav-text">Pricing</span><span class="nav-desc">Packages &amp; plans</span></a></li>
-            <li><a href="<?php echo esc_url(home_url('/contact')); ?>" class="nav-cta"><span class="nav-text">Get a Quote</span><span class="nav-desc">Free project call</span></a></li>
+            <?php foreach ($nav_items as $path => $label):
+                $href    = home_url($path);
+                $current = ($path === '/')
+                    ? is_front_page()
+                    : is_page(ltrim($path, '/'));
+                $active  = $current ? ' class="active" aria-current="page"' : '';
+            ?>
+            <li><a href="<?php echo esc_url($href); ?>"<?php echo $active; ?>><?php echo esc_html($label); ?></a></li>
+            <?php endforeach; ?>
+            <li><a href="<?php echo esc_url(home_url('/contact')); ?>" class="nav-cta<?php echo is_page('contact') ? ' active' : ''; ?>"<?php echo is_page('contact') ? ' aria-current="page"' : ''; ?>>Get a Quote</a></li>
         </ul>
     </nav>
 </header>
 
 <div id="navOverlay" class="nav-overlay" aria-hidden="true"></div>
-
-<a href="<?php echo esc_url(home_url('/contact')); ?>" class="sticky-cta" id="stickyCta" aria-label="Get a free quote">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    <span>Get a Quote</span>
-</a>

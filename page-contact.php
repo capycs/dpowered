@@ -3,10 +3,6 @@
 get_header(); ?>
 
 <section class="inner-hero" id="main-content">
-    <div class="hero-bg">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
-    </div>
     <div class="container inner-hero-content">
         <span class="section-tag">Let's Talk</span>
         <h1>Get a <span class="gradient-text">Free Quote</span></h1>
@@ -115,6 +111,12 @@ get_header(); ?>
                 <form class="contact-form" method="post" action="">
                     <?php wp_nonce_field('dpowered_contact', 'contact_nonce'); ?>
                     <input type="hidden" name="dpowered_contact_submit" value="1">
+                    <input type="hidden" name="contact_time" value="<?php echo esc_attr(time()); ?>">
+                    <?php /* Honeypot — hidden from real users, bots fill it in */ ?>
+                    <div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+                        <label for="contact_website">Website (leave blank)</label>
+                        <input type="text" id="contact_website" name="contact_website" value="" autocomplete="off" tabindex="-1">
+                    </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="contact-name">Your Name <span aria-hidden="true">*</span></label>
@@ -136,7 +138,7 @@ get_header(); ?>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>What are you interested in? <span style="font-weight:400;color:var(--text-muted);font-size:0.82rem">(select all that apply)</span></label>
+                        <label>What are you interested in? <span style="font-weight:400;color:var(--ink-2);font-size:0.82rem">(select all that apply)</span></label>
                         <div class="pkg-picker" role="group" aria-label="Select packages">
                             <input type="hidden" id="contact-service" name="contact_service" value="">
 
@@ -185,13 +187,13 @@ get_header(); ?>
                                 <button type="button" class="pkg-card" data-value="bundle">
                                     <span class="pkg-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                                     <span class="pkg-name">The Bundle</span>
-                                    <span class="pkg-price">&pound;399 <span style="color:var(--text-muted);font-size:0.85rem;font-weight:500">+</span> &pound;49<span class="pkg-per">/mo</span></span>
+                                    <span class="pkg-price">&pound;399 <span style="color:var(--ink-2);font-size:0.85rem;font-weight:500">+</span> &pound;49<span class="pkg-per">/mo</span></span>
                                     <span class="pkg-detail">Build + hosting + support</span>
                                 </button>
                                 <button type="button" class="pkg-card" data-value="not-sure">
                                     <span class="pkg-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                                     <span class="pkg-name">Not Sure</span>
-                                    <span class="pkg-price" style="font-size:0.9rem;color:var(--text-secondary)">Help me decide</span>
+                                    <span class="pkg-price" style="font-size:0.9rem;color:var(--ink-2)">Help me decide</span>
                                     <span class="pkg-detail">We'll find the best fit</span>
                                 </button>
                             </div>

@@ -3,10 +3,6 @@
 get_header(); ?>
 
 <section class="inner-hero" id="main-content">
-    <div class="hero-bg">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
-    </div>
     <div class="container inner-hero-content">
         <span class="section-tag">Our Story</span>
         <h1>About <span class="gradient-text">DPowered.online</span></h1>
@@ -87,7 +83,6 @@ get_header(); ?>
 <section class="section cta-section">
     <div class="container">
         <div class="cta-inner reveal">
-            <div class="cta-orb"></div>
             <span class="section-tag">Ready To Start?</span>
             <h2>Let's Work Together</h2>
             <p>Ready to power up your online presence? We'd love to hear about your project.</p>

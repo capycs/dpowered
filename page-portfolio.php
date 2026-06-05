@@ -3,13 +3,9 @@
 get_header(); ?>
 
 <section class="inner-hero" id="main-content">
-    <div class="hero-bg">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
-    </div>
     <div class="container inner-hero-content">
         <span class="section-tag">Our Work</span>
-        <h1>Sites We've <span class="gradient-text">Built & Launched</span></h1>
+        <h1>Sites We've <span class="gradient-text">Built &amp; Launched</span></h1>
         <p>A look at some of the businesses we've helped get online and grow.</p>
     </div>
 </section>
@@ -121,7 +117,6 @@ get_header(); ?>
 <section class="section cta-section">
     <div class="container">
         <div class="cta-inner reveal">
-            <div class="cta-orb"></div>
             <span class="section-tag">Ready To Start?</span>
             <h2>Want a Site Like These?<br><span class="gradient-text">Let's Talk</span></h2>
             <p>Get in touch today for a free, no-obligation quote and we'll get started.</p>

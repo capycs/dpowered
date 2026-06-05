@@ -3,14 +3,10 @@
 get_header(); ?>
 
 <section class="inner-hero" id="main-content">
-    <div class="hero-bg">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
-    </div>
     <div class="container inner-hero-content">
         <span class="section-tag">Transparent Pricing</span>
         <h1>Simple Prices,<br><span class="gradient-text">No Surprises</span></h1>
-        <p>Fixed website builds, optional care plans, and clear scope before you pay - no vague agency quote games.</p>
+        <p>Fixed website builds, optional care plans, and clear scope before you pay — no vague agency quote games.</p>
     </div>
 </section>
 
@@ -94,7 +90,7 @@ get_header(); ?>
                     <span>Analytics</span>
                     <span>Blog ready</span>
                 </div>
-                <p class="pricing-desc">For businesses ready to grow - more pages, better SEO, and a site built to bring in customers.</p>
+                <p class="pricing-desc">For businesses ready to grow — more pages, better SEO, and a site built to bring in customers.</p>
                 <ul class="pricing-features">
                     <li><?php echo dpowered_check_icon(); ?>Up to 8 pages</li>
                     <li><?php echo dpowered_check_icon(); ?>Everything in Launch</li>
@@ -123,7 +119,7 @@ get_header(); ?>
                     <span>Training</span>
                     <span>Priority support</span>
                 </div>
-                <p class="pricing-desc">For businesses that need something more - a larger, feature-rich website built to handle serious enquiries.</p>
+                <p class="pricing-desc">For businesses that need something more — a larger, feature-rich website built to handle serious enquiries.</p>
                 <ul class="pricing-features">
                     <li><?php echo dpowered_check_icon(); ?>Expanded page plan</li>
                     <li><?php echo dpowered_check_icon(); ?>Everything in Growth</li>
@@ -212,7 +208,6 @@ get_header(); ?>
 <section class="section bundle-section">
     <div class="container">
         <div class="bundle-card pricing-bundle-card reveal">
-            <div class="bundle-glow"></div>
             <div class="bundle-left">
                 <span class="section-tag" style="margin-bottom:16px">Low-Stress Route</span>
                 <h2>Website + Care<br><span class="gradient-text">Without the Big Agency Bill</span></h2>
@@ -239,14 +234,14 @@ get_header(); ?>
                         </div>
                     </div>
                     <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-full" style="margin-top:24px">Ask About the Bundle</a>
-                    <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;margin-top:12px">No hidden fees. Build scope confirmed before payment.</p>
+                    <p style="font-size:0.78rem;color:var(--ink-2);text-align:center;margin-top:12px">No hidden fees. Build scope confirmed before payment.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="section" style="background:var(--bg-secondary)">
+<section class="section" style="background:var(--bg-alt)">
     <div class="container">
         <div class="transparency-grid">
 
@@ -255,7 +250,7 @@ get_header(); ?>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     What Is Quoted Separately
                 </div>
-                <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:18px">To keep the public package prices fair, these are scoped separately when needed:</p>
+                <p style="font-size:0.88rem;color:var(--ink-2);margin-bottom:18px">To keep the public package prices fair, these are scoped separately when needed:</p>
                 <ul class="not-included-list">
                     <li><?php echo dpowered_x_icon(); ?>Logo or full branding work</li>
                     <li><?php echo dpowered_x_icon(); ?>Large copywriting projects</li>
@@ -263,7 +258,7 @@ get_header(); ?>
                     <li><?php echo dpowered_x_icon(); ?>Complex directories or membership areas</li>
                     <li><?php echo dpowered_x_icon(); ?>Unlimited edits after approval</li>
                 </ul>
-                <p class="plan-note" style="margin-top:16px">Need one of these? We can still help - we just quote it honestly instead of hiding it inside a package.</p>
+                <p class="plan-note" style="margin-top:16px">Need one of these? We can still help — we just quote it honestly instead of hiding it inside a package.</p>
             </div>
 
             <div class="peace-card reveal">
@@ -307,10 +302,9 @@ get_header(); ?>
 <section class="section cta-section">
     <div class="container">
         <div class="cta-inner reveal">
-            <div class="cta-orb"></div>
             <span class="section-tag">Ready To Get Started?</span>
             <h2>Not Sure Which Plan<br><span class="gradient-text">Is Right For You?</span></h2>
-            <p>Drop us a message and we will recommend the best option for your budget and goals - no pressure, no hard sell.</p>
+            <p>Drop us a message and we will recommend the best option for your budget and goals — no pressure, no hard sell.</p>
             <div class="cta-actions">
                 <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg">Talk To Us</a>
                 <a href="<?php echo esc_url(home_url('/services')); ?>" class="btn btn-outline btn-lg">View Services</a>

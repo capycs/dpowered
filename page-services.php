@@ -3,10 +3,6 @@
 get_header(); ?>
 
 <section class="inner-hero" id="main-content">
-    <div class="hero-bg">
-        <div class="hero-orb hero-orb-1"></div>
-        <div class="hero-orb hero-orb-2"></div>
-    </div>
     <div class="container inner-hero-content">
         <span class="section-tag">What We Offer</span>
         <h1>Our <span class="gradient-text">Services</span></h1>
@@ -126,6 +122,21 @@ get_header(); ?>
                 </ul>
                 <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary">Get in Touch</a>
             </div>
+            <div class="service-detail-card service-cta-card reveal">
+                <div class="service-icon large">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h2>Not Sure What You Need?</h2>
+                <span class="service-price-hint">Free Consultation</span>
+                <p>Every business is different. Tell us where you're at — existing site, starting from scratch, or just want advice — and we'll tell you exactly what makes sense for your situation. No pitch, no pressure.</p>
+                <ul class="service-list">
+                    <li>Honest recommendation, not a sales script</li>
+                    <li>We'll tell you if you don't need us</li>
+                    <li>Usually respond within 24 hours</li>
+                    <li>Free, no-obligation quote</li>
+                </ul>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary">Talk to Us</a>
+            </div>
         </div>
     </div>
 </section>
@@ -154,7 +165,6 @@ get_header(); ?>
 <section class="section cta-section">
     <div class="container">
         <div class="cta-inner reveal">
-            <div class="cta-orb"></div>
             <span class="section-tag">Ready To Start?</span>
             <h2>Not Sure What You Need?</h2>
             <p>Get in touch and we'll figure out the best solution for your business together.</p>
