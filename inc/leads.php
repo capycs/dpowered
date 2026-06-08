@@ -752,8 +752,8 @@ function dpowered_ajax_cursor_push() {
     check_ajax_referer('dpowered_leads', 'nonce');
     if (!dpowered_user_can_leads()) wp_send_json_error(null, 403);
     $uid = get_current_user_id();
-    $x   = max(0, min(100, (float) sanitize_text_field($_POST['x'] ?? 50)));
-    $y   = max(0, min(100, (float) sanitize_text_field($_POST['y'] ?? 50)));
+    $x   = max(0,     min(1,     (float) sanitize_text_field($_POST['x'] ?? 0.5))); // fraction of content width
+    $y   = max(-2000, min(60000, (float) sanitize_text_field($_POST['y'] ?? 0)));   // px down from content top
     set_transient('dpowered_cursor_' . $uid, [
         'x'    => $x,
         'y'    => $y,
@@ -962,7 +962,7 @@ function dpowered_render_lead_row($d, $statuses = null, $sources = null, $team =
 
     $edited = '';
     if ($d['edited_by_name'] && $d['edited_human']) {
-        $edited = ' · <span class="wa-edited">'
+        $edited = '<span class="wa-edited">'
                 . dpowered_avatar_html($d['edited_by'], 16, 'wa-edited-avatar')
                 . 'edited by ' . esc_html($d['edited_by_name']) . ' · ' . esc_html($d['edited_human'])
                 . '</span>';
@@ -981,7 +981,8 @@ function dpowered_render_lead_row($d, $statuses = null, $sources = null, $team =
         <td class="wa-col-toggle"><button type="button" class="wa-expand<?php echo $d['notes'] ? ' has-notes' : ''; ?>" aria-label="Toggle details">&rsaquo;</button></td>
         <td data-label="Business">
             <input type="text" class="wa-input wa-business" data-field="business" value="<?php echo esc_attr($d['business']); ?>">
-            <span class="wa-meta">Added <?php echo esc_html($d['created']); ?> · <?php echo esc_html($sources[$d['source']] ?? $d['source']); ?><?php echo $edited; ?></span>
+            <span class="wa-meta">Added <?php echo esc_html($d['created']); ?> · <?php echo esc_html($sources[$d['source']] ?? $d['source']); ?></span>
+            <?php echo $edited; ?>
             <span class="wa-callback-badge" hidden>📞 Callback</span>
         </td>
         <td data-label="Contact"><input type="text" class="wa-input" data-field="contact" value="<?php echo esc_attr($d['contact']); ?>"></td>

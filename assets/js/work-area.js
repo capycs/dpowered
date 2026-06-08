@@ -1150,42 +1150,58 @@
         ];
         function cursorColor(uid) { return CURSOR_COLORS[uid % CURSOR_COLORS.length]; }
 
-        var activeCursors = {}; // uid → { el, tx, ty, cx, cy, raf }
-        var lastMX = null, lastMY = null, pushThrottle = null;
-
-        function sendPos(x, y) {
-            post({ action: 'dpowered_cursor_push', x: x, y: y });
+        // Anchor cursors to the work-area content box so a position maps to the
+        // SAME content on every screen (independent of window size + scroll),
+        // not a meaningless fraction of each person's viewport.
+        function anchor() {
+            var el = document.querySelector('.work-area-section .container')
+                  || document.querySelector('.wa-workspace-layout')
+                  || document.body;
+            var r = el.getBoundingClientRect();
+            return { left: r.left + window.scrollX, top: r.top + window.scrollY, width: r.width || 1, height: r.height || 1 };
         }
 
+        var activeCursors = {}; // uid → { el, tx, ty, cx, cy, raf }
+        var sendX = null, sendY = null, lastSentX = null, lastSentY = null;
+
+        // Pointer tracked as content-relative coords: x = fraction of content
+        // width, y = pixels down from content top (document space).
         document.addEventListener('mousemove', function (e) {
-            var x = (e.clientX / window.innerWidth)  * 100;
-            var y = (e.clientY / window.innerHeight) * 100;
-            lastMX = x; lastMY = y;
-            clearTimeout(pushThrottle);
-            pushThrottle = setTimeout(function () { sendPos(x, y); }, 90);
+            var a = anchor();
+            var rx = (e.pageX - a.left) / a.width;
+            sendX = rx < 0 ? 0 : rx > 1 ? 1 : rx;
+            sendY = e.pageY - a.top;
         });
 
-        // Heartbeat — keeps presence alive without movement
+        function send() {
+            post({ action: 'dpowered_cursor_push', x: sendX, y: sendY });
+            lastSentX = sendX; lastSentY = sendY;
+        }
+        // Steady, bounded send — only when the pointer actually moved.
         setInterval(function () {
-            if (!document.hidden && lastMX !== null) sendPos(lastMX, lastMY);
-        }, 7000);
+            if (document.hidden || sendX === null) return;
+            if (sendX === lastSentX && sendY === lastSentY) return;
+            send();
+        }, 80);
+        // Heartbeat keeps presence alive while the pointer is still.
+        setInterval(function () { if (!document.hidden && sendX !== null) send(); }, 7000);
 
         function getOrCreate(uid, name) {
             if (activeCursors[uid]) return activeCursors[uid];
-            var color = cursorColor(uid);
             var el = document.createElement('div');
             el.className = 'wa-remote-cursor';
-            el.style.setProperty('--wc', color);
+            el.style.setProperty('--wc', cursorColor(uid));
             el.innerHTML = '<span class="wa-rc-label">' + escHtml(name) + '</span>'
                          + '<span class="wa-rc-dot"></span>';
             document.body.appendChild(el);
-            var obj = { el: el, tx: 50, ty: 50, cx: 50, cy: 50, raf: null };
+            var obj = { el: el, tx: 0, ty: 0, cx: null, cy: null, raf: null };
             activeCursors[uid] = obj;
             (function animLoop() {
-                obj.cx += (obj.tx - obj.cx) * 0.18;
-                obj.cy += (obj.ty - obj.cy) * 0.18;
-                el.style.left = obj.cx + 'vw';
-                el.style.top  = obj.cy + 'vh';
+                if (obj.cx === null) { obj.cx = obj.tx; obj.cy = obj.ty; } // first frame: snap, don't slide from 0,0
+                obj.cx += (obj.tx - obj.cx) * 0.3;   // snappier follow
+                obj.cy += (obj.ty - obj.cy) * 0.3;
+                el.style.left = obj.cx + 'px';
+                el.style.top  = obj.cy + 'px';
                 obj.raf = requestAnimationFrame(animLoop);
             })();
             return obj;
@@ -1231,14 +1247,17 @@
             post({ action: 'dpowered_cursor_poll' }).then(function (res) {
                 if (!res || !res.success) return;
                 var list = res.data.cursors || [];
+                var a = anchor();
                 var seen = {};
                 list.forEach(function (c) {
                     seen[c.uid] = true;
                     var obj = getOrCreate(c.uid, c.name);
                     var lbl = obj.el.querySelector('.wa-rc-label');
                     if (lbl && lbl.textContent !== c.name) lbl.textContent = c.name;
-                    obj.tx = c.x;
-                    obj.ty = c.y;
+                    // Map content-relative coords back into THIS screen's document px.
+                    var cy = c.y < 0 ? 0 : c.y > a.height ? a.height : c.y; // clamp so it can't add phantom scroll
+                    obj.tx = a.left + c.x * a.width;
+                    obj.ty = a.top + cy;
                 });
                 Object.keys(activeCursors).forEach(function (uid) {
                     if (!seen[uid]) removeCursor(uid);
@@ -1247,7 +1266,7 @@
             });
         }
 
-        setInterval(poll, 300);
+        setInterval(poll, 150);   // faster refresh
     })();
 
     /* ── Init ────────────────────────────────────────────── */

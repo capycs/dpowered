@@ -1248,13 +1248,15 @@ select.wa-input { cursor: pointer; }
 
 /* ── Remote cursor presence ─────────────────────────────────── */
 .wa-remote-cursor {
-    position: fixed;
+    position: absolute;            /* anchored in document space so it tracks the same content + scrolls with the page */
     pointer-events: none;
     z-index: 9999;
+    top: 0;
+    left: 0;
     width: 14px;
     height: 14px;
     transform: translate(-50%, -50%);
-    /* left/top set by JS */
+    /* left/top set by JS in document pixels */
 }
 .wa-rc-dot {
     position: absolute;
@@ -1472,13 +1474,18 @@ select.wa-input { cursor: pointer; }
 .wa-assigned-cell .wa-input { min-width: 80px; }
 
 /* ── "edited by" meta line ──────────────────────────────────── */
+/* Own line, wraps freely — must never force the Business column wider
+   (that was pushing the whole table + people panel off-screen). */
 .wa-edited {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+    display: block;
+    margin-top: 2px;
+    font-size: 0.72rem;
+    line-height: 1.4;
     color: var(--ink-2);
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
-.wa-edited-avatar { display: inline-flex; }
+.wa-edited-avatar { vertical-align: -3px; margin-right: 3px; }
 
 /* ── Remote-update row flash ────────────────────────────────── */
 .wa-row-remote td { animation: waRemoteFlash 1.8s var(--ease-out); }
