@@ -18,7 +18,7 @@ function dpowered_lead_statuses() {
         'interested' => 'Interested',
         'quoted'     => 'Quoted',
         'won'        => 'Won',
-        'dead'       => 'Dead',
+        'dead'       => 'Not interested',
     ];
 }
 
@@ -980,12 +980,12 @@ function dpowered_render_lead_row($d, $statuses = null, $sources = null, $team =
         data-private="<?php echo $d['private'] ? '1' : '0'; ?>">
         <td class="wa-col-toggle"><button type="button" class="wa-expand<?php echo $d['notes'] ? ' has-notes' : ''; ?>" aria-label="Toggle details">&rsaquo;</button></td>
         <td data-label="Business">
-            <input type="text" class="wa-input wa-business" data-field="business" value="<?php echo esc_attr($d['business']); ?>">
+            <input type="text" class="wa-input wa-business" data-field="business" value="<?php echo esc_attr($d['business']); ?>" placeholder="Business name">
+            <input type="text" class="wa-input wa-contact-inline" data-field="contact" value="<?php echo esc_attr($d['contact']); ?>" placeholder="+ contact name">
             <span class="wa-meta">Added <?php echo esc_html($d['created']); ?> · <?php echo esc_html($sources[$d['source']] ?? $d['source']); ?></span>
             <?php echo $edited; ?>
             <span class="wa-callback-badge" hidden>📞 Callback</span>
         </td>
-        <td data-label="Contact"><input type="text" class="wa-input" data-field="contact" value="<?php echo esc_attr($d['contact']); ?>"></td>
         <td data-label="Phone" class="wa-phone-cell">
             <input type="tel" class="wa-input" data-field="phone" value="<?php echo esc_attr($d['phone']); ?>">
             <button type="button" class="wa-call-btn" aria-label="Call this number" title="Call">
@@ -1022,7 +1022,7 @@ function dpowered_render_lead_row($d, $statuses = null, $sources = null, $team =
         </td>
     </tr>
     <tr class="wa-detail" data-id="<?php echo (int) $d['id']; ?>" hidden>
-        <td colspan="9">
+        <td colspan="8">
             <div class="wa-detail-grid">
                 <label>Email
                     <input type="email" class="wa-input" data-field="email" value="<?php echo esc_attr($d['email']); ?>">

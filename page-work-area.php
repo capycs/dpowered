@@ -219,7 +219,6 @@ $today       = current_time('Y-m-d');
                         <tr>
                             <th class="wa-col-toggle" aria-label="Expand"></th>
                             <th><button type="button" class="wa-th-sort" data-sort="business">Business <span class="wa-sort-caret" aria-hidden="true"></span></button></th>
-                            <th>Contact</th>
                             <th>Phone</th>
                             <th><button type="button" class="wa-th-sort" data-sort="status">Status <span class="wa-sort-caret" aria-hidden="true"></span></button></th>
                             <th class="wa-col-center">Called</th>

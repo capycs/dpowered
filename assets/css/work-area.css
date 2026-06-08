@@ -206,13 +206,13 @@
 }
 .wa-table {
     width: 100%;
-    min-width: 820px;
+    min-width: 680px;
     border-collapse: collapse;
     font-size: 0.9rem;
 }
 .wa-table thead th {
     text-align: left;
-    padding: 14px 12px;
+    padding: 12px 10px;
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -222,7 +222,7 @@
     white-space: nowrap;
 }
 .wa-table tbody td {
-    padding: 9px 12px;
+    padding: 8px 10px;
     border-bottom: 1px solid var(--bg-alt);
     vertical-align: middle;
 }
@@ -260,11 +260,16 @@
 }
 select.wa-input { cursor: pointer; }
 .wa-business { font-weight: 600; }
+/* Contact merged under the business name (saves a whole column) */
+.wa-contact-inline { font-size: 0.82rem; color: var(--ink-2); margin-top: 1px; font-weight: 400; }
+.wa-contact-inline::placeholder { color: var(--border); }
 
 .wa-check { width: 18px; height: 18px; accent-color: var(--blue); cursor: pointer; }
 
 /* status pill select */
 .wa-status {
+    width: 100%;
+    max-width: 138px;
     padding: 6px 10px;
     border-radius: 999px;
     border: 1px solid var(--border);
@@ -1149,7 +1154,7 @@ select.wa-input { cursor: pointer; }
 
 /* ── Click-to-call ───────────────────────────────────────── */
 .wa-phone-cell { white-space: nowrap; }
-.wa-phone-cell .wa-input { width: calc(100% - 32px); display: inline-block; vertical-align: middle; }
+.wa-phone-cell .wa-input { width: calc(100% - 32px); min-width: 108px; display: inline-block; vertical-align: middle; }
 .wa-call-btn {
     width: 26px; height: 26px;
     border: 1px solid var(--border);
@@ -1326,12 +1331,12 @@ select.wa-input { cursor: pointer; }
 .wa-workspace-layout {
     display: flex;
     align-items: flex-start;
-    gap: 22px;
+    gap: 16px;
 }
 .wa-workspace-main { flex: 1 1 auto; min-width: 0; }
 .wa-people-panel {
-    flex: 0 0 250px;
-    width: 250px;
+    flex: 0 0 220px;
+    width: 220px;
     position: sticky;
     top: 90px;
     background: var(--white);
@@ -1471,7 +1476,7 @@ select.wa-input { cursor: pointer; }
 
 /* ── Assigned-cell avatar ───────────────────────────────────── */
 .wa-assigned-cell { display: flex; align-items: center; gap: 7px; }
-.wa-assigned-cell .wa-input { min-width: 80px; }
+.wa-assigned-cell .wa-input { min-width: 70px; max-width: 100px; }
 
 /* ── "edited by" meta line ──────────────────────────────────── */
 /* Own line, wraps freely — must never force the Business column wider
@@ -1494,8 +1499,9 @@ select.wa-input { cursor: pointer; }
     100% { background: transparent; }
 }
 
-/* ── Responsive: stack the people rail ──────────────────────── */
-@media (max-width: 1024px) {
+/* ── Responsive: stack the people rail above the table on medium
+   screens so the table gets the full width (no horizontal scroll) ── */
+@media (max-width: 1180px) {
     .wa-workspace-layout { flex-direction: column; }
     .wa-people-panel {
         position: static;
