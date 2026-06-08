@@ -1063,6 +1063,34 @@ select.wa-input { cursor: pointer; }
 .wa-stat-card[data-tone="callback"].has-due { background: var(--blue-light); border-color: #bfdbfe; }
 .wa-stat-card[data-tone="callback"].has-due .wa-stat-num { color: var(--blue-dark); }
 .wa-stat-card[data-tone="rate"]       { border-left-color: var(--ink); }
+
+/* Clickable filter cards */
+.wa-stat-card[data-filter] {
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.14s var(--ease-out), box-shadow 0.14s var(--ease-out), border-color 0.14s var(--ease-out);
+}
+.wa-stat-card[data-filter]:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(12,12,12,0.08); }
+.wa-stat-card[data-filter]:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.wa-stat-card[data-filter]::after {
+    content: 'Filter';
+    position: absolute;
+    top: 9px; right: 11px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-2);
+    opacity: 0;
+    transition: opacity 0.14s var(--ease-out);
+}
+.wa-stat-card { position: relative; }
+.wa-stat-card[data-filter]:hover::after { opacity: 0.5; }
+.wa-stat-card.is-filter-active {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 2px var(--blue-light), 0 6px 18px rgba(26,77,255,0.1);
+}
+.wa-stat-card.is-filter-active::after { content: '✓ Active'; opacity: 1; color: var(--blue); }
 @media (max-width: 860px) {
     .wa-stats { grid-template-columns: repeat(3, 1fr); }
 }
@@ -1217,3 +1245,391 @@ select.wa-input { cursor: pointer; }
     transition: background 0.15s var(--ease-out);
 }
 .wa-confirm-yes:hover { background: #991b1b; }
+
+/* ── Remote cursor presence ─────────────────────────────────── */
+.wa-remote-cursor {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    width: 14px;
+    height: 14px;
+    transform: translate(-50%, -50%);
+    /* left/top set by JS */
+}
+.wa-rc-dot {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--wc, #22c55e);
+    border: 2px solid rgba(255,255,255,0.9);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+}
+.wa-rc-label {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--wc, #22c55e);
+    padding: 2px 7px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+}
+
+/* ── Online presence bar ────────────────────────────────────── */
+.wa-online-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink-2);
+}
+.wa-online-bar[hidden] { display: none; }
+.wa-online-pip {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.7);
+}
+
+/* ════════════════════════════════════════════════════════════
+   People presence · avatars · live updates  (Discord-vibe)
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Avatar primitive ───────────────────────────────────────── */
+.wa-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--bg-alt);
+    vertical-align: middle;
+}
+.wa-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wa-avatar-initials { color: #fff; font-weight: 700; line-height: 1; letter-spacing: 0.01em; }
+
+/* ── Workspace layout: main + people rail ───────────────────── */
+.wa-workspace-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+}
+.wa-workspace-main { flex: 1 1 auto; min-width: 0; }
+.wa-people-panel {
+    flex: 0 0 250px;
+    width: 250px;
+    position: sticky;
+    top: 90px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 6px 24px rgba(12,12,12,0.04);
+}
+.wa-people-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+.wa-people-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-2);
+}
+.wa-people-count {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--blue-dark, #1e40af);
+    background: var(--blue-light);
+    padding: 2px 9px;
+    border-radius: 999px;
+}
+.wa-people-list { display: flex; flex-direction: column; gap: 4px; }
+
+.wa-person {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 7px 8px;
+    border-radius: 10px;
+    transition: background 0.15s var(--ease-out);
+}
+.wa-person:hover { background: var(--bg-alt); }
+.wa-person:not(.is-online) { opacity: 0.55; }
+.wa-person:not(.is-online):hover { opacity: 1; }
+
+.wa-person-avatar-wrap { position: relative; flex-shrink: 0; line-height: 0; }
+.wa-person-avatar { box-shadow: 0 0 0 2px var(--white); }
+.wa-person-dot {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #c2c0b8;                 /* offline grey */
+    border: 2px solid var(--white);
+    box-sizing: content-box;
+}
+.wa-person.is-online .wa-person-dot {
+    background: #22c55e;                 /* online green */
+    box-shadow: 0 0 0 0 rgba(34,197,94,0.5);
+    animation: waPulseDot 2.4s var(--ease-out) infinite;
+}
+@keyframes waPulseDot {
+    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+    70%  { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+.wa-person-meta { display: flex; flex-direction: column; min-width: 0; gap: 1px; }
+.wa-person-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.wa-person-you {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--blue-dark, #1e40af);
+    background: var(--blue-light);
+    padding: 1px 6px;
+    border-radius: 999px;
+}
+.wa-person-status { font-size: 0.74rem; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wa-person.is-online .wa-person-status { color: #15803d; font-weight: 600; }
+
+/* ── Profile button (avatar + camera) in the top bar ────────── */
+.wa-bar-user { display: flex; align-items: center; gap: 12px; }
+.wa-bar-user-text { line-height: 1.3; }
+.wa-profile-btn {
+    position: relative;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    line-height: 0;
+    flex-shrink: 0;
+}
+.wa-profile-avatar { box-shadow: 0 0 0 2px var(--white), 0 0 0 3px var(--border); }
+.wa-profile-cam {
+    position: absolute;
+    right: -3px;
+    bottom: -3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--white);
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all 0.15s var(--ease-out);
+}
+.wa-profile-btn:hover .wa-profile-cam { opacity: 1; transform: scale(1); }
+.wa-profile-btn.is-uploading { pointer-events: none; }
+.wa-profile-btn.is-uploading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-top-color: var(--blue);
+    animation: waSpin 0.7s linear infinite;
+}
+@keyframes waSpin { to { transform: rotate(360deg); } }
+
+/* ── Assigned-cell avatar ───────────────────────────────────── */
+.wa-assigned-cell { display: flex; align-items: center; gap: 7px; }
+.wa-assigned-cell .wa-input { min-width: 80px; }
+
+/* ── "edited by" meta line ──────────────────────────────────── */
+.wa-edited {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--ink-2);
+}
+.wa-edited-avatar { display: inline-flex; }
+
+/* ── Remote-update row flash ────────────────────────────────── */
+.wa-row-remote td { animation: waRemoteFlash 1.8s var(--ease-out); }
+@keyframes waRemoteFlash {
+    0%   { background: var(--blue-light); }
+    100% { background: transparent; }
+}
+
+/* ── Responsive: stack the people rail ──────────────────────── */
+@media (max-width: 1024px) {
+    .wa-workspace-layout { flex-direction: column; }
+    .wa-people-panel {
+        position: static;
+        width: 100%;
+        flex-basis: auto;
+        order: -1;
+    }
+    .wa-people-list { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+    .wa-person { flex: 1 1 180px; border: 1px solid var(--border); }
+}
+@media (max-width: 480px) {
+    .wa-person { flex-basis: 100%; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   Pages workspace — upgraded editor
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Sidebar search ─────────────────────────────────────────── */
+.wa-pages-search-wrap { position: relative; }
+.wa-pages-search-icon {
+    position: absolute;
+    left: 11px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-2);
+    pointer-events: none;
+}
+.wa-pages-search {
+    width: 100%;
+    padding: 8px 12px 8px 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+}
+.wa-pages-search:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-light); }
+
+/* ── Two-line page list items ───────────────────────────────── */
+.wa-page-item { align-items: flex-start; }
+.wa-page-item-icon { margin-top: 1px; }
+.wa-page-item-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.wa-page-item-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.wa-page-item-sub {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.71rem;
+    color: var(--ink-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.wa-page-item.is-active .wa-page-item-sub { color: var(--ink-2); }
+
+/* ── Document column (centred, comfortable reading width) ───── */
+.wa-page-titlebar,
+.wa-page-metabar,
+.wa-editor-toolbar,
+.wa-editor-content {
+    width: 100%;
+    max-width: 820px;
+    align-self: center;
+}
+
+/* ── Edited-by meta in the metabar ──────────────────────────── */
+.wa-page-edited-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: var(--ink-2);
+}
+.wa-page-edited-meta[hidden] { display: none; }
+
+/* ── Sticky toolbar so formatting is always reachable ───────── */
+.wa-editor-toolbar {
+    position: sticky;
+    top: 70px;
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(12,12,12,0.04);
+}
+
+/* ── Richer editor content styles ───────────────────────────── */
+.wa-editor-content a { color: var(--blue); text-decoration: underline; }
+.wa-editor-content a:hover { color: var(--blue-dark, #1e40af); }
+.wa-editor-content s, .wa-editor-content strike { text-decoration: line-through; color: var(--ink-2); }
+.wa-editor-content blockquote {
+    margin: 0.9em 0;
+    padding: 8px 16px;
+    border-left: 3px solid var(--blue);
+    background: var(--bg-alt);
+    border-radius: 0 8px 8px 0;
+    color: var(--ink-2);
+    font-style: italic;
+}
+
+/* ── Checklist (class-based so it survives sanitisation) ────── */
+.wa-editor-content .wa-checklist { list-style: none; padding-left: 0; margin: 0 0 0.6em; }
+.wa-editor-content .wa-task {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 0.35em;
+    min-height: 1.55em;
+    cursor: text;
+}
+.wa-editor-content .wa-task::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.18em;
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    background: var(--white);
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 0.12s var(--ease-out);
+}
+.wa-editor-content .wa-task:hover::before { border-color: var(--blue); }
+.wa-editor-content .wa-task-done::before { background: var(--blue); border-color: var(--blue); }
+.wa-editor-content .wa-task-done::after {
+    content: '';
+    position: absolute;
+    left: 6px; top: 0.3em;
+    width: 4px; height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    pointer-events: none;
+}
+.wa-editor-content .wa-task-done { color: var(--ink-2); text-decoration: line-through; }
+
+@media (max-width: 860px) {
+    .wa-editor-toolbar { position: static; }
+}

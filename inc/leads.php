@@ -198,13 +198,20 @@ function dpowered_get_meeting_data($post_id) {
 function dpowered_get_page_data($page_id) {
     $p = get_post($page_id);
     if (!$p) return null;
+    $author  = (int) $p->post_author;
+    $auser   = $author ? get_userdata($author) : null;
+    $updated = (int) get_post_modified_time('U', true, $page_id);
     return [
-        'id'      => (int) $page_id,
-        'title'   => $p->post_title ?: 'Untitled',
-        'content' => $p->post_content,
-        'icon'    => (string) get_post_meta($page_id, '_page_icon', true),
-        'private' => (bool)   get_post_meta($page_id, '_page_private', true),
-        'author'  => (int)    $p->post_author,
+        'id'            => (int) $page_id,
+        'title'         => $p->post_title ?: 'Untitled',
+        'content'       => $p->post_content,
+        'icon'          => (string) get_post_meta($page_id, '_page_icon', true),
+        'private'       => (bool)   get_post_meta($page_id, '_page_private', true),
+        'author'        => $author,
+        'author_name'   => $auser ? $auser->display_name : '',
+        'author_avatar' => dpowered_user_avatar($author),
+        'updated'       => $updated,
+        'updated_human' => $updated ? human_time_diff($updated, time()) . ' ago' : '',
     ];
 }
 
@@ -231,6 +238,9 @@ function dpowered_get_visible_pages($uid) {
 function dpowered_get_lead_data($post_id) {
     $assigned = (int) get_post_meta($post_id, '_lead_assigned', true);
     $assigned_user = $assigned ? get_userdata($assigned) : null;
+    $edited_by   = (int) get_post_meta($post_id, '_lead_edited_by', true);
+    $edited_at   = (int) get_post_meta($post_id, '_lead_edited_at', true);
+    $edited_user = $edited_by ? get_userdata($edited_by) : null;
     return [
         'id'           => (int) $post_id,
         'business'     => get_the_title($post_id),
@@ -248,7 +258,18 @@ function dpowered_get_lead_data($post_id) {
         'private'      => (bool)   get_post_meta($post_id, '_lead_private', true),
         'notes'        => (string) get_post_meta($post_id, '_lead_notes', true),
         'created'      => get_the_date('Y-m-d', $post_id),
+        'edited_by'    => $edited_by,
+        'edited_by_name' => $edited_user ? $edited_user->display_name : '',
+        'edited_at'    => $edited_at,
+        'edited_human' => $edited_at ? human_time_diff($edited_at, current_time('timestamp')) . ' ago' : '',
     ];
+}
+
+/** Record who last touched a lead, and when. */
+function dpowered_touch_lead($post_id, $uid = null) {
+    $uid = $uid ?: get_current_user_id();
+    update_post_meta($post_id, '_lead_edited_by', (int) $uid);
+    update_post_meta($post_id, '_lead_edited_at', time());
 }
 
 /** Create a lead from an arbitrary set of fields. Returns post ID or WP_Error. */
@@ -298,6 +319,7 @@ function dpowered_insert_lead($args) {
     update_post_meta($id, '_lead_date', $date);
     update_post_meta($id, '_lead_callback', $callback);
     update_post_meta($id, '_lead_private', (int) (bool) $a['private']);
+    dpowered_touch_lead($id, get_current_user_id());
 
     return $id;
 }
@@ -456,6 +478,7 @@ function dpowered_ajax_update_lead() {
             wp_send_json_error(['msg' => 'Unknown field'], 400);
     }
 
+    dpowered_touch_lead($id);
     wp_send_json_success(['lead' => dpowered_get_lead_data($id)]);
 }
 add_action('wp_ajax_dpowered_update_lead', 'dpowered_ajax_update_lead');
@@ -708,11 +731,363 @@ function dpowered_work_area_assets() {
     );
     $uid = get_current_user_id();
     wp_localize_script('dpowered-work-area', 'dpoweredLeads', [
-        'ajaxurl'     => admin_url('admin-ajax.php'),
-        'nonce'       => wp_create_nonce('dpowered_leads'),
-        'currentUser' => $uid,
-        'pages'       => dpowered_get_visible_pages($uid),
-        'todayPad'    => (string) get_user_meta($uid, '_dpowered_pad_' . current_time('Y-m-d'), true),
+        'ajaxurl'       => admin_url('admin-ajax.php'),
+        'nonce'         => wp_create_nonce('dpowered_leads'),
+        'currentUser'   => $uid,
+        'currentName'   => wp_get_current_user()->display_name,
+        'currentAvatar' => dpowered_user_avatar($uid),
+        'colors'        => [
+            '#22c55e', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4',
+            '#f97316', '#ec4899', '#14b8a6', '#84cc16', '#fb923c',
+        ],
+        'pages'         => dpowered_get_visible_pages($uid),
+        'todayPad'      => (string) get_user_meta($uid, '_dpowered_pad_' . current_time('Y-m-d'), true),
     ]);
 }
 add_action('wp_enqueue_scripts', 'dpowered_work_area_assets');
+
+// ── AJAX: cursor presence ─────────────────────────────────────────────────────
+
+function dpowered_ajax_cursor_push() {
+    check_ajax_referer('dpowered_leads', 'nonce');
+    if (!dpowered_user_can_leads()) wp_send_json_error(null, 403);
+    $uid = get_current_user_id();
+    $x   = max(0, min(100, (float) sanitize_text_field($_POST['x'] ?? 50)));
+    $y   = max(0, min(100, (float) sanitize_text_field($_POST['y'] ?? 50)));
+    set_transient('dpowered_cursor_' . $uid, [
+        'x'    => $x,
+        'y'    => $y,
+        'name' => wp_get_current_user()->display_name,
+        't'    => time(),
+    ], 15);
+    wp_send_json_success();
+}
+add_action('wp_ajax_dpowered_cursor_push', 'dpowered_ajax_cursor_push');
+
+function dpowered_ajax_cursor_poll() {
+    check_ajax_referer('dpowered_leads', 'nonce');
+    if (!dpowered_user_can_leads()) wp_send_json_error(null, 403);
+    $uid  = get_current_user_id();
+    $team = get_users(['role__in' => ['sales_team', 'administrator'], 'fields' => ['ID']]);
+    $now  = time();
+    $out  = [];
+    foreach ($team as $member) {
+        $mid = (int) $member->ID;
+        if ($mid === $uid) continue;
+        $data = get_transient('dpowered_cursor_' . $mid);
+        if ($data && ($now - $data['t']) < 8) {
+            $out[] = ['uid' => $mid, 'x' => $data['x'], 'y' => $data['y'], 'name' => $data['name']];
+        }
+    }
+    wp_send_json_success(['cursors' => $out]);
+}
+add_action('wp_ajax_dpowered_cursor_poll', 'dpowered_ajax_cursor_poll');
+
+// ══════════════════════════════════════════════════════════════════════════════
+//  People presence · avatars · last-edited · live updates
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * A user's signature colour. Same palette + order as work-area.js so a person's
+ * cursor, avatar fallback and presence pip all match across every screen.
+ */
+function dpowered_user_color($uid) {
+    $palette = [
+        '#22c55e', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4',
+        '#f97316', '#ec4899', '#14b8a6', '#84cc16', '#fb923c',
+    ];
+    return $palette[((int) $uid) % count($palette)];
+}
+
+/** Initials from a display name, e.g. "Sarah Jones" → "SJ". */
+function dpowered_user_initials($name) {
+    $parts = preg_split('/\s+/', trim((string) $name));
+    $parts = array_filter($parts);
+    if (!$parts) return '?';
+    if (count($parts) === 1) return strtoupper(mb_substr($parts[0], 0, 1));
+    $first = reset($parts);
+    $last  = end($parts);
+    return strtoupper(mb_substr($first, 0, 1) . mb_substr($last, 0, 1));
+}
+
+/** Avatar descriptor for a user: custom upload URL if set, else colour + initials. */
+function dpowered_user_avatar($uid) {
+    $uid  = (int) $uid;
+    $user = $uid ? get_userdata($uid) : null;
+    $name = $user ? $user->display_name : '';
+    $att  = (int) get_user_meta($uid, '_dpowered_avatar', true);
+    $url  = $att ? wp_get_attachment_image_url($att, 'thumbnail') : '';
+    return [
+        'uid'      => $uid,
+        'name'     => $name,
+        'url'      => $url ?: '',
+        'color'    => dpowered_user_color($uid),
+        'initials' => dpowered_user_initials($name),
+    ];
+}
+
+/** Render an avatar chip (HTML) at a given pixel size. */
+function dpowered_avatar_html($uid, $size = 32, $extra_class = '') {
+    $a = dpowered_user_avatar($uid);
+    $style = 'width:' . (int) $size . 'px;height:' . (int) $size . 'px;'
+           . 'font-size:' . round($size * 0.4) . 'px;';
+    $cls = 'wa-avatar ' . esc_attr($extra_class);
+    if ($a['url']) {
+        return '<span class="' . $cls . '" style="' . esc_attr($style) . '" title="' . esc_attr($a['name']) . '">'
+             . '<img src="' . esc_url($a['url']) . '" alt="' . esc_attr($a['name']) . '"></span>';
+    }
+    $style .= 'background:' . esc_attr($a['color']) . ';';
+    return '<span class="' . $cls . ' wa-avatar-initials" style="' . esc_attr($style) . '" title="' . esc_attr($a['name']) . '">'
+         . esc_html($a['initials']) . '</span>';
+}
+
+// ── Presence heartbeat ────────────────────────────────────────────────────────
+
+/** True if a user pinged within the last 35 seconds. */
+function dpowered_user_is_online($uid) {
+    $seen = (int) get_transient('dpowered_seen_' . (int) $uid);
+    return $seen && (time() - $seen) < 35;
+}
+
+function dpowered_ajax_presence_ping() {
+    check_ajax_referer('dpowered_leads', 'nonce');
+    if (!dpowered_user_can_leads()) wp_send_json_error(null, 403);
+    set_transient('dpowered_seen_' . get_current_user_id(), time(), 60);
+    wp_send_json_success();
+}
+add_action('wp_ajax_dpowered_presence_ping', 'dpowered_ajax_presence_ping');
+
+/** Build the team roster with live presence + avatar info. */
+function dpowered_team_presence() {
+    $team = dpowered_lead_team_members();
+    $now  = time();
+    $out  = [];
+    foreach ($team as $member) {
+        $uid  = (int) $member->ID;
+        $seen = (int) get_transient('dpowered_seen_' . $uid);
+        $a    = dpowered_user_avatar($uid);
+        $out[] = [
+            'uid'         => $uid,
+            'name'        => $member->display_name,
+            'url'         => $a['url'],
+            'color'       => $a['color'],
+            'initials'    => $a['initials'],
+            'online'      => ($seen && ($now - $seen) < 35),
+            'last_human'  => $seen ? human_time_diff($seen, $now) . ' ago' : '',
+        ];
+    }
+    // Online first, then alphabetical.
+    usort($out, function ($x, $y) {
+        if ($x['online'] !== $y['online']) return $x['online'] ? -1 : 1;
+        return strcasecmp($x['name'], $y['name']);
+    });
+    return $out;
+}
+
+function dpowered_ajax_presence_poll() {
+    check_ajax_referer('dpowered_leads', 'nonce');
+    if (!dpowered_user_can_leads()) wp_send_json_error(null, 403);
+    wp_send_json_success(['team' => dpowered_team_presence()]);
+}
+add_action('wp_ajax_dpowered_presence_poll', 'dpowered_ajax_presence_poll');
+
+// ── Avatar upload ─────────────────────────────────────────────────────────────
+
+function dpowered_ajax_upload_avatar() {
+    check_ajax_referer('dpowered_leads', 'nonce');
+    if (!dpowered_user_can_leads()) wp_send_json_error(['msg' => 'Not allowed'], 403);
+    if (empty($_FILES['avatar'])) wp_send_json_error(['msg' => 'No file received.'], 400);
+
+    $file = $_FILES['avatar'];
+    $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $check = wp_check_filetype($file['name']);
+    if (!in_array($file['type'], $allowed, true) || !in_array($check['type'], $allowed, true)) {
+        wp_send_json_error(['msg' => 'Please upload a JPG, PNG, GIF or WebP image.'], 400);
+    }
+    if ($file['size'] > 4 * 1024 * 1024) {
+        wp_send_json_error(['msg' => 'Image must be under 4MB.'], 400);
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+
+    $uid = get_current_user_id();
+    $att_id = media_handle_upload('avatar', 0);
+    if (is_wp_error($att_id)) {
+        wp_send_json_error(['msg' => 'Upload failed. ' . $att_id->get_error_message()], 500);
+    }
+
+    // Remove the previous custom avatar so the media library doesn't fill up.
+    $old = (int) get_user_meta($uid, '_dpowered_avatar', true);
+    if ($old && $old !== $att_id) wp_delete_attachment($old, true);
+
+    update_user_meta($uid, '_dpowered_avatar', $att_id);
+    wp_send_json_success(['avatar' => dpowered_user_avatar($uid)]);
+}
+add_action('wp_ajax_dpowered_upload_avatar', 'dpowered_ajax_upload_avatar');
+
+/** Surface the custom avatar inside wp-admin's get_avatar() too. */
+function dpowered_filter_avatar_url($url, $id_or_email, $args) {
+    $uid = 0;
+    if (is_numeric($id_or_email)) {
+        $uid = (int) $id_or_email;
+    } elseif ($id_or_email instanceof WP_User) {
+        $uid = (int) $id_or_email->ID;
+    } elseif ($id_or_email instanceof WP_Comment) {
+        $uid = (int) $id_or_email->user_id;
+    } elseif (is_string($id_or_email) && ($u = get_user_by('email', $id_or_email))) {
+        $uid = (int) $u->ID;
+    }
+    if (!$uid) return $url;
+    $att = (int) get_user_meta($uid, '_dpowered_avatar', true);
+    if ($att) {
+        $custom = wp_get_attachment_image_url($att, 'thumbnail');
+        if ($custom) return $custom;
+    }
+    return $url;
+}
+add_filter('get_avatar_url', 'dpowered_filter_avatar_url', 10, 3);
+
+// ── Server-rendered lead row (shared by template + live updates) ───────────────
+
+/**
+ * Render one lead's <tr> pair (main row + detail row) exactly as the template
+ * does, so live updates can drop in fresh markup without duplicating it in JS.
+ */
+function dpowered_render_lead_row($d, $statuses = null, $sources = null, $team = null) {
+    $statuses = $statuses ?: dpowered_lead_statuses();
+    $sources  = $sources  ?: dpowered_lead_sources();
+    $team     = $team     ?: dpowered_lead_team_members();
+
+    $edited = '';
+    if ($d['edited_by_name'] && $d['edited_human']) {
+        $edited = ' · <span class="wa-edited">'
+                . dpowered_avatar_html($d['edited_by'], 16, 'wa-edited-avatar')
+                . 'edited by ' . esc_html($d['edited_by_name']) . ' · ' . esc_html($d['edited_human'])
+                . '</span>';
+    }
+
+    ob_start();
+    ?>
+    <tr class="wa-row<?php echo $d['private'] ? ' is-private-lead' : ''; ?>"
+        data-id="<?php echo (int) $d['id']; ?>"
+        data-status="<?php echo esc_attr($d['status']); ?>"
+        data-assigned="<?php echo (int) $d['assigned']; ?>"
+        data-date="<?php echo esc_attr($d['date']); ?>"
+        data-callback="<?php echo esc_attr($d['callback']); ?>"
+        data-edited="<?php echo (int) $d['edited_at']; ?>"
+        data-private="<?php echo $d['private'] ? '1' : '0'; ?>">
+        <td class="wa-col-toggle"><button type="button" class="wa-expand<?php echo $d['notes'] ? ' has-notes' : ''; ?>" aria-label="Toggle details">&rsaquo;</button></td>
+        <td data-label="Business">
+            <input type="text" class="wa-input wa-business" data-field="business" value="<?php echo esc_attr($d['business']); ?>">
+            <span class="wa-meta">Added <?php echo esc_html($d['created']); ?> · <?php echo esc_html($sources[$d['source']] ?? $d['source']); ?><?php echo $edited; ?></span>
+            <span class="wa-callback-badge" hidden>📞 Callback</span>
+        </td>
+        <td data-label="Contact"><input type="text" class="wa-input" data-field="contact" value="<?php echo esc_attr($d['contact']); ?>"></td>
+        <td data-label="Phone" class="wa-phone-cell">
+            <input type="tel" class="wa-input" data-field="phone" value="<?php echo esc_attr($d['phone']); ?>">
+            <button type="button" class="wa-call-btn" aria-label="Call this number" title="Call">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </button>
+        </td>
+        <td data-label="Status">
+            <select class="wa-status status-<?php echo esc_attr($d['status']); ?>" data-field="status">
+                <?php foreach ($statuses as $key => $label): ?>
+                <option value="<?php echo esc_attr($key); ?>" <?php selected($d['status'], $key); ?>><?php echo esc_html($label); ?></option>
+                <?php endforeach; ?>
+            </select>
+        </td>
+        <td class="wa-col-center" data-label="Called"><input type="checkbox" class="wa-check" data-field="called" <?php checked($d['called']); ?>></td>
+        <td class="wa-col-center" data-label="Offered"><input type="checkbox" class="wa-check" data-field="offered" <?php checked($d['offered']); ?>></td>
+        <td data-label="Assigned">
+            <div class="wa-assigned-cell">
+                <?php echo $d['assigned'] ? dpowered_avatar_html($d['assigned'], 24, 'wa-assigned-avatar') : ''; ?>
+                <select class="wa-input" data-field="assigned">
+                    <option value="0">Unassigned</option>
+                    <?php foreach ($team as $member): ?>
+                    <option value="<?php echo (int) $member->ID; ?>" <?php selected($d['assigned'], $member->ID); ?>><?php echo esc_html($member->display_name); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </td>
+        <td class="wa-col-center wa-col-actions">
+            <button type="button"
+                class="wa-private-btn<?php echo $d['private'] ? ' is-private' : ''; ?>"
+                data-field="private"
+                aria-label="Toggle privacy"
+                title="<?php echo $d['private'] ? 'Private — click to share with team' : 'Shared — click to make private'; ?>"></button>
+            <button type="button" class="wa-delete" aria-label="Delete lead">&times;</button>
+        </td>
+    </tr>
+    <tr class="wa-detail" data-id="<?php echo (int) $d['id']; ?>" hidden>
+        <td colspan="9">
+            <div class="wa-detail-grid">
+                <label>Email
+                    <input type="email" class="wa-input" data-field="email" value="<?php echo esc_attr($d['email']); ?>">
+                </label>
+                <label>Source
+                    <select class="wa-input" data-field="source">
+                        <?php foreach ($sources as $key => $label): ?>
+                        <option value="<?php echo esc_attr($key); ?>" <?php selected($d['source'], $key); ?>><?php echo esc_html($label); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+                <label>Sheet date
+                    <input type="date" class="wa-input" data-field="date" value="<?php echo esc_attr($d['date']); ?>">
+                </label>
+                <label>Call back date
+                    <input type="date" class="wa-input" data-field="callback" value="<?php echo esc_attr($d['callback']); ?>">
+                </label>
+                <label class="wa-detail-notes">Notes
+                    <textarea class="wa-input" data-field="notes" rows="2"><?php echo esc_textarea($d['notes']); ?></textarea>
+                </label>
+            </div>
+        </td>
+    </tr>
+    <?php
+    return ob_get_clean();
+}
+
+// ── AJAX: live lead changes since a timestamp ──────────────────────────────────
+
+function dpowered_ajax_leads_changes() {
+    check_ajax_referer('dpowered_leads', 'nonce');
+    if (!dpowered_user_can_leads()) wp_send_json_error(null, 403);
+
+    $since       = absint($_POST['since'] ?? 0);
+    $uid         = get_current_user_id();
+    $is_admin    = current_user_can('manage_options');
+    $statuses    = dpowered_lead_statuses();
+    $sources     = dpowered_lead_sources();
+    $team        = dpowered_lead_team_members();
+
+    $leads = get_posts([
+        'post_type'      => 'lead',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    ]);
+
+    $ids  = [];
+    $rows = [];
+    foreach ($leads as $l) {
+        $d = dpowered_get_lead_data($l->ID);
+        // Respect privacy: leads only the owner/admin can see.
+        if ($d['private'] && $d['assigned'] !== $uid && !$is_admin) continue;
+        $ids[] = $d['id'];
+        if ($since && $d['edited_at'] > $since) {
+            $rows[] = [
+                'id'     => $d['id'],
+                'editor' => $d['edited_by'],
+                'editor_name' => $d['edited_by_name'],
+                'business'    => $d['business'],
+                'html'   => dpowered_render_lead_row($d, $statuses, $sources, $team),
+            ];
+        }
+    }
+
+    wp_send_json_success(['now' => time(), 'ids' => $ids, 'rows' => $rows]);
+}
+add_action('wp_ajax_dpowered_leads_changes', 'dpowered_ajax_leads_changes');

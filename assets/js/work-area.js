@@ -119,8 +119,16 @@
         }
 
         var status = row.getAttribute('data-status');
-        if (activeFilter === 'tocall' && status !== 'new') return false;
-        if (activeFilter === 'won' && status !== 'won') return false;
+        if (activeFilter === 'tocall'     && status !== 'new')        return false;
+        if (activeFilter === 'won'        && status !== 'won')        return false;
+        if (activeFilter === 'interested' && status !== 'interested') return false;
+        if (activeFilter === 'quoted'     && status !== 'quoted')     return false;
+        if (activeFilter === 'callbacks') {
+            var cbDue = row.getAttribute('data-callback');
+            if (!cbDue || status === 'won' || status === 'dead') return false;
+            if (allDates) { if (cbDue > todayStr()) return false; }      // due today or overdue
+            else if (activeDate && cbDue !== activeDate) return false;   // due on the viewed day
+        }
 
         if (activePerson !== 'everyone' && row.getAttribute('data-assigned') !== String(activePerson)) return false;
 
@@ -213,14 +221,36 @@
         });
     }
 
+    var statCards = Array.prototype.slice.call(document.querySelectorAll('.wa-stat-card[data-filter]'));
+
+    /* Single source of truth for the active filter — keeps the pill tabs and
+       the clickable stat cards in sync. */
+    function setFilter(key) {
+        activeFilter = key;
+        tabs.forEach(function (t) { t.classList.toggle('is-active', t.getAttribute('data-filter') === key); });
+        statCards.forEach(function (c) {
+            var on = c.getAttribute('data-filter') === key;
+            c.classList.toggle('is-filter-active', on);
+            c.setAttribute('aria-pressed', String(on));
+        });
+        applyFilter();
+    }
+
     tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            tabs.forEach(function (t) { t.classList.remove('is-active'); });
-            tab.classList.add('is-active');
-            activeFilter = tab.getAttribute('data-filter');
-            applyFilter();
+        tab.addEventListener('click', function () { setFilter(tab.getAttribute('data-filter')); });
+    });
+
+    statCards.forEach(function (card) {
+        function toggle() {
+            var key = card.getAttribute('data-filter');
+            setFilter(activeFilter === key ? 'all' : key); // click the active card again to clear
+        }
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
         });
     });
+
     if (searchInput) searchInput.addEventListener('input', applyFilter);
     if (peopleSelect) peopleSelect.addEventListener('change', function () {
         activePerson = peopleSelect.value;
@@ -573,16 +603,19 @@
     var newPageBtn       = document.getElementById('waNewPage');
     var newPageEmptyBtn  = document.getElementById('waNewPageEmpty');
     var pagesList        = document.getElementById('waPagesList');
+    var pagesSearch      = document.getElementById('waPagesSearch');
     var pageEmptyState   = document.getElementById('waPageEmptyState');
     var pageEditorWrap   = document.getElementById('waPageEditorWrap');
     var pageIconBtn      = document.getElementById('waPageIconBtn');
     var pageTitleInput   = document.getElementById('waPageTitleInput');
     var pagePrivacyBtn   = document.getElementById('waPagePrivacyBtn');
     var privacyLabel     = document.getElementById('waPrivacyLabel');
+    var pageEditedMeta   = document.getElementById('waPageEditedMeta');
     var pageSavedStatus  = document.getElementById('waPageSavedStatus');
     var pageDeleteBtn    = document.getElementById('waPageDeleteBtn');
     var editorContent    = document.getElementById('waEditorContent');
     var editorToolbar    = document.getElementById('waEditorToolbar');
+    var pagesSearchTerm  = '';
 
     var PAGE_ICONS = ['📄','📝','🎯','💡','📊','✅','🔖','📌','⭐','🔥','💼','📱','🗂','📋','🧠','🚀'];
 
@@ -603,17 +636,48 @@
             pagesList.innerHTML = '<p class="wa-pages-list-empty">No pages yet.<br>Create your first one above.</p>';
             return;
         }
-        pagesData.forEach(function (p) {
+        var term = pagesSearchTerm;
+        var shown = pagesData.filter(function (p) {
+            return !term || (p.title || 'Untitled').toLowerCase().indexOf(term) !== -1;
+        });
+        if (!shown.length) {
+            pagesList.innerHTML = '<p class="wa-pages-list-empty">No pages match “' + escHtml(term) + '”.</p>';
+            return;
+        }
+        shown.forEach(function (p) {
             var btn = document.createElement('button');
             btn.className = 'wa-page-item' + (activePage && activePage.id === p.id ? ' is-active' : '');
             btn.setAttribute('data-page-id', p.id);
+            var sub = '';
+            if (p.author_avatar || p.updated_human) {
+                sub = '<span class="wa-page-item-sub">'
+                    + (p.author_avatar ? avatarHtml(p.author_avatar, 14, 'wa-page-item-av') : '')
+                    + escHtml(p.updated_human ? 'Edited ' + p.updated_human : (p.author_name || ''))
+                    + '</span>';
+            }
             btn.innerHTML = '<span class="wa-page-item-icon">' + escHtml(p.icon || '📄') + '</span>'
-                + '<span class="wa-page-item-title">' + escHtml(p.title || 'Untitled') + '</span>'
-                + (p.private ? '<span class="wa-page-item-badge">🔒</span>' : '');
+                + '<span class="wa-page-item-body">'
+                + '<span class="wa-page-item-title">' + escHtml(p.title || 'Untitled')
+                + (p.private ? ' <span class="wa-page-item-badge">🔒</span>' : '') + '</span>'
+                + sub + '</span>';
             btn.addEventListener('click', function () { openPage(p); });
             pagesList.appendChild(btn);
         });
     }
+
+    function renderEditedMeta(page) {
+        if (!pageEditedMeta) return;
+        if (!page || (!page.author_name && !page.updated_human)) { pageEditedMeta.hidden = true; pageEditedMeta.innerHTML = ''; return; }
+        pageEditedMeta.hidden = false;
+        pageEditedMeta.innerHTML = (page.author_avatar ? avatarHtml(page.author_avatar, 16, 'wa-page-edited-av') : '')
+            + 'Edited by ' + escHtml(page.author_name || 'someone')
+            + (page.updated_human ? ' · ' + escHtml(page.updated_human) : '');
+    }
+
+    if (pagesSearch) pagesSearch.addEventListener('input', function () {
+        pagesSearchTerm = pagesSearch.value.trim().toLowerCase();
+        renderPageList();
+    });
 
     function openPage(page) {
         activePage = page;
@@ -626,6 +690,7 @@
         if (pagePrivacyBtn)  { pagePrivacyBtn.setAttribute('data-private', priv); pagePrivacyBtn.classList.toggle('is-private', !!page.private); }
         if (privacyLabel)    privacyLabel.textContent = page.private ? 'Private' : 'Shared with team';
         if (pageSavedStatus) pageSavedStatus.textContent = '';
+        renderEditedMeta(page);
         document.querySelectorAll('.wa-page-item').forEach(function (el) {
             el.classList.toggle('is-active', parseInt(el.getAttribute('data-page-id'), 10) === page.id);
         });
@@ -641,6 +706,7 @@
         if (pagePrivacyBtn)  { pagePrivacyBtn.setAttribute('data-private', '0'); pagePrivacyBtn.classList.remove('is-private'); }
         if (privacyLabel)    privacyLabel.textContent = 'Shared with team';
         if (pageSavedStatus) pageSavedStatus.textContent = '';
+        renderEditedMeta(null);
         document.querySelectorAll('.wa-page-item').forEach(function (el) { el.classList.remove('is-active'); });
     }
 
@@ -672,6 +738,7 @@
             if (idx >= 0) pagesData[idx] = page;
             else pagesData.unshift(page);
             renderPageList();
+            renderEditedMeta(page);
             document.querySelectorAll('.wa-page-item').forEach(function (el) {
                 el.classList.toggle('is-active', parseInt(el.getAttribute('data-page-id'), 10) === page.id);
             });
@@ -724,8 +791,29 @@
         e.preventDefault();
         var cmd = btn.getAttribute('data-cmd');
         var val = btn.getAttribute('data-val') || null;
-        document.execCommand(cmd, false, val);
+
+        if (cmd === 'createLink') {
+            var url = window.prompt('Link URL:', 'https://');
+            if (!url) return;
+            if (!/^https?:\/\//i.test(url) && !/^mailto:/i.test(url)) url = 'https://' + url;
+            document.execCommand('createLink', false, url);
+        } else if (cmd === 'checklist') {
+            // Class-based tasks (survive wp_kses_post — no <input>, no data-*).
+            document.execCommand('insertHTML', false,
+                '<ul class="wa-checklist"><li class="wa-task">New task</li></ul><p><br></p>');
+        } else {
+            document.execCommand(cmd, false, val);
+        }
         if (editorContent) editorContent.focus();
+        scheduleSavePage();
+    });
+
+    // Toggle a checklist item done by clicking its checkbox glyph (left ~24px).
+    if (editorContent) editorContent.addEventListener('click', function (e) {
+        var task = e.target.closest('.wa-task');
+        if (!task || !editorContent.contains(task)) return;
+        if (e.offsetX > 24) return; // only the box zone toggles; rest edits text
+        task.classList.toggle('wa-task-done');
         scheduleSavePage();
     });
 
@@ -891,6 +979,276 @@
             case 't': case 'T': setDate(todayStr()); break;
         }
     });
+
+    /* ── Avatar rendering helper (mirrors PHP dpowered_avatar_html) ── */
+    function avatarHtml(a, size, cls) {
+        cls = cls || '';
+        var s = 'width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.4) + 'px;';
+        if (a && a.url) {
+            return '<span class="wa-avatar ' + cls + '" style="' + s + '" title="' + escHtml(a.name) + '">'
+                 + '<img src="' + a.url + '" alt="' + escHtml(a.name) + '"></span>';
+        }
+        s += 'background:' + ((a && a.color) || '#888') + ';';
+        return '<span class="wa-avatar wa-avatar-initials ' + cls + '" style="' + s + '" title="' + escHtml(a ? a.name : '') + '">'
+             + escHtml(a ? a.initials : '?') + '</span>';
+    }
+
+    /* ── Profile photo upload ────────────────────────────── */
+    var profileBtn  = document.getElementById('waProfileBtn');
+    var avatarInput = document.getElementById('waAvatarInput');
+    if (profileBtn && avatarInput) {
+        profileBtn.addEventListener('click', function () { avatarInput.click(); });
+        avatarInput.addEventListener('change', function () {
+            var file = avatarInput.files && avatarInput.files[0];
+            if (!file) return;
+            if (file.size > 4 * 1024 * 1024) { toast('Image must be under 4MB.', 'error'); avatarInput.value = ''; return; }
+            var data = new FormData();
+            data.append('action', 'dpowered_upload_avatar');
+            data.append('nonce', cfg.nonce);
+            data.append('avatar', file);
+            profileBtn.classList.add('is-uploading');
+            fetch(cfg.ajaxurl, { method: 'POST', credentials: 'same-origin', body: data })
+                .then(function (r) { return r.json(); })
+                .then(function (res) {
+                    profileBtn.classList.remove('is-uploading');
+                    if (!res || !res.success) { toast((res && res.data && res.data.msg) || 'Upload failed.', 'error'); return; }
+                    var holder = profileBtn.querySelector('.wa-avatar');
+                    if (holder) holder.outerHTML = avatarHtml(res.data.avatar, 40, 'wa-profile-avatar');
+                    toast('Profile photo updated.');
+                })
+                .catch(function () { profileBtn.classList.remove('is-uploading'); toast('Upload failed.', 'error'); });
+            avatarInput.value = '';
+        });
+    }
+
+    /* ── Presence + people panel ─────────────────────────── */
+    (function () {
+        var peopleList  = document.getElementById('waPeopleList');
+        var onlineCount = document.getElementById('waOnlineCount');
+
+        function ping() { if (!document.hidden) post({ action: 'dpowered_presence_ping' }); }
+        ping();
+        setInterval(ping, 15000);
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) { ping(); pollPresence(); } });
+
+        function renderPeople(team) {
+            if (!peopleList) return;
+            var online = 0;
+            peopleList.innerHTML = team.map(function (p) {
+                if (p.online) online++;
+                var you = p.uid === cfg.currentUser ? ' <span class="wa-person-you">you</span>' : '';
+                var status = p.online ? 'Online now' : (p.last_human ? 'Active ' + escHtml(p.last_human) : 'Offline');
+                return '<div class="wa-person' + (p.online ? ' is-online' : '') + '" data-uid="' + p.uid + '">'
+                     + '<span class="wa-person-avatar-wrap">'
+                     + avatarHtml(p, 36, 'wa-person-avatar')
+                     + '<span class="wa-person-dot" style="--pc:' + p.color + '"></span></span>'
+                     + '<span class="wa-person-meta">'
+                     + '<span class="wa-person-name">' + escHtml(p.name) + you + '</span>'
+                     + '<span class="wa-person-status">' + status + '</span></span></div>';
+            }).join('');
+            if (onlineCount) onlineCount.textContent = online + ' online';
+        }
+
+        function pollPresence() {
+            if (document.hidden) return;
+            post({ action: 'dpowered_presence_poll' }).then(function (res) {
+                if (res && res.success) renderPeople(res.data.team || []);
+            });
+        }
+        pollPresence();
+        setInterval(pollPresence, 5000);
+    })();
+
+    /* ── Live lead updates (no refresh needed) ───────────── */
+    (function () {
+        var lastSync = 0; // seeded from server on first poll → avoids clock skew
+
+        function rowFocused(el) {
+            var ae = document.activeElement;
+            return el && ae && el.contains(ae);
+        }
+        function flashRemote(row) {
+            row.classList.remove('wa-row-remote');
+            void row.offsetWidth;
+            row.classList.add('wa-row-remote');
+        }
+
+        function patchRow(item) {
+            var existing       = body.querySelector('.wa-row[data-id="' + item.id + '"]');
+            var existingDetail = body.querySelector('.wa-detail[data-id="' + item.id + '"]');
+            var isMine = item.editor === cfg.currentUser;
+
+            // Never clobber a field the user is actively editing.
+            if (rowFocused(existing) || rowFocused(existingDetail)) return;
+
+            var tmp = document.createElement('tbody');
+            tmp.innerHTML = (item.html || '').trim();
+            var newRow    = tmp.querySelector('.wa-row');
+            var newDetail = tmp.querySelector('.wa-detail');
+            if (!newRow) return;
+
+            if (existing) {
+                var wasOpen = existingDetail && !existingDetail.hidden;
+                if (wasOpen && newDetail) {
+                    newDetail.hidden = false;
+                    newDetail.style.display = '';
+                    var ex = newRow.querySelector('.wa-expand');
+                    if (ex) ex.classList.add('is-open');
+                }
+                existing.replaceWith(newRow);
+                if (existingDetail) { existingDetail.replaceWith(newDetail || document.createComment('')); }
+                else if (newDetail) { newRow.after(newDetail); }
+                if (!isMine) { flashRemote(newRow); toast((item.editor_name || 'A teammate') + ' updated ' + (item.business || 'a lead')); }
+            } else {
+                body.appendChild(newRow);
+                if (newDetail) body.appendChild(newDetail);
+                if (!isMine) { flashRemote(newRow); toast((item.editor_name || 'A teammate') + ' added ' + (item.business || 'a lead')); }
+            }
+        }
+
+        function sync() {
+            if (document.hidden) return;
+            post({ action: 'dpowered_leads_changes', since: lastSync }).then(function (res) {
+                if (!res || !res.success) return;
+                var d = res.data;
+                var firstRun = lastSync === 0;
+                lastSync = d.now;
+
+                var changed = d.rows || [];
+                changed.forEach(patchRow);
+
+                // Remove leads that vanished (deleted, or turned private for me).
+                var idSet = {};
+                (d.ids || []).forEach(function (id) { idSet[id] = true; });
+                var removed = 0;
+                Array.prototype.forEach.call(body.querySelectorAll('.wa-row'), function (row) {
+                    var id = row.getAttribute('data-id');
+                    if (!idSet[id]) {
+                        var det = body.querySelector('.wa-detail[data-id="' + id + '"]');
+                        row.remove();
+                        if (det) det.remove();
+                        removed++;
+                    }
+                });
+
+                if (!firstRun && (changed.length || removed)) {
+                    recomputeCounts();
+                    applyFilter();
+                    refreshCallButtons();
+                    if (sortKey) applySort();
+                }
+            });
+        }
+        setInterval(sync, 3000);
+    })();
+
+    /* ── Multiplayer cursor presence ─────────────────────── */
+    (function () {
+        var CURSOR_COLORS = [
+            '#22c55e', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4',
+            '#f97316', '#ec4899', '#14b8a6', '#84cc16', '#fb923c'
+        ];
+        function cursorColor(uid) { return CURSOR_COLORS[uid % CURSOR_COLORS.length]; }
+
+        var activeCursors = {}; // uid → { el, tx, ty, cx, cy, raf }
+        var lastMX = null, lastMY = null, pushThrottle = null;
+
+        function sendPos(x, y) {
+            post({ action: 'dpowered_cursor_push', x: x, y: y });
+        }
+
+        document.addEventListener('mousemove', function (e) {
+            var x = (e.clientX / window.innerWidth)  * 100;
+            var y = (e.clientY / window.innerHeight) * 100;
+            lastMX = x; lastMY = y;
+            clearTimeout(pushThrottle);
+            pushThrottle = setTimeout(function () { sendPos(x, y); }, 90);
+        });
+
+        // Heartbeat — keeps presence alive without movement
+        setInterval(function () {
+            if (!document.hidden && lastMX !== null) sendPos(lastMX, lastMY);
+        }, 7000);
+
+        function getOrCreate(uid, name) {
+            if (activeCursors[uid]) return activeCursors[uid];
+            var color = cursorColor(uid);
+            var el = document.createElement('div');
+            el.className = 'wa-remote-cursor';
+            el.style.setProperty('--wc', color);
+            el.innerHTML = '<span class="wa-rc-label">' + escHtml(name) + '</span>'
+                         + '<span class="wa-rc-dot"></span>';
+            document.body.appendChild(el);
+            var obj = { el: el, tx: 50, ty: 50, cx: 50, cy: 50, raf: null };
+            activeCursors[uid] = obj;
+            (function animLoop() {
+                obj.cx += (obj.tx - obj.cx) * 0.18;
+                obj.cy += (obj.ty - obj.cy) * 0.18;
+                el.style.left = obj.cx + 'vw';
+                el.style.top  = obj.cy + 'vh';
+                obj.raf = requestAnimationFrame(animLoop);
+            })();
+            return obj;
+        }
+
+        function removeCursor(uid) {
+            var c = activeCursors[uid];
+            if (!c) return;
+            cancelAnimationFrame(c.raf);
+            if (c.el.parentNode) c.el.parentNode.removeChild(c.el);
+            delete activeCursors[uid];
+        }
+
+        var onlineBar = null;
+        function ensureOnlineBar() {
+            if (onlineBar) return onlineBar;
+            onlineBar = document.createElement('span');
+            onlineBar.className = 'wa-online-bar';
+            onlineBar.hidden = true;
+            var barUser = document.querySelector('.wa-bar-user');
+            if (barUser) barUser.appendChild(onlineBar);
+            return onlineBar;
+        }
+
+        function updateOnlineBar(cursors) {
+            var bar = ensureOnlineBar();
+            if (!cursors.length) { bar.hidden = true; return; }
+            bar.hidden = false;
+            var html = cursors.map(function (c) {
+                var col = cursorColor(c.uid);
+                var first = (c.name || '').split(' ')[0];
+                return '<span class="wa-online-pip" style="background:' + col + '"></span>'
+                     + escHtml(first);
+            }).join(' · ');
+            bar.innerHTML = html;
+        }
+
+        function poll() {
+            if (document.hidden) {
+                Object.keys(activeCursors).forEach(removeCursor);
+                return;
+            }
+            post({ action: 'dpowered_cursor_poll' }).then(function (res) {
+                if (!res || !res.success) return;
+                var list = res.data.cursors || [];
+                var seen = {};
+                list.forEach(function (c) {
+                    seen[c.uid] = true;
+                    var obj = getOrCreate(c.uid, c.name);
+                    var lbl = obj.el.querySelector('.wa-rc-label');
+                    if (lbl && lbl.textContent !== c.name) lbl.textContent = c.name;
+                    obj.tx = c.x;
+                    obj.ty = c.y;
+                });
+                Object.keys(activeCursors).forEach(function (uid) {
+                    if (!seen[uid]) removeCursor(uid);
+                });
+                updateOnlineBar(list);
+            });
+        }
+
+        setInterval(poll, 300);
+    })();
 
     /* ── Init ────────────────────────────────────────────── */
     var hashMatch = (window.location.hash || '').match(/d=(\d{4}-\d{2}-\d{2})/);

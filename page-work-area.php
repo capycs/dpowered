@@ -143,13 +143,23 @@ $today       = current_time('Y-m-d');
         <!-- Top bar (persistent across both views) -->
         <div class="wa-bar">
             <div class="wa-bar-user">
-                Signed in as <strong><?php echo esc_html($current_user->display_name); ?></strong>
+                <button type="button" class="wa-profile-btn" id="waProfileBtn" title="Change your profile photo">
+                    <?php echo dpowered_avatar_html($current_uid, 40, 'wa-profile-avatar'); ?>
+                    <span class="wa-profile-cam" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </span>
+                </button>
+                <input type="file" id="waAvatarInput" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+                <span class="wa-bar-user-text">Signed in as <strong><?php echo esc_html($current_user->display_name); ?></strong></span>
             </div>
             <div class="wa-bar-actions">
                 <button type="button" class="btn btn-primary" id="waAddBtn">+ Add Lead</button>
                 <a href="<?php echo esc_url(wp_logout_url(dpowered_work_area_url())); ?>" class="btn btn-secondary">Log out</a>
             </div>
         </div>
+
+        <div class="wa-workspace-layout">
+        <div class="wa-workspace-main">
 
         <!-- ═══════════════════════════════════════════════ LEADS VIEW -->
         <div id="waLeadsView">
@@ -180,14 +190,14 @@ $today       = current_time('Y-m-d');
                 </button>
             </div>
 
-            <!-- Live stats — reflect the date + team filter in view -->
-            <div class="wa-stats" id="waStats" aria-label="Lead summary">
-                <div class="wa-stat-card" data-tone="new"><span class="wa-stat-num" data-stat="tocall">0</span><span class="wa-stat-lbl">To call</span></div>
-                <div class="wa-stat-card" data-tone="interested"><span class="wa-stat-num" data-stat="interested">0</span><span class="wa-stat-lbl">Interested</span></div>
-                <div class="wa-stat-card" data-tone="quoted"><span class="wa-stat-num" data-stat="quoted">0</span><span class="wa-stat-lbl">Quoted</span></div>
-                <div class="wa-stat-card" data-tone="won"><span class="wa-stat-num" data-stat="won">0</span><span class="wa-stat-lbl">Won</span></div>
-                <div class="wa-stat-card" data-tone="callback"><span class="wa-stat-num" data-stat="callbacks">0</span><span class="wa-stat-lbl">Callbacks due</span></div>
-                <div class="wa-stat-card" data-tone="rate"><span class="wa-stat-num" data-stat="conversion">0%</span><span class="wa-stat-lbl">Win rate</span></div>
+            <!-- Live stats — click a card to filter the table -->
+            <div class="wa-stats" id="waStats" aria-label="Lead summary — click a card to filter">
+                <div class="wa-stat-card" data-tone="new" data-filter="tocall" role="button" tabindex="0" aria-pressed="false" title="Filter: to call"><span class="wa-stat-num" data-stat="tocall">0</span><span class="wa-stat-lbl">To call</span></div>
+                <div class="wa-stat-card" data-tone="interested" data-filter="interested" role="button" tabindex="0" aria-pressed="false" title="Filter: interested"><span class="wa-stat-num" data-stat="interested">0</span><span class="wa-stat-lbl">Interested</span></div>
+                <div class="wa-stat-card" data-tone="quoted" data-filter="quoted" role="button" tabindex="0" aria-pressed="false" title="Filter: quoted"><span class="wa-stat-num" data-stat="quoted">0</span><span class="wa-stat-lbl">Quoted</span></div>
+                <div class="wa-stat-card" data-tone="won" data-filter="won" role="button" tabindex="0" aria-pressed="false" title="Filter: won"><span class="wa-stat-num" data-stat="won">0</span><span class="wa-stat-lbl">Won</span></div>
+                <div class="wa-stat-card" data-tone="callback" data-filter="callbacks" role="button" tabindex="0" aria-pressed="false" title="Filter: callbacks due"><span class="wa-stat-num" data-stat="callbacks">0</span><span class="wa-stat-lbl">Callbacks due</span></div>
+                <div class="wa-stat-card" data-tone="rate" title="Win rate (not a filter)"><span class="wa-stat-num" data-stat="conversion">0%</span><span class="wa-stat-lbl">Win rate</span></div>
             </div>
 
             <div class="wa-tabs" role="tablist">
@@ -223,79 +233,8 @@ $today       = current_time('Y-m-d');
                             $d = dpowered_get_lead_data($l->ID);
                             // Skip private leads not assigned to current user (unless admin).
                             if ($d['private'] && $d['assigned'] !== $current_uid && !$is_admin) continue;
-                        ?>
-                        <tr class="wa-row<?php echo $d['private'] ? ' is-private-lead' : ''; ?>"
-                            data-id="<?php echo (int) $d['id']; ?>"
-                            data-status="<?php echo esc_attr($d['status']); ?>"
-                            data-assigned="<?php echo (int) $d['assigned']; ?>"
-                            data-date="<?php echo esc_attr($d['date']); ?>"
-                            data-callback="<?php echo esc_attr($d['callback']); ?>"
-                            data-private="<?php echo $d['private'] ? '1' : '0'; ?>">
-                            <td class="wa-col-toggle"><button type="button" class="wa-expand<?php echo $d['notes'] ? ' has-notes' : ''; ?>" aria-label="Toggle details">&rsaquo;</button></td>
-                            <td data-label="Business">
-                                <input type="text" class="wa-input wa-business" data-field="business" value="<?php echo esc_attr($d['business']); ?>">
-                                <span class="wa-meta">Added <?php echo esc_html($d['created']); ?> · <?php echo esc_html($sources[$d['source']] ?? $d['source']); ?></span>
-                                <span class="wa-callback-badge" hidden>📞 Callback</span>
-                            </td>
-                            <td data-label="Contact"><input type="text" class="wa-input" data-field="contact" value="<?php echo esc_attr($d['contact']); ?>"></td>
-                            <td data-label="Phone" class="wa-phone-cell">
-                                <input type="tel" class="wa-input" data-field="phone" value="<?php echo esc_attr($d['phone']); ?>">
-                                <button type="button" class="wa-call-btn" aria-label="Call this number" title="Call">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                                </button>
-                            </td>
-                            <td data-label="Status">
-                                <select class="wa-status status-<?php echo esc_attr($d['status']); ?>" data-field="status">
-                                    <?php foreach ($statuses as $key => $label): ?>
-                                    <option value="<?php echo esc_attr($key); ?>" <?php selected($d['status'], $key); ?>><?php echo esc_html($label); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                            <td class="wa-col-center" data-label="Called"><input type="checkbox" class="wa-check" data-field="called" <?php checked($d['called']); ?>></td>
-                            <td class="wa-col-center" data-label="Offered"><input type="checkbox" class="wa-check" data-field="offered" <?php checked($d['offered']); ?>></td>
-                            <td data-label="Assigned">
-                                <select class="wa-input" data-field="assigned">
-                                    <option value="0">Unassigned</option>
-                                    <?php foreach ($team as $member): ?>
-                                    <option value="<?php echo (int) $member->ID; ?>" <?php selected($d['assigned'], $member->ID); ?>><?php echo esc_html($member->display_name); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                            <td class="wa-col-center wa-col-actions">
-                                <button type="button"
-                                    class="wa-private-btn<?php echo $d['private'] ? ' is-private' : ''; ?>"
-                                    data-field="private"
-                                    aria-label="Toggle privacy"
-                                    title="<?php echo $d['private'] ? 'Private — click to share with team' : 'Shared — click to make private'; ?>"></button>
-                                <button type="button" class="wa-delete" aria-label="Delete lead">&times;</button>
-                            </td>
-                        </tr>
-                        <tr class="wa-detail" data-id="<?php echo (int) $d['id']; ?>" hidden>
-                            <td colspan="9">
-                                <div class="wa-detail-grid">
-                                    <label>Email
-                                        <input type="email" class="wa-input" data-field="email" value="<?php echo esc_attr($d['email']); ?>">
-                                    </label>
-                                    <label>Source
-                                        <select class="wa-input" data-field="source">
-                                            <?php foreach ($sources as $key => $label): ?>
-                                            <option value="<?php echo esc_attr($key); ?>" <?php selected($d['source'], $key); ?>><?php echo esc_html($label); ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </label>
-                                    <label>Sheet date
-                                        <input type="date" class="wa-input" data-field="date" value="<?php echo esc_attr($d['date']); ?>">
-                                    </label>
-                                    <label>Call back date
-                                        <input type="date" class="wa-input" data-field="callback" value="<?php echo esc_attr($d['callback']); ?>">
-                                    </label>
-                                    <label class="wa-detail-notes">Notes
-                                        <textarea class="wa-input" data-field="notes" rows="2"><?php echo esc_textarea($d['notes']); ?></textarea>
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
+                            echo dpowered_render_lead_row($d, $statuses, $sources, $team);
+                        endforeach; ?>
                     </tbody>
                 </table>
                 <p class="wa-empty" id="waEmpty"<?php echo $leads ? ' hidden' : ''; ?>>No leads yet. Click <strong>+ Add Lead</strong> to add your first one.</p>
@@ -562,6 +501,10 @@ $today       = current_time('Y-m-d');
                 <!-- Sidebar: page list -->
                 <aside class="wa-pages-sidebar">
                     <button class="btn btn-primary wa-pages-new-btn" id="waNewPage">+ New page</button>
+                    <div class="wa-pages-search-wrap">
+                        <svg class="wa-pages-search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="search" class="wa-pages-search" id="waPagesSearch" placeholder="Search pages…" aria-label="Search pages">
+                    </div>
                     <div class="wa-pages-list" id="waPagesList">
                         <p class="wa-pages-list-empty">No pages yet.<br>Create your first one above.</p>
                     </div>
@@ -588,6 +531,7 @@ $today       = current_time('Y-m-d');
                                 <span class="wa-privacy-icon">🔓</span>
                                 <span id="waPrivacyLabel">Shared with team</span>
                             </button>
+                            <span class="wa-page-edited-meta" id="waPageEditedMeta" hidden></span>
                             <span class="wa-page-saved-status" id="waPageSavedStatus"></span>
                             <button class="wa-page-delete-btn" id="waPageDeleteBtn" aria-label="Delete page" title="Delete this page">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
@@ -595,16 +539,22 @@ $today       = current_time('Y-m-d');
                         </div>
 
                         <div class="wa-editor-toolbar" id="waEditorToolbar">
-                            <button class="wa-fmt" data-cmd="bold" title="Bold"><b>B</b></button>
-                            <button class="wa-fmt" data-cmd="italic" title="Italic"><i>I</i></button>
-                            <button class="wa-fmt" data-cmd="underline" title="Underline"><u>U</u></button>
+                            <button class="wa-fmt" data-cmd="bold" title="Bold (Ctrl+B)"><b>B</b></button>
+                            <button class="wa-fmt" data-cmd="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+                            <button class="wa-fmt" data-cmd="underline" title="Underline (Ctrl+U)"><u>U</u></button>
+                            <button class="wa-fmt" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
                             <span class="wa-fmt-sep"></span>
                             <button class="wa-fmt" data-cmd="formatBlock" data-val="h2" title="Heading">H2</button>
                             <button class="wa-fmt" data-cmd="formatBlock" data-val="h3" title="Sub-heading">H3</button>
+                            <button class="wa-fmt" data-cmd="formatBlock" data-val="blockquote" title="Quote">❝</button>
+                            <span class="wa-fmt-sep"></span>
                             <button class="wa-fmt" data-cmd="insertUnorderedList" title="Bullet list">• List</button>
                             <button class="wa-fmt" data-cmd="insertOrderedList" title="Numbered list">1. List</button>
+                            <button class="wa-fmt" data-cmd="checklist" title="Checklist">☑ Tasks</button>
                             <span class="wa-fmt-sep"></span>
+                            <button class="wa-fmt" data-cmd="createLink" title="Add link">🔗 Link</button>
                             <button class="wa-fmt" data-cmd="insertHorizontalRule" title="Divider">—</button>
+                            <button class="wa-fmt" data-cmd="removeFormat" title="Clear formatting">✕ Clear</button>
                         </div>
 
                         <div class="wa-editor-content" id="waEditorContent" contenteditable="true" spellcheck="true" data-placeholder="Start writing — your content auto-saves as you type…"></div>
@@ -615,6 +565,34 @@ $today       = current_time('Y-m-d');
 
             </div><!-- /.wa-pages-layout -->
         </div><!-- /#waPagesView -->
+
+        </div><!-- /.wa-workspace-main -->
+
+        <!-- People panel — live team presence -->
+        <aside class="wa-people-panel" id="waPeoplePanel" aria-label="Team presence">
+            <?php $presence = dpowered_team_presence();
+                  $online_count = count(array_filter($presence, function ($p) { return $p['online']; })); ?>
+            <div class="wa-people-head">
+                <span class="wa-people-title">Team</span>
+                <span class="wa-people-count" id="waOnlineCount"><?php echo (int) $online_count; ?> online</span>
+            </div>
+            <div class="wa-people-list" id="waPeopleList">
+                <?php foreach ($presence as $p): ?>
+                <div class="wa-person<?php echo $p['online'] ? ' is-online' : ''; ?>" data-uid="<?php echo (int) $p['uid']; ?>">
+                    <span class="wa-person-avatar-wrap">
+                        <?php echo dpowered_avatar_html($p['uid'], 36, 'wa-person-avatar'); ?>
+                        <span class="wa-person-dot" style="--pc:<?php echo esc_attr($p['color']); ?>"></span>
+                    </span>
+                    <span class="wa-person-meta">
+                        <span class="wa-person-name"><?php echo esc_html($p['name']); ?><?php echo $p['uid'] === $current_uid ? ' <span class="wa-person-you">you</span>' : ''; ?></span>
+                        <span class="wa-person-status"><?php echo $p['online'] ? 'Online now' : ($p['last_human'] ? 'Active ' . esc_html($p['last_human']) : 'Offline'); ?></span>
+                    </span>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </aside>
+
+        </div><!-- /.wa-workspace-layout -->
 
     <?php endif; ?>
 
