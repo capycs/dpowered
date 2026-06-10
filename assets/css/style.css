@@ -1519,6 +1519,18 @@ h3 { font-family: var(--font-display); font-weight: 700; }
     position: relative;
     overflow: hidden;
 }
+.bundle-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        radial-gradient(900px 620px at 82% -14%, rgba(26,77,255,0.32), transparent 62%),
+        radial-gradient(1400px 920px at 56% 32%, rgba(26,77,255,0.13), transparent 72%);
+    pointer-events: none;
+    z-index: 0;
+}
+/* keep the existing .bundle-glow div working too, if present */
 .bundle-glow {
     position: absolute;
     inset: 0;
