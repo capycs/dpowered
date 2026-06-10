@@ -56,7 +56,7 @@ get_header(); ?>
     <div class="container">
         <div class="studio-manifesto reveal">
             <span class="section-tag">How We Think</span>
-            <h2>Good websites feel simple because the hard decisions have already been made.</h2>
+            <h2>Good websites feel <em>simple</em> because the hard decisions have already been made.</h2>
             <p>We care about the details visitors notice without being able to name them: the first impression, the way sections flow, the confidence a form gives them, and whether your business feels alive enough to contact.</p>
         </div>
         <div class="about-timeline reveal">

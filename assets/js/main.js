@@ -1,6 +1,8 @@
-/* DPowered V2 — main.js */
+/* DPowered V2.1 — main.js */
 (function () {
   'use strict';
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ── Strikethrough (SVG path draw) ────────────────────────────── */
   const strikeEl = document.getElementById('agencyStrike');
@@ -9,9 +11,12 @@
   }
 
   /* ── Scroll Progress Bar ───────────────────────────────────────── */
+  /* CSS scroll-driven animation handles this where supported — JS is
+     only the fallback for older browsers. */
   const progressBar = document.getElementById('scrollProgress');
+  const cssProgress = typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline: scroll()');
   function updateProgress() {
-    if (!progressBar) return;
+    if (!progressBar || cssProgress) return;
     const scrolled = window.scrollY;
     const total = document.documentElement.scrollHeight - window.innerHeight;
     progressBar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
@@ -61,10 +66,13 @@
   navClose   && navClose.addEventListener('click', closeNav);
   navOverlay && navOverlay.addEventListener('click', closeNav);
   navLinks   && navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && navLinks && navLinks.classList.contains('open')) closeNav();
+  });
 
   /* ── Cursor Follower ───────────────────────────────────────────── */
   const isTouchDevice = window.matchMedia('(hover: none)').matches;
-  if (!isTouchDevice) {
+  if (!isTouchDevice && !prefersReduced) {
     const cursor = document.createElement('div');
     cursor.className = 'v2-cursor';
     document.body.appendChild(cursor);
@@ -92,36 +100,53 @@
   }
 
   /* ── Magnetic Buttons ──────────────────────────────────────────── */
-  document.querySelectorAll('.mag-btn').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const r  = btn.getBoundingClientRect();
-      const dx = e.clientX - (r.left + r.width  / 2);
-      const dy = e.clientY - (r.top  + r.height / 2);
-      btn.style.transform = `translate(${dx * 0.28}px, ${dy * 0.28}px)`;
+  if (!prefersReduced) {
+    document.querySelectorAll('.mag-btn').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const r  = btn.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width  / 2);
+        const dy = e.clientY - (r.top  + r.height / 2);
+        btn.style.transform = `translate(${dx * 0.28}px, ${dy * 0.28}px)`;
+      });
+      btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
     });
-    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
-  });
+  }
 
   /* ── Scroll Reveal (single + group) ───────────────────────────── */
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-  document.querySelectorAll('.reveal, .reveal-left, .reveal-scale, .reveal-group').forEach(el => {
-    revealObserver.observe(el);
-  });
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale, .reveal-group');
+  if (prefersReduced) {
+    revealEls.forEach(el => el.classList.add('visible'));
+  } else {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => revealObserver.observe(el));
+  }
 
   /* ── Word-Split Headline Animation ────────────────────────────── */
+  /* Walks child nodes so <em> serif accents survive the split — em
+     words get .is-serif on the inner span. Skipped entirely under
+     reduced motion (CSS shows headlines as-is). */
   function initSplitHeadlines() {
+    if (prefersReduced) return;
     document.querySelectorAll('.split-headline').forEach(el => {
-      const words = el.textContent.trim().split(/\s+/);
-      el.innerHTML = words
-        .map((w, i) => `<span class="split-word" style="transition-delay:${i * 0.06}s"><span>${w}</span></span>`)
+      const tokens = [];
+      el.childNodes.forEach(node => {
+        const isSerif = node.nodeType === 1 && node.tagName === 'EM';
+        const text = node.textContent;
+        text.trim().split(/\s+/).forEach(w => {
+          if (w) tokens.push({ w, serif: isSerif });
+        });
+      });
+      if (!tokens.length) return;
+      el.innerHTML = tokens
+        .map((t, i) =>
+          `<span class="split-word" style="transition-delay:${(i * 0.06).toFixed(2)}s"><span class="${t.serif ? 'is-serif' : ''}">${t.w}</span></span>`)
         .join(' ');
 
       const obs = new IntersectionObserver((entries) => {
@@ -137,7 +162,7 @@
   }
   initSplitHeadlines();
 
-  /* ── Number Scramble Counter (21st dev inspired) ───────────────── */
+  /* ── Number Scramble Counter ───────────────────────────────────── */
   const CHARS = '0123456789';
 
   function scrambleCount(el, target, suffix, prefix, decimals) {
@@ -178,7 +203,11 @@
         const suffix   = el.dataset.suffix  || '';
         const prefix   = el.dataset.prefix  || '';
         const decimals = el.dataset.decimals ? parseInt(el.dataset.decimals) : 0;
-        scrambleCount(el, target, suffix, prefix, decimals);
+        if (prefersReduced) {
+          el.textContent = prefix + target.toFixed(decimals) + suffix;
+        } else {
+          scrambleCount(el, target, suffix, prefix, decimals);
+        }
         counterObserver.unobserve(el);
       }
     });
@@ -186,24 +215,23 @@
 
   document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
 
-  /* ── FAQ Accordion ─────────────────────────────────────────────── */
+  /* ── FAQ Accordion (grid-rows animation lives in CSS) ──────────── */
   document.querySelectorAll('.v2-faq-question').forEach(q => {
     q.addEventListener('click', () => {
-      const item   = q.closest('.v2-faq-item');
-      const answer = item && item.querySelector('.v2-faq-answer');
-      if (!item || !answer) return;
+      const item = q.closest('.v2-faq-item');
+      if (!item) return;
 
       const isOpen = item.classList.contains('open');
 
       document.querySelectorAll('.v2-faq-item.open').forEach(openItem => {
         openItem.classList.remove('open');
-        const a = openItem.querySelector('.v2-faq-answer');
-        if (a) a.style.maxHeight = '0';
+        const btn = openItem.querySelector('.v2-faq-question');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
       });
 
       if (!isOpen) {
         item.classList.add('open');
-        answer.style.maxHeight = answer.scrollHeight + 'px';
+        q.setAttribute('aria-expanded', 'true');
       }
     });
   });
@@ -211,8 +239,10 @@
   /* ── Package Picker (contact page) ────────────────────────────── */
   const serviceInput = document.getElementById('contact-service');
   document.querySelectorAll('.pkg-card').forEach(card => {
+    card.setAttribute('aria-pressed', card.classList.contains('selected') ? 'true' : 'false');
     card.addEventListener('click', () => {
       card.classList.toggle('selected');
+      card.setAttribute('aria-pressed', card.classList.contains('selected') ? 'true' : 'false');
       if (serviceInput) {
         const selected = [...document.querySelectorAll('.pkg-card.selected')]
           .map(c => c.dataset.value || '')
@@ -223,7 +253,7 @@
     });
   });
 
-  /* ── Clock ─────────────────────────────────────────────────────── */
+  /* ── Clock (footer + anywhere #liveClock appears) ──────────────── */
   const clockEl = document.getElementById('liveClock');
   if (clockEl) {
     function updateClock() {
@@ -242,18 +272,8 @@
       const target = document.querySelector(a.getAttribute('href'));
       if (target) {
         e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
       }
-    });
-  });
-
-  /* ── Marquee pause on hover ────────────────────────────────────── */
-  document.querySelectorAll('.v2-marquee-track').forEach(track => {
-    track.closest('.v2-marquee') && track.closest('.v2-marquee').addEventListener('mouseenter', () => {
-      track.style.animationPlayState = 'paused';
-    });
-    track.closest('.v2-marquee') && track.closest('.v2-marquee').addEventListener('mouseleave', () => {
-      track.style.animationPlayState = 'running';
     });
   });
 

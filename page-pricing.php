@@ -40,7 +40,7 @@ get_header(); ?>
     <div class="container">
         <div class="section-header">
             <span class="section-tag">One-Off Website Builds</span>
-            <h2>Choose the Build<br>That Matches the Job</h2>
+            <h2>Choose the Build<br>That <em>Matches</em> the Job</h2>
             <p>Most small businesses do not need a bloated agency project. They need a fast, credible website that earns trust, takes enquiries, and can grow when the business grows.</p>
         </div>
 
@@ -158,7 +158,7 @@ get_header(); ?>
     <div class="container">
         <div class="section-header">
             <span class="section-tag">Optional Monthly Care</span>
-            <h2>Keep the Site Sharp<br>After It Goes Live</h2>
+            <h2>Keep the Site <em>Sharp</em><br>After It Goes Live</h2>
             <p>Some agencies bundle hosting and support into everything. We keep it optional: choose a one-off build, or add monthly care if you want us handling the technical side.</p>
         </div>
 

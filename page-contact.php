@@ -15,7 +15,7 @@ get_header(); ?>
         <div class="quote-flow reveal">
             <div>
                 <span class="section-tag">Before the Quote</span>
-                <h2>What happens after you message us.</h2>
+                <h2>What happens <em>after</em> you message us.</h2>
             </div>
             <div class="quote-flow-steps">
                 <div>

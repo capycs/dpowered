@@ -101,7 +101,7 @@
         <a href="<?php echo esc_url(home_url('/services')); ?>" class="v2-svc-card mag-btn">
             <span class="v2-svc-num">01</span>
             <div class="v2-svc-body">
-                <strong>New Websites</strong>
+                <span class="v2-svc-roll"><span class="v2-svc-roll-track"><strong>New Websites</strong><em aria-hidden="true">New Websites</em></span></span>
                 <span>Built from scratch, fast</span>
             </div>
             <svg class="v2-svc-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
@@ -109,7 +109,7 @@
         <a href="<?php echo esc_url(home_url('/services')); ?>" class="v2-svc-card mag-btn">
             <span class="v2-svc-num">02</span>
             <div class="v2-svc-body">
-                <strong>Website Redesigns</strong>
+                <span class="v2-svc-roll"><span class="v2-svc-roll-track"><strong>Website Redesigns</strong><em aria-hidden="true">Website Redesigns</em></span></span>
                 <span>Old site, new life</span>
             </div>
             <svg class="v2-svc-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
@@ -117,7 +117,7 @@
         <a href="<?php echo esc_url(home_url('/services')); ?>" class="v2-svc-card mag-btn">
             <span class="v2-svc-num">03</span>
             <div class="v2-svc-body">
-                <strong>Monthly Care Plans</strong>
+                <span class="v2-svc-roll"><span class="v2-svc-roll-track"><strong>Monthly Care Plans</strong><em aria-hidden="true">Monthly Care Plans</em></span></span>
                 <span>Updates &amp; maintenance</span>
             </div>
             <svg class="v2-svc-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
@@ -125,7 +125,7 @@
         <a href="<?php echo esc_url(home_url('/services')); ?>" class="v2-svc-card mag-btn">
             <span class="v2-svc-num">04</span>
             <div class="v2-svc-body">
-                <strong>WordPress Training</strong>
+                <span class="v2-svc-roll"><span class="v2-svc-roll-track"><strong>WordPress Training</strong><em aria-hidden="true">WordPress Training</em></span></span>
                 <span>Edit it yourself</span>
             </div>
             <svg class="v2-svc-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
@@ -138,20 +138,24 @@
     <div class="container">
         <div class="v2-stats-grid reveal-group">
             <div class="v2-stat">
-                <div class="v2-stat-val"><span data-counter data-target="14" data-prefix="7–" data-suffix="">7–14</span><span class="v2-stat-unit"> days</span></div>
                 <div class="v2-stat-label">Turnaround</div>
+                <div class="v2-stat-val"><span data-counter data-target="14" data-prefix="7–" data-suffix="">7–14</span><span class="v2-stat-unit"> days</span></div>
+                <p class="v2-stat-desc">Brief to live in two weeks, not two months.</p>
             </div>
             <div class="v2-stat">
-                <div class="v2-stat-val"><span data-counter data-target="99.9" data-decimals="1" data-suffix="">99.9</span><span class="v2-stat-unit">%</span></div>
                 <div class="v2-stat-label">Uptime SLA</div>
+                <div class="v2-stat-val"><span data-counter data-target="99.9" data-decimals="1" data-suffix="">99.9</span><span class="v2-stat-unit">%</span></div>
+                <p class="v2-stat-desc">Solid hosting that stays up when it matters.</p>
             </div>
             <div class="v2-stat">
-                <div class="v2-stat-val"><span data-counter data-target="500" data-prefix="&lt;" data-suffix="">500</span><span class="v2-stat-unit">ms</span></div>
                 <div class="v2-stat-label">Avg. response time</div>
+                <div class="v2-stat-val"><span data-counter data-target="500" data-prefix="&lt;" data-suffix="">500</span><span class="v2-stat-unit">ms</span></div>
+                <p class="v2-stat-desc">Lean builds that load fast on every device.</p>
             </div>
             <div class="v2-stat">
-                <div class="v2-stat-val"><span data-counter data-target="100" data-suffix="%" data-prefix="">100</span></div>
                 <div class="v2-stat-label">Free SSL + CDN</div>
+                <div class="v2-stat-val"><span data-counter data-target="100" data-suffix="%" data-prefix="">100</span></div>
+                <p class="v2-stat-desc">Secure padlock and speed on every build.</p>
             </div>
         </div>
     </div>
@@ -161,8 +165,11 @@
 <section class="v2-process section">
     <div class="container">
         <div class="v2-process-header reveal">
-            <span class="section-tag">How We Work</span>
-            <h2 class="split-headline">Simple process, powerful results.</h2>
+            <div class="section-head-meta">
+                <span class="section-index" aria-hidden="true">01</span>
+                <span class="section-tag">How We Work</span>
+            </div>
+            <h2 class="split-headline">Simple process, <em>powerful</em> results.</h2>
         </div>
         <div class="v2-process-steps reveal-group">
             <div class="v2-process-step">
@@ -190,15 +197,25 @@
     </div>
 </section>
 
+<!-- ── KINETIC STATEMENT ──────────────────────────────────────────────────── -->
+<section class="v2-statement" aria-label="Less agency theatre. More working website.">
+    <div class="v2-statement-line v2-statement-line--a">Less agency <em>theatre.</em></div>
+    <div class="v2-statement-line v2-statement-line--b">More <em>working</em> website.</div>
+</section>
+
 <!-- ── WHY DPOWERED ───────────────────────────────────────────────────────── -->
 <section class="v2-why section">
     <div class="container">
         <div class="v2-why-header reveal">
-            <span class="section-tag">Why DPowered.online</span>
-            <h2 class="split-headline">Six reasons businesses choose us.</h2>
+            <div class="section-head-meta">
+                <span class="section-index" aria-hidden="true">02</span>
+                <span class="section-tag">Why DPowered.online</span>
+            </div>
+            <h2 class="split-headline">Six reasons businesses <em>choose</em> us.</h2>
         </div>
         <div class="v2-why-grid reveal-group">
-            <div class="v2-why-card">
+            <div class="v2-why-card v2-why-card--featured">
+                <div class="v2-why-glow" aria-hidden="true"></div>
                 <div class="v2-why-num">01</div>
                 <h3>Live in 7–14 days</h3>
                 <p>No 6-week timelines or endless back-and-forth. We move fast — most projects go from brief to live in under two weeks, without cutting a single corner.</p>
@@ -228,7 +245,7 @@
                 <p>We don't disappear after launch. Something broken? Need a change? Just want advice? We're a message away — and we actually respond quickly.</p>
                 <a href="<?php echo esc_url(home_url('/contact')); ?>" class="v2-why-link">Talk to us →</a>
             </div>
-            <div class="v2-why-card">
+            <div class="v2-why-card v2-why-card--wide">
                 <div class="v2-why-num">06</div>
                 <h3>Prices you can plan around</h3>
                 <p>Fixed project quotes, no hidden fees, no scope creep surprises. You know the full cost before a deposit — not after months of back-and-forth.</p>
@@ -246,8 +263,13 @@ if ($reviews->have_posts()):
 <section class="v2-reviews section">
     <div class="container">
         <div class="v2-reviews-header reveal">
-            <span class="section-tag">Client Stories</span>
-            <h2>What our clients<br>are saying.</h2>
+            <div>
+                <div class="section-head-meta">
+                    <span class="section-index" aria-hidden="true">03</span>
+                    <span class="section-tag">Client Stories</span>
+                </div>
+                <h2>What our clients<br>are <em>saying.</em></h2>
+            </div>
             <a href="<?php echo esc_url(home_url('/reviews')); ?>" class="v2-all-reviews-link">See all reviews →</a>
         </div>
         <div class="v2-reviews-grid">
@@ -285,8 +307,11 @@ if ($reviews->have_posts()):
     <div class="container">
         <div class="v2-faq-inner">
             <div class="v2-faq-header reveal">
-                <span class="section-tag">FAQ</span>
-                <h2>Common questions.</h2>
+                <div class="section-head-meta">
+                    <span class="section-index" aria-hidden="true">04</span>
+                    <span class="section-tag">FAQ</span>
+                </div>
+                <h2>Common <em>questions.</em></h2>
                 <p>Everything you need to know before getting started.</p>
                 <a href="<?php echo esc_url(home_url('/contact')); ?>" class="v2-btn-primary" style="display:inline-flex;margin-top:24px">Ask us anything →</a>
             </div>
@@ -328,7 +353,7 @@ if ($reviews->have_posts()):
     <div class="container">
         <div class="v2-cta-inner reveal">
             <span class="section-tag v2-cta-tag">Ready to start?</span>
-            <h2>Let's build something<br>worth talking about.</h2>
+            <h2>Let's build something<br><em>worth talking about.</em></h2>
             <p>Get in touch today and let's talk about how we can help your business grow online.</p>
             <div class="v2-cta-actions">
                 <a href="<?php echo esc_url(home_url('/contact')); ?>" class="v2-btn-primary v2-btn-lg mag-btn">Get a Free Quote</a>

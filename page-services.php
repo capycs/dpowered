@@ -15,7 +15,7 @@ get_header(); ?>
         <div class="narrative-split reveal">
             <div class="narrative-copy">
                 <span class="section-tag">Built Around Outcomes</span>
-                <h2>Not just a website. A sharper way for people to choose you.</h2>
+                <h2>Not just a website. A <em>sharper</em> way for people to choose you.</h2>
                 <p>Most business websites fail because they are treated like online leaflets. We build pages around the decisions your customers are actually making: can they trust you, do you solve their problem, and is it easy to take the next step?</p>
             </div>
             <div class="narrative-flow">
@@ -146,7 +146,7 @@ get_header(); ?>
         <div class="insight-band reveal">
             <div>
                 <span class="section-tag">What Changes</span>
-                <h2>Before and after your site starts doing its job.</h2>
+                <h2>Before and after your site starts doing its <em>job.</em></h2>
             </div>
             <div class="insight-compare">
                 <div>
