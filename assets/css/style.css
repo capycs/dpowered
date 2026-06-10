@@ -21,7 +21,6 @@
     --white:       #FFFFFF;
     --font-display: 'Space Grotesk', sans-serif;
     --font-body:    'Inter', sans-serif;
-    --font-serif:   'Instrument Serif', Georgia, serif;
     --nav-h:       68px;
     --radius-sm:   10px;
     --radius:      14px;
@@ -190,19 +189,14 @@ body::after {
     display: inline-block;
 }
 
-/* Editorial serif accent — used via <em> in headings + .gradient-text */
+/* Brand accent — <em> in headings + .gradient-text render solid blue.
+   Two-font rule: Space Grotesk + Inter only, no third typeface. */
 h1 em, h2 em, h3 em,
 .split-word .is-serif,
 .gradient-text {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: 1.06em;
-    line-height: 1;
-    letter-spacing: 0;
+    font-style: normal;
+    color: var(--blue);
 }
-h1 em, h2 em, h3 em { color: var(--blue); }
-.gradient-text { color: var(--blue); }
 
 /* ─── BUTTONS ────────────────────────────────────────────────────────────── */
 .btn, .v2-btn-primary, .v2-btn-ghost, .v2-btn-outline-dark {
@@ -750,10 +744,7 @@ h1 em, h2 em, h3 em { color: var(--blue); }
     margin-bottom: 0;
 }
 .v2-svc-roll-track em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: 1.04rem;
+    font-style: normal;
     color: var(--blue);
 }
 .v2-svc-card:hover .v2-svc-roll-track { transform: translateY(-50%); }
@@ -805,10 +796,9 @@ h1 em, h2 em, h3 em { color: var(--blue); }
 }
 .v2-stat-unit {
     display: inline;
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: 0.42em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.4em;
     color: var(--blue-on-dark);
 }
 .v2-stat-label {
@@ -900,7 +890,7 @@ h1 em, h2 em, h3 em { color: var(--blue); }
     width: max-content;
 }
 .v2-statement-line em {
-    font-size: 1.05em;
+    font-style: normal;
     color: var(--blue);
 }
 .v2-statement-line--a { margin-left: 5vw; }
@@ -1061,8 +1051,9 @@ h1 em, h2 em, h3 em { color: var(--blue); }
     position: absolute;
     top: 14px;
     right: 22px;
-    font-family: var(--font-serif);
-    font-size: 4.6rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 4.2rem;
     line-height: 1;
     color: rgba(26,77,255,0.14);
     pointer-events: none;
@@ -1074,11 +1065,9 @@ h1 em, h2 em, h3 em { color: var(--blue); }
 }
 .v2-review-stars { display: flex; gap: 3px; color: #f59e0b; }
 .v2-review-text {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 1.05rem;
-    color: var(--ink);
-    line-height: 1.6;
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    line-height: 1.7;
     flex: 1;
 }
 .v2-review-author { display: flex; align-items: center; gap: 12px; margin-top: auto; }
@@ -1461,7 +1450,7 @@ h3 { font-family: var(--font-display); font-weight: 700; }
 .pricing-price { font-family: var(--font-display); font-size: clamp(2.6rem, 4vw, 3.2rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; position: relative; }
 .pricing-currency { font-size: 0.45em; vertical-align: top; margin-top: 0.3em; display: inline-block; color: var(--blue); }
 .featured .pricing-currency { color: var(--blue-on-dark); }
-.pricing-per { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 0.42em; color: var(--ink-2); letter-spacing: 0; }
+.pricing-per { font-family: var(--font-body); font-weight: 500; font-size: 0.4em; color: var(--ink-2); letter-spacing: 0; }
 .featured .pricing-per { color: rgba(255,255,255,0.5); }
 .pricing-promise { font-size: 0.82rem; color: var(--ink-2); line-height: 1.55; position: relative; }
 .featured .pricing-promise { color: rgba(255,255,255,0.6); }
@@ -1534,8 +1523,8 @@ h3 { font-family: var(--font-display); font-weight: 700; }
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(680px 500px at 86% -10%, rgba(26,77,255,0.26), transparent 64%),
-        radial-gradient(1100px 800px at 68% 22%, rgba(26,77,255,0.10), transparent 72%);
+        radial-gradient(900px 620px at 82% -14%, rgba(26,77,255,0.32), transparent 62%),
+        radial-gradient(1400px 920px at 56% 32%, rgba(26,77,255,0.13), transparent 72%);
     pointer-events: none;
 }
 .bundle-left { position: relative; }
@@ -1552,7 +1541,7 @@ h3 { font-family: var(--font-display); font-weight: 700; }
 .bundle-price-row { display: flex; align-items: center; gap: 24px; margin-bottom: 4px; }
 .bundle-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 4px; display: block; }
 .bundle-amount { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--white); letter-spacing: -0.02em; }
-.bundle-plus { font-family: var(--font-serif); font-style: italic; font-size: 1.6rem; color: var(--blue-on-dark); }
+.bundle-plus { font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; color: var(--blue-on-dark); }
 .transparency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .not-included-card, .peace-card {
     background: var(--white);
@@ -1742,8 +1731,9 @@ h3 { font-family: var(--font-display); font-weight: 700; }
     position: absolute;
     top: 14px;
     right: 22px;
-    font-family: var(--font-serif);
-    font-size: 4.6rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 4.2rem;
     line-height: 1;
     color: rgba(26,77,255,0.14);
     pointer-events: none;
@@ -1751,11 +1741,9 @@ h3 { font-family: var(--font-display); font-weight: 700; }
 .testimonial-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: rgba(26,77,255,0.35); }
 .testimonial-stars { display: flex; gap: 3px; color: #f59e0b; }
 .testimonial-text {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 1.05rem;
-    color: var(--ink);
-    line-height: 1.6;
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    line-height: 1.7;
     flex: 1;
 }
 .testimonial-author { display: flex; align-items: center; gap: 12px; }
