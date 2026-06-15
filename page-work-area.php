@@ -575,7 +575,7 @@ $today       = current_time('Y-m-d');
 
             <div class="wa-finder-intro">
                 <h2 class="wa-finder-title">Find businesses with no website</h2>
-                <p class="wa-finder-sub">Searches OpenStreetMap (free) for local businesses that have <strong>no website listed</strong> — your ideal prospects. Tick the ones you want and add them straight to your leads.</p>
+                <p class="wa-finder-sub">Searches OpenStreetMap (free) for local businesses with <strong>no website listed</strong>. Businesses already active on Facebook/Instagram but with no site are flagged <strong>🔥 hot</strong> and sorted to the top — they want to be online, they just need a site. Tick the ones you want and add them straight to your leads.</p>
             </div>
 
             <form class="wa-finder-form" id="waFinderForm">
@@ -602,14 +602,23 @@ $today       = current_time('Y-m-d');
                 <button type="submit" class="btn btn-primary wa-finder-go" id="waFinderGo">Search</button>
             </form>
 
+            <div class="wa-finder-saved" id="waFinderSaved" hidden>
+                <span class="wa-finder-saved-label">Saved searches</span>
+                <div class="wa-finder-saved-list" id="waFinderSavedList"></div>
+            </div>
+
             <div class="wa-finder-results" id="waFinderResults" hidden>
                 <div class="wa-finder-resultsbar">
                     <label class="wa-finder-selectall"><input type="checkbox" id="waFinderAll"> Select all</label>
                     <span class="wa-finder-summary" id="waFinderSummary"></span>
-                    <button type="button" class="btn btn-primary wa-finder-import" id="waFinderImport" disabled>Add selected to leads</button>
+                    <div class="wa-finder-actions-right">
+                        <label class="wa-finder-newonly" title="Hide businesses already in your leads"><input type="checkbox" id="waFinderNewOnly"> New only</label>
+                        <button type="button" class="btn btn-secondary wa-finder-savebtn" id="waFinderSave" title="Save this area + type as a reusable search">★ Save search</button>
+                        <button type="button" class="btn btn-primary wa-finder-import" id="waFinderImport" disabled>Add selected to leads</button>
+                    </div>
                 </div>
                 <div class="wa-finder-table-wrap">
-                    <table class="wa-finder-table">
+                    <table class="wa-finder-table" id="waFinderTable">
                         <thead>
                             <tr>
                                 <th class="wa-finder-col-check" aria-label="Select"></th>

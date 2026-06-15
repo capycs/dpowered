@@ -743,6 +743,7 @@ function dpowered_work_area_assets() {
         ],
         'pages'         => dpowered_get_visible_pages($uid),
         'todayPad'      => (string) get_user_meta($uid, '_dpowered_pad_' . current_time('Y-m-d'), true),
+        'savedSearches' => function_exists('dpowered_get_saved_searches') ? dpowered_get_saved_searches() : [],
     ]);
 }
 add_action('wp_enqueue_scripts', 'dpowered_work_area_assets');

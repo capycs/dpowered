@@ -1731,4 +1731,45 @@ select.wa-input { cursor: pointer; }
 @media (max-width: 720px) {
     .wa-finder-import { margin-left: 0; width: 100%; }
     .wa-finder-addr { display: none; }
+    .wa-finder-actions-right { margin-left: 0; width: 100%; }
 }
+
+/* ── Hot leads + signals ── */
+.wa-finder-row.is-hot .wa-finder-name { font-weight: 700; }
+.wa-finder-hot {
+    display: inline-block; font-size: .66rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .03em; color: #b42318; background: #fee4e2;
+    padding: 1px 7px; border-radius: 20px; vertical-align: 1px;
+}
+.wa-finder-signals { display: block; font-size: .72rem; color: var(--blue); margin-top: 3px; }
+
+/* ── Results bar right-hand group ── */
+.wa-finder-actions-right { margin-left: auto; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.wa-finder-newonly { display: flex; align-items: center; gap: 7px; cursor: pointer; font-family: var(--font-body); font-size: .88rem; color: var(--ink); white-space: nowrap; }
+.wa-finder-savebtn { white-space: nowrap; }
+
+/* ── "New only" hides businesses already in leads ── */
+.wa-finder-table.newonly .wa-finder-row.is-known { display: none; }
+
+/* ── Saved searches ── */
+.wa-finder-saved { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: -8px 0 22px; }
+.wa-finder-saved-label {
+    font-family: var(--font-body); font-size: .72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--ink-2);
+}
+.wa-finder-saved-list { display: flex; gap: 8px; flex-wrap: wrap; }
+.wa-finder-chip {
+    display: inline-flex; align-items: stretch; border: 1px solid var(--border);
+    background: var(--white); border-radius: 20px; overflow: hidden;
+    transition: border-color .15s var(--ease-out), box-shadow .15s var(--ease-out);
+}
+.wa-finder-chip:hover { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-light); }
+.wa-finder-chip-run {
+    border: none; background: none; cursor: pointer; font-family: var(--font-body);
+    font-size: .82rem; color: var(--ink); padding: 6px 4px 6px 13px;
+}
+.wa-finder-chip-del {
+    border: none; background: none; cursor: pointer; color: var(--ink-2);
+    font-size: 1rem; line-height: 1; padding: 0 11px 0 6px;
+}
+.wa-finder-chip-del:hover { color: #b42318; }

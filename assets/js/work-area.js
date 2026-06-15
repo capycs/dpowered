@@ -565,16 +565,26 @@
     var finderInited   = false;
     var finderResults  = [];
 
+    var savedSearches = Array.isArray(cfg.savedSearches) ? cfg.savedSearches.slice() : [];
+
     function initFinder() {
         finderInited = true;
         var form     = document.getElementById('waFinderForm');
         var goBtn    = document.getElementById('waFinderGo');
         var resultsW = document.getElementById('waFinderResults');
         var bodyEl   = document.getElementById('waFinderBody');
+        var tableEl  = document.getElementById('waFinderTable');
         var summary  = document.getElementById('waFinderSummary');
         var stateEl  = document.getElementById('waFinderState');
         var allBox   = document.getElementById('waFinderAll');
         var importBtn= document.getElementById('waFinderImport');
+        var saveBtn  = document.getElementById('waFinderSave');
+        var newOnly  = document.getElementById('waFinderNewOnly');
+        var savedWrap= document.getElementById('waFinderSaved');
+        var savedList= document.getElementById('waFinderSavedList');
+        var areaInput= document.getElementById('finder-area');
+        var catInput = document.getElementById('finder-cat');
+        var radInput = document.getElementById('finder-radius');
         if (!form) return;
 
         function setState(html) {
@@ -591,9 +601,8 @@
             allBox.checked = checks.length > 0 && picked.length === checks.length;
         }
 
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            var area = document.getElementById('finder-area').value.trim();
+        function runSearch() {
+            var area = areaInput.value.trim();
             if (!area) return;
             goBtn.disabled = true;
             goBtn.textContent = 'Searching…';
@@ -603,8 +612,8 @@
             post({
                 action:   'dpowered_finder_search',
                 area:     area,
-                category: document.getElementById('finder-cat').value,
-                radius:   document.getElementById('finder-radius').value
+                category: catInput.value,
+                radius:   radInput.value
             }).then(function (res) {
                 goBtn.disabled = false;
                 goBtn.textContent = 'Search';
@@ -624,34 +633,57 @@
                 goBtn.textContent = 'Search';
                 setState('<div class="wa-finder-empty">Something went wrong. Try again.</div>');
             });
-        });
+        }
+
+        form.addEventListener('submit', function (e) { e.preventDefault(); runSearch(); });
 
         function renderResults(areaLabel, items) {
             bodyEl.innerHTML = '';
             items.forEach(function (it, i) {
                 var tr = document.createElement('tr');
-                tr.className = 'wa-finder-row' + (it.known ? ' is-known' : '');
+                tr.className = 'wa-finder-row' + (it.known ? ' is-known' : '') + (it.hot ? ' is-hot' : '');
+                var badges = '';
+                if (it.hot)   badges += ' <span class="wa-finder-hot">🔥 hot</span>';
+                if (it.known) badges += ' <span class="wa-finder-known">in leads</span>';
+                var signal = (it.signals && it.signals.length) ? '<span class="wa-finder-signals">' + escHtml(it.signals.join(' · ')) + '</span>' : '';
+                var maps = it.maps ? '<a href="' + escHtml(it.maps) + '" target="_blank" rel="noopener" title="View on map">📍</a>' : '';
+                var social = it.social ? '<a href="' + escHtml(it.social) + '" target="_blank" rel="noopener" title="' + escHtml(it.social_net || 'Social') + ' page">🔗</a>' : '';
                 tr.innerHTML =
                     '<td class="wa-finder-col-check"><input type="checkbox" class="wa-finder-check" data-i="' + i + '"' + (it.known ? ' disabled title="Already in your leads"' : '') + '></td>' +
-                    '<td class="wa-finder-name">' + escHtml(it.name) + (it.known ? ' <span class="wa-finder-known">in leads</span>' : '') + '<span class="wa-finder-cat">' + escHtml(it.category) + '</span></td>' +
+                    '<td class="wa-finder-name">' + escHtml(it.name) + badges + '<span class="wa-finder-cat">' + escHtml(it.category) + '</span>' + signal + '</td>' +
                     '<td>' + (it.phone ? '<a href="tel:' + escHtml(it.phone.replace(/\s+/g, '')) + '">' + escHtml(it.phone) + '</a>' : '<span class="wa-finder-nophone">—</span>') + '</td>' +
                     '<td class="wa-finder-addr">' + escHtml(it.address || '—') + '</td>' +
-                    '<td class="wa-finder-col-map">' + (it.maps ? '<a href="' + escHtml(it.maps) + '" target="_blank" rel="noopener" title="View on map">📍</a>' : '') + '</td>';
+                    '<td class="wa-finder-col-map">' + maps + social + '</td>';
                 bodyEl.appendChild(tr);
             });
             var fresh = items.filter(function (it) { return !it.known; }).length;
-            summary.innerHTML = '<strong>' + items.length + '</strong> found near ' + escHtml(areaLabel) + ' · <strong>' + fresh + '</strong> new';
+            var hot   = items.filter(function (it) { return it.hot; }).length;
+            summary.innerHTML = '<strong>' + items.length + '</strong> found near ' + escHtml(areaLabel) +
+                ' · <strong>' + fresh + '</strong> new' + (hot ? ' · <strong>' + hot + '</strong> 🔥 hot' : '');
             resultsW.hidden = false;
             allBox.checked = false;
+            applyNewOnly();
             refreshSelection();
         }
+
+        function applyNewOnly() {
+            if (!tableEl) return;
+            tableEl.classList.toggle('newonly', newOnly && newOnly.checked);
+        }
+
+        if (newOnly) newOnly.addEventListener('change', applyNewOnly);
 
         bodyEl.addEventListener('change', function (e) {
             if (e.target.classList.contains('wa-finder-check')) refreshSelection();
         });
 
         allBox.addEventListener('change', function () {
-            bodyEl.querySelectorAll('.wa-finder-check:not(:disabled)').forEach(function (c) { c.checked = allBox.checked; });
+            // Only toggle rows that are visible (respects "New only").
+            bodyEl.querySelectorAll('.wa-finder-row:not(.is-known) .wa-finder-check:not(:disabled), .wa-finder-check:not(:disabled)').forEach(function (c) {
+                var row = c.closest('.wa-finder-row');
+                if (row && row.offsetParent === null) return; // hidden by New only
+                c.checked = allBox.checked;
+            });
             refreshSelection();
         });
 
@@ -659,7 +691,7 @@
             var picked = [];
             bodyEl.querySelectorAll('.wa-finder-check:checked').forEach(function (c) {
                 var it = finderResults[+c.getAttribute('data-i')];
-                if (it) picked.push({ name: it.name, phone: it.phone, address: it.address, category: it.category });
+                if (it) picked.push({ name: it.name, phone: it.phone, address: it.address, category: it.category, social: it.social || '' });
             });
             if (!picked.length) return;
             importBtn.disabled = true;
@@ -680,6 +712,58 @@
                 refreshSelection();
             });
         });
+
+        /* ── Saved searches ── */
+        function renderSaved() {
+            if (!savedWrap || !savedList) return;
+            savedList.innerHTML = '';
+            if (!savedSearches.length) { savedWrap.hidden = true; return; }
+            savedWrap.hidden = false;
+            savedSearches.forEach(function (s) {
+                var chip = document.createElement('span');
+                chip.className = 'wa-finder-chip';
+                chip.setAttribute('data-id', s.id);
+                chip.innerHTML = '<button type="button" class="wa-finder-chip-run" title="Run this search">' + escHtml(s.label) + '</button>' +
+                                 '<button type="button" class="wa-finder-chip-del" aria-label="Delete saved search" title="Delete">&times;</button>';
+                savedList.appendChild(chip);
+            });
+        }
+
+        if (savedList) savedList.addEventListener('click', function (e) {
+            var chip = e.target.closest('.wa-finder-chip');
+            if (!chip) return;
+            var id = +chip.getAttribute('data-id');
+            var s  = savedSearches.filter(function (x) { return x.id === id; })[0];
+            if (!s) return;
+            if (e.target.closest('.wa-finder-chip-del')) {
+                post({ action: 'dpowered_delete_search', search_id: id }).then(function (res) {
+                    if (res && res.success) { savedSearches = res.data.searches || []; renderSaved(); }
+                });
+                return;
+            }
+            if (e.target.closest('.wa-finder-chip-run') && s.params) {
+                areaInput.value = s.params.area || '';
+                if (s.params.category) catInput.value = s.params.category;
+                if (s.params.radius)   radInput.value = s.params.radius;
+                runSearch();
+            }
+        });
+
+        if (saveBtn) saveBtn.addEventListener('click', function () {
+            var area = areaInput.value.trim();
+            if (!area) { toast('Run a search first, then save it.', 'error'); return; }
+            saveBtn.disabled = true;
+            post({ action: 'dpowered_save_search', area: area, category: catInput.value, radius: radInput.value })
+                .then(function (res) {
+                    saveBtn.disabled = false;
+                    if (!res || !res.success) { toast((res && res.data && res.data.msg) || 'Could not save.', 'error'); return; }
+                    savedSearches = res.data.searches || [];
+                    renderSaved();
+                    toast('Search saved.');
+                }).catch(function () { saveBtn.disabled = false; toast('Could not save.', 'error'); });
+        });
+
+        renderSaved();
     }
 
     /* ── Scratchpad ──────────────────────────────────────── */

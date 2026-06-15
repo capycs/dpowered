@@ -25,6 +25,11 @@ if (!defined('ABSPATH')) exit;
 
 function dpowered_finder_categories() {
     return [
+        // ── Group sweeps (query several types at once) ──
+        'all_food'    => ['label' => '★ All food & drink',   'tags' => [['amenity', 'restaurant'], ['amenity', 'cafe'], ['amenity', 'fast_food'], ['amenity', 'pub'], ['amenity', 'bar']]],
+        'all_trades'  => ['label' => '★ All trades',         'tags' => [['craft', 'plumber'], ['craft', 'electrician'], ['craft', 'builder'], ['craft', 'carpenter'], ['craft', 'painter'], ['craft', 'roofer']]],
+        'all_beauty'  => ['label' => '★ All hair & beauty',  'tags' => [['shop', 'hairdresser'], ['shop', 'beauty'], ['shop', 'nails']]],
+        // ── Single types ──
         'restaurant'  => ['label' => 'Restaurants',          'tags' => [['amenity', 'restaurant']]],
         'cafe'        => ['label' => 'Cafés',                'tags' => [['amenity', 'cafe']]],
         'takeaway'    => ['label' => 'Takeaways / fast food','tags' => [['amenity', 'fast_food']]],
@@ -167,22 +172,49 @@ function dpowered_ajax_finder_search() {
         $lat = $el['lat'] ?? ($el['center']['lat'] ?? null);
         $lon = $el['lon'] ?? ($el['center']['lon'] ?? null);
 
+        $phone = trim($t['phone'] ?? ($t['contact:phone'] ?? ''));
+
+        // Social presence (no website, since we've filtered those out) = a business
+        // that's actively trying to be found online but has no site = hottest lead.
+        $fb = trim($t['contact:facebook']  ?? ($t['facebook']  ?? ''));
+        $ig = trim($t['contact:instagram'] ?? ($t['instagram'] ?? ''));
+        if ($fb !== '') {
+            $social_url = preg_match('#^https?://#i', $fb) ? $fb : 'https://facebook.com/' . ltrim($fb, '/');
+            $social_net = 'Facebook';
+        } elseif ($ig !== '') {
+            $social_url = preg_match('#^https?://#i', $ig) ? $ig : 'https://instagram.com/' . ltrim($ig, '/');
+            $social_net = 'Instagram';
+        } else {
+            $social_url = '';
+            $social_net = '';
+        }
+        $has_social = $social_url !== '';
+
+        // Lead score: social-but-no-website is the strongest signal, phone is actionable.
+        $signals = [];
+        $score   = 0;
+        if ($has_social)     { $score += 2; $signals[] = 'On ' . $social_net . ' · no website'; }
+        if ($phone !== '')   { $score += 1; $signals[] = 'Has phone'; }
+
         $items[] = [
-            'name'     => $name,
-            'phone'    => trim($t['phone'] ?? ($t['contact:phone'] ?? '')),
-            'address'  => dpowered_finder_address($t),
-            'category' => $cats[$cat_key]['label'],
-            'maps'     => ($lat && $lon) ? "https://www.openstreetmap.org/?mlat={$lat}&mlon={$lon}#map=18/{$lat}/{$lon}" : '',
-            'known'    => isset($existing[$key]),
+            'name'       => $name,
+            'phone'      => $phone,
+            'address'    => dpowered_finder_address($t),
+            'category'   => $cats[$cat_key]['label'],
+            'maps'       => ($lat && $lon) ? "https://www.openstreetmap.org/?mlat={$lat}&mlon={$lon}#map=18/{$lat}/{$lon}" : '',
+            'social'     => $social_url,
+            'social_net' => $social_net,
+            'hot'        => $has_social,
+            'score'      => $score,
+            'signals'    => $signals,
+            'known'      => isset($existing[$key]),
         ];
         if (count($items) >= 250) break;
     }
 
-    // Businesses with a phone number first — they're the actionable ones.
+    // Hottest first (social-no-site, then phone), then alphabetical.
     usort($items, function ($a, $b) {
-        $pa = $a['phone'] !== '' ? 0 : 1;
-        $pb = $b['phone'] !== '' ? 0 : 1;
-        if ($pa !== $pb) return $pa - $pb;
+        if ($a['score'] !== $b['score']) return $b['score'] - $a['score'];
         return strcasecmp($a['name'], $b['name']);
     });
 
@@ -222,9 +254,11 @@ function dpowered_ajax_finder_import() {
 
         $address  = sanitize_text_field($it['address'] ?? '');
         $category = sanitize_text_field($it['category'] ?? '');
+        $social   = esc_url_raw($it['social'] ?? '');
         $note     = 'No website found via Map Finder.';
         if ($category) $note .= ' Type: ' . $category . '.';
         if ($address)  $note .= ' Address: ' . $address . '.';
+        if ($social)   $note .= ' Active on social (no site): ' . $social;
 
         $id = dpowered_insert_lead([
             'business' => $name,
@@ -243,3 +277,95 @@ function dpowered_ajax_finder_import() {
     wp_send_json_success(['added' => $added, 'skipped' => $skipped]);
 }
 add_action('wp_ajax_dpowered_finder_import', 'dpowered_ajax_finder_import');
+
+// ── Saved searches (team "territories") ──────────────────────────────────────
+// A reusable area+type+radius combo. Shared across the team like leads/meetings.
+
+function dpowered_register_saved_searches() {
+    register_post_type('dpowered_search', [
+        'labels'          => ['name' => 'Saved Searches', 'singular_name' => 'Saved Search'],
+        'public'          => false,
+        'show_ui'         => false,
+        'supports'        => ['title', 'author'],
+        'capability_type' => 'post',
+        'map_meta_cap'    => true,
+    ]);
+}
+add_action('init', 'dpowered_register_saved_searches');
+
+/** All saved searches (shared), newest first, with owner + decoded params. */
+function dpowered_get_saved_searches() {
+    $posts = get_posts([
+        'post_type'      => 'dpowered_search',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+    ]);
+    $out = [];
+    foreach ($posts as $p) {
+        $params = json_decode((string) get_post_meta($p->ID, '_search_params', true), true);
+        $owner  = (int) $p->post_author;
+        $u      = $owner ? get_userdata($owner) : null;
+        $out[] = [
+            'id'         => (int) $p->ID,
+            'label'      => $p->post_title,
+            'params'     => is_array($params) ? $params : [],
+            'owner'      => $owner,
+            'owner_name' => $u ? $u->display_name : '',
+        ];
+    }
+    return $out;
+}
+
+function dpowered_ajax_save_search() {
+    check_ajax_referer('dpowered_leads', 'nonce');
+    if (!dpowered_user_can_leads()) wp_send_json_error(['msg' => 'No access.'], 403);
+
+    $area     = sanitize_text_field(wp_unslash($_POST['area'] ?? ''));
+    $category = sanitize_key($_POST['category'] ?? '');
+    $radius   = sanitize_text_field(wp_unslash($_POST['radius'] ?? '3'));
+    $label    = sanitize_text_field(wp_unslash($_POST['label'] ?? ''));
+
+    $cats = dpowered_finder_categories();
+    if ($area === '' || !isset($cats[$category])) {
+        wp_send_json_error(['msg' => 'Run a search first, then save it.'], 400);
+    }
+    if ($label === '') {
+        $label = $cats[$category]['label'] . ' · ' . $area;
+    }
+
+    $id = wp_insert_post([
+        'post_type'   => 'dpowered_search',
+        'post_status' => 'publish',
+        'post_title'  => $label,
+        'post_author' => get_current_user_id(),
+    ], true);
+    if (is_wp_error($id)) wp_send_json_error(['msg' => 'Could not save.'], 500);
+
+    update_post_meta($id, '_search_params', wp_json_encode([
+        'source'   => 'map',
+        'area'     => $area,
+        'category' => $category,
+        'radius'   => $radius,
+    ]));
+
+    wp_send_json_success(['searches' => dpowered_get_saved_searches()]);
+}
+add_action('wp_ajax_dpowered_save_search', 'dpowered_ajax_save_search');
+
+function dpowered_ajax_delete_search() {
+    check_ajax_referer('dpowered_leads', 'nonce');
+    if (!dpowered_user_can_leads()) wp_send_json_error(['msg' => 'No access.'], 403);
+
+    $id = absint($_POST['search_id'] ?? 0);
+    $p  = get_post($id);
+    if (!$p || $p->post_type !== 'dpowered_search') wp_send_json_error(['msg' => 'Not found.'], 404);
+    if ((int) $p->post_author !== get_current_user_id() && !current_user_can('manage_options')) {
+        wp_send_json_error(['msg' => 'Only the owner can delete this.'], 403);
+    }
+
+    wp_delete_post($id, true);
+    wp_send_json_success(['searches' => dpowered_get_saved_searches()]);
+}
+add_action('wp_ajax_dpowered_delete_search', 'dpowered_ajax_delete_search');
