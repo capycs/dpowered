@@ -27,6 +27,7 @@ function dpowered_lead_sources() {
         'website'   => 'Website',
         'cold-call' => 'Cold call',
         'referral'  => 'Referral',
+        'finder'    => 'Map finder',
         'other'     => 'Other',
     ];
 }

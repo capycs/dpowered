@@ -138,6 +138,10 @@ $today       = current_time('Y-m-d');
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 Pages
             </button>
+            <button class="wa-workspace-tab" id="waViewFinder" role="tab" aria-selected="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Find Leads
+            </button>
         </nav>
 
         <!-- Top bar (persistent across both views) -->
@@ -564,6 +568,64 @@ $today       = current_time('Y-m-d');
 
             </div><!-- /.wa-pages-layout -->
         </div><!-- /#waPagesView -->
+
+        <!-- ═══════════════════════════════════════════════ FIND LEADS VIEW -->
+        <div id="waFinderView" hidden>
+            <?php $finder_cats = dpowered_finder_categories(); $finder_radii = dpowered_finder_radii(); ?>
+
+            <div class="wa-finder-intro">
+                <h2 class="wa-finder-title">Find businesses with no website</h2>
+                <p class="wa-finder-sub">Searches OpenStreetMap (free) for local businesses that have <strong>no website listed</strong> — your ideal prospects. Tick the ones you want and add them straight to your leads.</p>
+            </div>
+
+            <form class="wa-finder-form" id="waFinderForm">
+                <div class="wa-finder-field wa-finder-field-area">
+                    <label for="finder-area">Area</label>
+                    <input type="text" id="finder-area" name="area" placeholder="Town, area or postcode — e.g. Shevington or WN6 8" autocomplete="off" required>
+                </div>
+                <div class="wa-finder-field">
+                    <label for="finder-cat">Business type</label>
+                    <select id="finder-cat" name="category">
+                        <?php foreach ($finder_cats as $ck => $c): ?>
+                        <option value="<?php echo esc_attr($ck); ?>"><?php echo esc_html($c['label']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="wa-finder-field wa-finder-field-radius">
+                    <label for="finder-radius">Within</label>
+                    <select id="finder-radius" name="radius">
+                        <?php foreach ($finder_radii as $rk => $rm): ?>
+                        <option value="<?php echo esc_attr($rk); ?>" <?php selected($rk, '3'); ?>><?php echo esc_html($rk); ?> km</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary wa-finder-go" id="waFinderGo">Search</button>
+            </form>
+
+            <div class="wa-finder-results" id="waFinderResults" hidden>
+                <div class="wa-finder-resultsbar">
+                    <label class="wa-finder-selectall"><input type="checkbox" id="waFinderAll"> Select all</label>
+                    <span class="wa-finder-summary" id="waFinderSummary"></span>
+                    <button type="button" class="btn btn-primary wa-finder-import" id="waFinderImport" disabled>Add selected to leads</button>
+                </div>
+                <div class="wa-finder-table-wrap">
+                    <table class="wa-finder-table">
+                        <thead>
+                            <tr>
+                                <th class="wa-finder-col-check" aria-label="Select"></th>
+                                <th>Business</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th class="wa-finder-col-map" aria-label="Map"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="waFinderBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="wa-finder-state" id="waFinderState" hidden></div>
+        </div><!-- /#waFinderView -->
 
         </div><!-- /.wa-workspace-main -->
 

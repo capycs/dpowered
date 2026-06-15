@@ -541,21 +541,146 @@
     var viewLeadsBtn    = document.getElementById('waViewLeads');
     var viewMeetingsBtn = document.getElementById('waViewMeetings');
     var viewPagesBtn    = document.getElementById('waViewPages');
+    var viewFinderBtn   = document.getElementById('waViewFinder');
     var leadsView       = document.getElementById('waLeadsView');
     var pagesView       = document.getElementById('waPagesView');
+    var finderView      = document.getElementById('waFinderView');
 
     function showView(view) {
-        var views   = { leads: leadsView, meetings: meetingsView, pages: pagesView };
-        var buttons = { leads: viewLeadsBtn, meetings: viewMeetingsBtn, pages: viewPagesBtn };
+        var views   = { leads: leadsView, meetings: meetingsView, pages: pagesView, finder: finderView };
+        var buttons = { leads: viewLeadsBtn, meetings: viewMeetingsBtn, pages: viewPagesBtn, finder: viewFinderBtn };
         Object.keys(views).forEach(function(v) {
             if (views[v])   views[v].hidden = (v !== view);
             if (buttons[v]) { buttons[v].classList.toggle('is-active', v === view); buttons[v].setAttribute('aria-selected', String(v === view)); }
         });
         if (view === 'pages' && !pagesLoaded) initPages();
+        if (view === 'finder' && !finderInited) initFinder();
     }
     if (viewLeadsBtn)    viewLeadsBtn.addEventListener('click',    function () { showView('leads'); });
     if (viewMeetingsBtn) viewMeetingsBtn.addEventListener('click', function () { showView('meetings'); });
     if (viewPagesBtn)    viewPagesBtn.addEventListener('click',    function () { showView('pages'); });
+    if (viewFinderBtn)   viewFinderBtn.addEventListener('click',   function () { showView('finder'); });
+
+    /* ── Find Leads (free OSM business finder) ───────────────── */
+    var finderInited   = false;
+    var finderResults  = [];
+
+    function initFinder() {
+        finderInited = true;
+        var form     = document.getElementById('waFinderForm');
+        var goBtn    = document.getElementById('waFinderGo');
+        var resultsW = document.getElementById('waFinderResults');
+        var bodyEl   = document.getElementById('waFinderBody');
+        var summary  = document.getElementById('waFinderSummary');
+        var stateEl  = document.getElementById('waFinderState');
+        var allBox   = document.getElementById('waFinderAll');
+        var importBtn= document.getElementById('waFinderImport');
+        if (!form) return;
+
+        function setState(html) {
+            if (!stateEl) return;
+            stateEl.innerHTML = html || '';
+            stateEl.hidden = !html;
+        }
+
+        function refreshSelection() {
+            var checks = bodyEl.querySelectorAll('.wa-finder-check:not(:disabled)');
+            var picked = bodyEl.querySelectorAll('.wa-finder-check:checked');
+            importBtn.disabled = picked.length === 0;
+            importBtn.textContent = picked.length ? 'Add ' + picked.length + ' to leads' : 'Add selected to leads';
+            allBox.checked = checks.length > 0 && picked.length === checks.length;
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var area = document.getElementById('finder-area').value.trim();
+            if (!area) return;
+            goBtn.disabled = true;
+            goBtn.textContent = 'Searching…';
+            resultsW.hidden = true;
+            setState('<div class="wa-finder-loading">Searching OpenStreetMap for businesses with no website…</div>');
+
+            post({
+                action:   'dpowered_finder_search',
+                area:     area,
+                category: document.getElementById('finder-cat').value,
+                radius:   document.getElementById('finder-radius').value
+            }).then(function (res) {
+                goBtn.disabled = false;
+                goBtn.textContent = 'Search';
+                if (!res || !res.success) {
+                    setState('<div class="wa-finder-empty">' + escHtml((res && res.data && res.data.msg) || 'Search failed. Try again.') + '</div>');
+                    return;
+                }
+                finderResults = res.data.results || [];
+                if (!finderResults.length) {
+                    setState('<div class="wa-finder-empty">No no-website businesses found near <strong>' + escHtml(res.data.area) + '</strong> for that type. Try a wider radius or a different type.</div>');
+                    return;
+                }
+                setState('');
+                renderResults(res.data.area, finderResults);
+            }).catch(function () {
+                goBtn.disabled = false;
+                goBtn.textContent = 'Search';
+                setState('<div class="wa-finder-empty">Something went wrong. Try again.</div>');
+            });
+        });
+
+        function renderResults(areaLabel, items) {
+            bodyEl.innerHTML = '';
+            items.forEach(function (it, i) {
+                var tr = document.createElement('tr');
+                tr.className = 'wa-finder-row' + (it.known ? ' is-known' : '');
+                tr.innerHTML =
+                    '<td class="wa-finder-col-check"><input type="checkbox" class="wa-finder-check" data-i="' + i + '"' + (it.known ? ' disabled title="Already in your leads"' : '') + '></td>' +
+                    '<td class="wa-finder-name">' + escHtml(it.name) + (it.known ? ' <span class="wa-finder-known">in leads</span>' : '') + '<span class="wa-finder-cat">' + escHtml(it.category) + '</span></td>' +
+                    '<td>' + (it.phone ? '<a href="tel:' + escHtml(it.phone.replace(/\s+/g, '')) + '">' + escHtml(it.phone) + '</a>' : '<span class="wa-finder-nophone">—</span>') + '</td>' +
+                    '<td class="wa-finder-addr">' + escHtml(it.address || '—') + '</td>' +
+                    '<td class="wa-finder-col-map">' + (it.maps ? '<a href="' + escHtml(it.maps) + '" target="_blank" rel="noopener" title="View on map">📍</a>' : '') + '</td>';
+                bodyEl.appendChild(tr);
+            });
+            var fresh = items.filter(function (it) { return !it.known; }).length;
+            summary.innerHTML = '<strong>' + items.length + '</strong> found near ' + escHtml(areaLabel) + ' · <strong>' + fresh + '</strong> new';
+            resultsW.hidden = false;
+            allBox.checked = false;
+            refreshSelection();
+        }
+
+        bodyEl.addEventListener('change', function (e) {
+            if (e.target.classList.contains('wa-finder-check')) refreshSelection();
+        });
+
+        allBox.addEventListener('change', function () {
+            bodyEl.querySelectorAll('.wa-finder-check:not(:disabled)').forEach(function (c) { c.checked = allBox.checked; });
+            refreshSelection();
+        });
+
+        importBtn.addEventListener('click', function () {
+            var picked = [];
+            bodyEl.querySelectorAll('.wa-finder-check:checked').forEach(function (c) {
+                var it = finderResults[+c.getAttribute('data-i')];
+                if (it) picked.push({ name: it.name, phone: it.phone, address: it.address, category: it.category });
+            });
+            if (!picked.length) return;
+            importBtn.disabled = true;
+            importBtn.textContent = 'Adding…';
+            post({ action: 'dpowered_finder_import', items: JSON.stringify(picked) }).then(function (res) {
+                if (!res || !res.success) {
+                    toast((res && res.data && res.data.msg) || 'Import failed.', 'error');
+                    importBtn.disabled = false;
+                    refreshSelection();
+                    return;
+                }
+                var added = res.data.added, skipped = res.data.skipped;
+                toast('Added ' + added + ' lead' + (added === 1 ? '' : 's') + (skipped ? ' · ' + skipped + ' already existed' : '') + '. Reloading leads…');
+                setTimeout(function () { window.location.reload(); }, 1300);
+            }).catch(function () {
+                toast('Import failed.', 'error');
+                importBtn.disabled = false;
+                refreshSelection();
+            });
+        });
+    }
 
     /* ── Scratchpad ──────────────────────────────────────── */
     var padToggle = document.getElementById('waPadToggle');
