@@ -31,6 +31,15 @@ get_header(); ?>
             <h2>Your content is your responsibility</h2>
             <p>You're responsible for making sure the words, prices, photos and claims on your site are accurate and that you have the right to use them. We're not responsible for content you give us to publish.</p>
 
+            <h2>What we need from you</h2>
+            <p>To keep your project on track and your site legal, you agree to:</p>
+            <ul>
+                <li>Give us your content, photos and approvals promptly. Our timescales, including our typical two-week build, assume you do this. Delays on your side may push the dates back.</li>
+                <li>Only give us words, images and logos you have the right to use.</li>
+                <li>Keep your contact details up to date so we can reach you.</li>
+                <li><strong>Tell us promptly if your business closes, stops trading, is sold or changes owner</strong>, so we can update or take the site down as set out below.</li>
+            </ul>
+
             <h2>Your domain &amp; hosting</h2>
             <p>We'll always tell you who owns your domain name and where your site is hosted. We don't lock you in. If you ever leave, you can take your domain with you. If we host your site, hosting continues only while your care plan is active.</p>
 
@@ -50,6 +59,9 @@ get_header(); ?>
                 <li>We may <strong>keep a screenshot or archived sample</strong> of the finished design in our portfolio, clearly marked as a past project.</li>
             </ul>
             <p>If you'd like us to keep any version of the site online after you've closed, that has to be agreed in writing first.</p>
+
+            <h2>Covering us</h2>
+            <p>You agree to cover us for any claims, fines or losses that come from the content you supply, from something you did not tell us, or from you not meeting the responsibilities above. For example, if your business closes and you do not let us know, you are responsible for any problems caused by the site still appearing open.</p>
 
             <h2>What we're not responsible for</h2>
             <p>We build and maintain your website, but we don't run your business. We're not liable for your sales, bookings, the accuracy of your content, or outages caused by third parties (such as your host, domain registrar or payment provider). Our total liability is limited to the fees you've paid us.</p>
