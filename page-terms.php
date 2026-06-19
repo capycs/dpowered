@@ -6,7 +6,7 @@ get_header(); ?>
     <div class="container inner-hero-content">
         <span class="section-tag">Legal</span>
         <h1>Terms &amp; <span class="gradient-text">Client Agreement</span></h1>
-        <p>Plain English. Exactly how we work together and who owns what — no jargon.</p>
+        <p>Plain English. Exactly how we work together and who owns what, with no jargon.</p>
     </div>
 </section>
 
@@ -19,7 +19,7 @@ get_header(); ?>
             <p>This is the deal between you (our client) and DPowered.online when we build or look after your website. We've kept it short and clear on purpose.</p>
 
             <h2>What you're paying for</h2>
-            <p>We design and build your website, and — if you're on a care plan — we host, update and look after it. What's included is whatever we agreed in your quote. If it's not in the quote, it's not included until we agree it in writing.</p>
+            <p>We design and build your website. If you're on a care plan, we also host, update and look after it. What's included is whatever we agreed in your quote. If it's not in the quote, it's not included until we agree it in writing.</p>
 
             <h2>Who owns what</h2>
             <ul>
@@ -32,7 +32,7 @@ get_header(); ?>
             <p>You're responsible for making sure the words, prices, photos and claims on your site are accurate and that you have the right to use them. We're not responsible for content you give us to publish.</p>
 
             <h2>Your domain &amp; hosting</h2>
-            <p>We'll always tell you who owns your domain name and where your site is hosted. We don't lock you in — if you ever leave, you can take your domain with you. If we host your site, hosting continues only while your care plan is active.</p>
+            <p>We'll always tell you who owns your domain name and where your site is hosted. We don't lock you in. If you ever leave, you can take your domain with you. If we host your site, hosting continues only while your care plan is active.</p>
 
             <h2>Your customers' data</h2>
             <p>If your site collects customer details (for example through a booking or contact form), that data is yours and you're responsible for it under UK data protection law. While we manage your site, we handle that data carefully and only to keep the site working.</p>
@@ -41,7 +41,7 @@ get_header(); ?>
             <p>Build fees are invoiced as agreed in your quote. Care plans are billed monthly and can be cancelled with one month's notice. If a care plan is cancelled or unpaid, hosting and updates stop and your site may be taken offline.</p>
 
             <h2>If your business closes or stops trading</h2>
-            <p>This is important, so we'll be blunt. A website that still looks "open" when the business has closed can mislead customers — so we won't leave it that way.</p>
+            <p>This is important, so we'll be blunt. A website that still looks "open" when the business has closed can mislead customers, so we won't leave it that way.</p>
             <ul>
                 <li><strong>Tell us as soon as you can</strong> if you stop trading.</li>
                 <li>We will then do one of the following: <strong>take the site offline</strong>, replace it with a clear <strong>"permanently closed" notice</strong>, or keep a labelled sample of the design in our portfolio.</li>
@@ -52,7 +52,7 @@ get_header(); ?>
             <p>If you'd like us to keep any version of the site online after you've closed, that has to be agreed in writing first.</p>
 
             <h2>What we're not responsible for</h2>
-            <p>We build and maintain your website — we don't run your business. We're not liable for your sales, bookings, the accuracy of your content, or outages caused by third parties (such as your host, domain registrar or payment provider). Our total liability is limited to the fees you've paid us.</p>
+            <p>We build and maintain your website, but we don't run your business. We're not liable for your sales, bookings, the accuracy of your content, or outages caused by third parties (such as your host, domain registrar or payment provider). Our total liability is limited to the fees you've paid us.</p>
 
             <h2>Ending the agreement</h2>
             <p>Either of us can end the working relationship with reasonable notice. Any work completed up to that point remains payable. Cancelling a care plan stops hosting and updates from the end of the notice period.</p>
@@ -61,7 +61,7 @@ get_header(); ?>
             <p>This agreement is governed by the laws of England &amp; Wales.</p>
 
             <h2>Questions</h2>
-            <p>Anything unclear? Just ask — we'd rather explain than have you guess.</p>
+            <p>Anything unclear? Just ask. We'd rather explain than have you guess.</p>
             <p><strong>Email:</strong> <a href="mailto:support@dpowered.online">support@dpowered.online</a></p>
 
             <p class="privacy-updated">This is our standard plain-English agreement. For larger projects a signed copy forms part of your project paperwork.</p>

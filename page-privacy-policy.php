@@ -28,17 +28,17 @@ get_header(); ?>
                 <li>Business name (optional)</li>
                 <li>Message content</li>
             </ul>
-            <p>We do not collect payment information directly — any payment processing uses a third-party provider.</p>
+            <p>We do not collect payment information directly. Any payment processing uses a third-party provider.</p>
 
             <h2>How We Use Your Data</h2>
             <p>Information submitted through our contact form is used solely to respond to your enquiry. We do not sell, rent, or share your personal data with third parties for marketing purposes.</p>
             <p>Review submissions may be published on our website with your name and business/role as provided. We will contact you before publishing.</p>
 
             <h2>Cookies</h2>
-            <p>Our website uses minimal cookies — primarily those set by WordPress for core functionality and security. We do not use tracking or advertising cookies. If you complete a contact form, WordPress may set a session cookie.</p>
+            <p>Our website uses minimal cookies, mainly those set by WordPress for core functionality and security. We do not use tracking or advertising cookies. If you complete a contact form, WordPress may set a session cookie.</p>
 
             <h2>Third-Party Services</h2>
-            <p>We use Google Fonts to serve typography. Google may collect anonymised data about font requests. We also use Google Analytics on some pages to understand visitor behaviour — this is anonymised and does not identify individuals.</p>
+            <p>We use Google Fonts to serve typography. Google may collect anonymised data about font requests. We also use Google Analytics on some pages to understand visitor behaviour. This is anonymised and does not identify individuals.</p>
 
             <h2>Data Retention</h2>
             <p>Contact form submissions are retained in our email inbox for as long as reasonably necessary to fulfil your enquiry. You may request deletion at any time by emailing <a href="mailto:support@dpowered.online">support@dpowered.online</a>.</p>
