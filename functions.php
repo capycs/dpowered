@@ -2,6 +2,33 @@
 require_once get_template_directory() . '/inc/leads.php';
 require_once get_template_directory() . '/inc/finder.php';
 
+// ── Terms / Client Agreement page (auto-created, slug "terms") ─────────────────
+function dpowered_ensure_terms_page() {
+    $existing = get_page_by_path('terms');
+    if ($existing) {
+        update_post_meta($existing->ID, '_wp_page_template', 'page-terms.php');
+        return $existing->ID;
+    }
+    $id = wp_insert_post([
+        'post_title'   => 'Terms & Client Agreement',
+        'post_name'    => 'terms',
+        'post_status'  => 'publish',
+        'post_type'    => 'page',
+        'post_content' => '',
+        'meta_input'   => ['_wp_page_template' => 'page-terms.php'],
+    ]);
+    return ($id && !is_wp_error($id)) ? $id : 0;
+}
+add_action('after_switch_theme', 'dpowered_ensure_terms_page');
+
+// Runs once after deploy (theme already active, so after_switch_theme won't fire).
+function dpowered_maybe_create_terms_page() {
+    if (get_option('dpowered_terms_page_done')) return;
+    dpowered_ensure_terms_page();
+    update_option('dpowered_terms_page_done', 1);
+}
+add_action('init', 'dpowered_maybe_create_terms_page');
+
 function dpowered_check_icon() {
     return '<svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
 }
