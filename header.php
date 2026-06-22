@@ -8,7 +8,7 @@
     <?php
     global $post;
     $site_name = get_bloginfo('name') ?: 'DPowered.online';
-    $sep       = ' — ';
+    $sep       = ' · ';
     if (is_front_page()) {
         $meta_title = $site_name . $sep . 'Web Design Agency UK';
         $meta_desc  = 'DPowered.online builds modern, affordable websites for small businesses across the UK. Professional web design with a 7–14 day turnaround. Get a free quote today.';
@@ -17,7 +17,7 @@
         $meta_desc  = 'Browse websites built and launched by DPowered.online for small businesses across the UK.';
     } elseif (is_page('pricing')) {
         $meta_title = 'Pricing' . $sep . $site_name;
-        $meta_desc  = 'Simple, transparent website pricing from £399. One-off builds and monthly care plans — no hidden fees.';
+        $meta_desc  = 'Simple, transparent website pricing from £399. One-off builds and monthly care plans, no hidden fees.';
     } elseif (is_page('reviews')) {
         $meta_title = 'Client Reviews' . $sep . $site_name;
         $meta_desc  = 'Real reviews from businesses that DPowered.online has helped get online and grow.';
@@ -26,11 +26,11 @@
         $meta_desc  = 'Contact DPowered.online for a free, no-obligation web design quote. We typically respond within 24 hours.';
     } elseif (is_singular() && !empty($post)) {
         $meta_title = get_the_title($post) . $sep . $site_name;
-        $meta_desc  = has_excerpt($post) ? strip_tags(get_the_excerpt($post)) : 'DPowered.online — professional web design for small businesses.';
+        $meta_desc  = has_excerpt($post) ? strip_tags(get_the_excerpt($post)) : 'DPowered.online: professional web design for small businesses.';
     } else {
         $raw_title  = wp_title('', false);
         $meta_title = ($raw_title ? trim($raw_title) . $sep : '') . $site_name;
-        $meta_desc  = 'DPowered.online — modern, affordable web design for small businesses across the UK.';
+        $meta_desc  = 'DPowered.online: modern, affordable web design for small businesses across the UK.';
     }
     $icon_base = get_template_directory_uri() . '/assets/images';
     $og_image  = $icon_base . '/favicon-512.png';
@@ -61,7 +61,6 @@
 </head>
 <body <?php body_class(); ?>>
 
-<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
 <header class="site-header" id="site-header">

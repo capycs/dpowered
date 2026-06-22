@@ -5,7 +5,7 @@ get_header(); ?>
 <section class="inner-hero" id="main-content">
     <div class="container inner-hero-content">
         <span class="section-tag">Let's Talk</span>
-        <h1>Get a <span class="gradient-text">Free Quote</span></h1>
+        <h1>Get a <span class="gradient-text">free quote</span></h1>
         <p>Tell us about your project and we'll get back to you as soon as possible.</p>
     </div>
 </section>
@@ -42,8 +42,8 @@ get_header(); ?>
     <div class="container">
         <div class="contact-layout">
             <div class="contact-info reveal">
-                <h2>Get In Touch</h2>
-                <p>Whether you need a new website, a redesign, or ongoing help with your existing site — we're here. Fill in the form and we'll get back to you quickly with a free, no-obligation quote.</p>
+                <h2>Get in touch</h2>
+                <p>Whether you need a new website, a redesign, or ongoing help with your existing site, we're here. Fill in the form and we'll get back to you quickly with a free, no-obligation quote.</p>
                 <div class="contact-points">
                     <div class="contact-point">
                         <div class="contact-point-icon">
@@ -78,7 +78,7 @@ get_header(); ?>
                         </div>
                         <div>
                             <strong>Location</strong>
-                            <span>UK — Working Remotely</span>
+                            <span>UK, working remotely</span>
                         </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@ get_header(); ?>
                     <?php wp_nonce_field('dpowered_contact', 'contact_nonce'); ?>
                     <input type="hidden" name="dpowered_contact_submit" value="1">
                     <input type="hidden" name="contact_time" value="<?php echo esc_attr(time()); ?>">
-                    <?php /* Honeypot — hidden from real users, bots fill it in */ ?>
+
                     <div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden" aria-hidden="true">
                         <label for="contact_website">Website (leave blank)</label>
                         <input type="text" id="contact_website" name="contact_website" value="" autocomplete="off" tabindex="-1">

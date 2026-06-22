@@ -1,4 +1,4 @@
-/* Team Work Area — lead manager interactions */
+
 (function () {
     'use strict';
 
@@ -20,7 +20,7 @@
     var activePerson = peopleSelect ? peopleSelect.value : 'everyone';
     var allDates = false;
 
-    /* ── Date helpers ─────────────────────────────────────── */
+
     function todayStr() {
         var d = new Date();
         return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
@@ -49,7 +49,7 @@
         loadPadForDate(str);
     }
 
-    /* ── AJAX helper ──────────────────────────────────────── */
+
     function post(fields) {
         var data = new FormData();
         data.append('nonce', cfg.nonce);
@@ -65,7 +65,7 @@
         el.classList.add('wa-saved');
     }
 
-    /* ── Toasts (replaces blocking alert) ─────────────────── */
+
     var toastWrap = null;
     function toast(msg, type) {
         if (!toastWrap) {
@@ -83,7 +83,7 @@
         }, type === 'error' ? 4200 : 2400);
     }
 
-    /* ── Confirm dialog (promise, replaces window.confirm) ── */
+
     function confirmDialog(messageHtml) {
         return new Promise(function (resolve) {
             var overlay = document.createElement('div');
@@ -110,7 +110,7 @@
         });
     }
 
-    /* ── Filtering ───────────────────────────────────────── */
+
     function rowMatches(row) {
         if (!allDates && activeDate) {
             var onDate     = row.getAttribute('data-date') === activeDate;
@@ -223,8 +223,7 @@
 
     var statCards = Array.prototype.slice.call(document.querySelectorAll('.wa-stat-card[data-filter]'));
 
-    /* Single source of truth for the active filter — keeps the pill tabs and
-       the clickable stat cards in sync. */
+
     function setFilter(key) {
         activeFilter = key;
         tabs.forEach(function (t) { t.classList.toggle('is-active', t.getAttribute('data-filter') === key); });
@@ -258,7 +257,7 @@
         recomputeCounts();
     });
 
-    /* ── Date navigation ─────────────────────────────────── */
+
     if (dateInput) dateInput.addEventListener('change', function () { setDate(dateInput.value || todayStr()); });
     var prevBtn = document.getElementById('waDatePrev');
     var nextBtn = document.getElementById('waDateNext');
@@ -274,7 +273,7 @@
         recomputeCounts();
     });
 
-    /* ── Expand / collapse detail ────────────────────────── */
+
     body.addEventListener('click', function (e) {
         var btn = e.target.closest('.wa-expand');
         if (!btn) return;
@@ -287,7 +286,7 @@
         btn.classList.toggle('is-open', open);
     });
 
-    /* ── Inline saves ────────────────────────────────────── */
+
     function saveField(control) {
         var row = control.closest('.wa-row') || control.closest('.wa-detail');
         var id = row.getAttribute('data-id');
@@ -343,7 +342,7 @@
         if (c.matches('input[data-field]:not([type="checkbox"]), textarea[data-field]')) saveField(c);
     }, true);
 
-    /* ── Private toggle ─────────────────────────────────── */
+
     body.addEventListener('click', function (e) {
         var btn = e.target.closest('.wa-private-btn');
         if (!btn) return;
@@ -362,7 +361,7 @@
             });
     });
 
-    /* ── Delete ──────────────────────────────────────────── */
+
     body.addEventListener('click', function (e) {
         var btn = e.target.closest('.wa-delete');
         if (!btn) return;
@@ -383,7 +382,7 @@
         });
     });
 
-    /* ── Add Lead modal ──────────────────────────────────── */
+
     var modal = document.getElementById('waModal');
     var addBtn = document.getElementById('waAddBtn');
     var closeBtn = document.getElementById('waModalClose');
@@ -425,7 +424,7 @@
         });
     });
 
-    /* ── Meetings ────────────────────────────────────────── */
+
     var meetingsView      = document.getElementById('waMeetingsView');
     var meetingsList      = document.getElementById('waMeetingsList');
     var addMeetingBtn     = document.getElementById('waAddMeetingBtn');
@@ -465,7 +464,7 @@
         });
     });
 
-    /* Meeting expand / collapse */
+
     document.addEventListener('click', function(e) {
         var expandBtn = e.target.closest('.wa-meeting-expand-btn');
         if (!expandBtn) return;
@@ -477,7 +476,7 @@
         expandBtn.classList.toggle('is-open', open);
     });
 
-    /* Meeting inline save */
+
     function saveMeetingField(el) {
         var card = el.closest('.wa-meeting-card') || el.closest('.wa-meeting-detail');
         if (!card) return;
@@ -505,7 +504,7 @@
         if (e.target.closest('.wa-meeting-card') && e.target.matches('input[data-field], textarea[data-field]')) saveMeetingField(e.target);
     }, true);
 
-    /* Mark as done */
+
     document.addEventListener('click', function(e) {
         var btn = e.target.closest('.wa-meeting-done-btn');
         if (!btn) return;
@@ -519,7 +518,7 @@
             });
     });
 
-    /* Delete meeting */
+
     document.addEventListener('click', function(e) {
         var btn = e.target.closest('.wa-meeting-delete-btn');
         if (!btn) return;
@@ -537,236 +536,27 @@
         });
     });
 
-    /* ── Workspace navigation ────────────────────────────── */
+
     var viewLeadsBtn    = document.getElementById('waViewLeads');
     var viewMeetingsBtn = document.getElementById('waViewMeetings');
     var viewPagesBtn    = document.getElementById('waViewPages');
-    var viewFinderBtn   = document.getElementById('waViewFinder');
     var leadsView       = document.getElementById('waLeadsView');
     var pagesView       = document.getElementById('waPagesView');
-    var finderView      = document.getElementById('waFinderView');
 
     function showView(view) {
-        var views   = { leads: leadsView, meetings: meetingsView, pages: pagesView, finder: finderView };
-        var buttons = { leads: viewLeadsBtn, meetings: viewMeetingsBtn, pages: viewPagesBtn, finder: viewFinderBtn };
+        var views   = { leads: leadsView, meetings: meetingsView, pages: pagesView };
+        var buttons = { leads: viewLeadsBtn, meetings: viewMeetingsBtn, pages: viewPagesBtn };
         Object.keys(views).forEach(function(v) {
             if (views[v])   views[v].hidden = (v !== view);
             if (buttons[v]) { buttons[v].classList.toggle('is-active', v === view); buttons[v].setAttribute('aria-selected', String(v === view)); }
         });
         if (view === 'pages' && !pagesLoaded) initPages();
-        if (view === 'finder' && !finderInited) initFinder();
     }
     if (viewLeadsBtn)    viewLeadsBtn.addEventListener('click',    function () { showView('leads'); });
     if (viewMeetingsBtn) viewMeetingsBtn.addEventListener('click', function () { showView('meetings'); });
     if (viewPagesBtn)    viewPagesBtn.addEventListener('click',    function () { showView('pages'); });
-    if (viewFinderBtn)   viewFinderBtn.addEventListener('click',   function () { showView('finder'); });
 
-    /* ── Find Leads (free OSM business finder) ───────────────── */
-    var finderInited   = false;
-    var finderResults  = [];
 
-    var savedSearches = Array.isArray(cfg.savedSearches) ? cfg.savedSearches.slice() : [];
-
-    function initFinder() {
-        finderInited = true;
-        var form     = document.getElementById('waFinderForm');
-        var goBtn    = document.getElementById('waFinderGo');
-        var resultsW = document.getElementById('waFinderResults');
-        var bodyEl   = document.getElementById('waFinderBody');
-        var tableEl  = document.getElementById('waFinderTable');
-        var summary  = document.getElementById('waFinderSummary');
-        var stateEl  = document.getElementById('waFinderState');
-        var allBox   = document.getElementById('waFinderAll');
-        var importBtn= document.getElementById('waFinderImport');
-        var saveBtn  = document.getElementById('waFinderSave');
-        var newOnly  = document.getElementById('waFinderNewOnly');
-        var savedWrap= document.getElementById('waFinderSaved');
-        var savedList= document.getElementById('waFinderSavedList');
-        var areaInput= document.getElementById('finder-area');
-        var catInput = document.getElementById('finder-cat');
-        var radInput = document.getElementById('finder-radius');
-        if (!form) return;
-
-        function setState(html) {
-            if (!stateEl) return;
-            stateEl.innerHTML = html || '';
-            stateEl.hidden = !html;
-        }
-
-        function refreshSelection() {
-            var checks = bodyEl.querySelectorAll('.wa-finder-check:not(:disabled)');
-            var picked = bodyEl.querySelectorAll('.wa-finder-check:checked');
-            importBtn.disabled = picked.length === 0;
-            importBtn.textContent = picked.length ? 'Add ' + picked.length + ' to leads' : 'Add selected to leads';
-            allBox.checked = checks.length > 0 && picked.length === checks.length;
-        }
-
-        function runSearch() {
-            var area = areaInput.value.trim();
-            if (!area) return;
-            goBtn.disabled = true;
-            goBtn.textContent = 'Searching…';
-            resultsW.hidden = true;
-            setState('<div class="wa-finder-loading">Searching OpenStreetMap for businesses with no website…</div>');
-
-            post({
-                action:   'dpowered_finder_search',
-                area:     area,
-                category: catInput.value,
-                radius:   radInput.value
-            }).then(function (res) {
-                goBtn.disabled = false;
-                goBtn.textContent = 'Search';
-                if (!res || !res.success) {
-                    setState('<div class="wa-finder-empty">' + escHtml((res && res.data && res.data.msg) || 'Search failed. Try again.') + '</div>');
-                    return;
-                }
-                finderResults = res.data.results || [];
-                if (!finderResults.length) {
-                    setState('<div class="wa-finder-empty">No no-website businesses found near <strong>' + escHtml(res.data.area) + '</strong> for that type. Try a wider radius or a different type.</div>');
-                    return;
-                }
-                setState('');
-                renderResults(res.data.area, finderResults);
-            }).catch(function () {
-                goBtn.disabled = false;
-                goBtn.textContent = 'Search';
-                setState('<div class="wa-finder-empty">Something went wrong. Try again.</div>');
-            });
-        }
-
-        form.addEventListener('submit', function (e) { e.preventDefault(); runSearch(); });
-
-        function renderResults(areaLabel, items) {
-            bodyEl.innerHTML = '';
-            items.forEach(function (it, i) {
-                var tr = document.createElement('tr');
-                tr.className = 'wa-finder-row' + (it.known ? ' is-known' : '') + (it.hot ? ' is-hot' : '');
-                var badges = '';
-                if (it.hot)   badges += ' <span class="wa-finder-hot">🔥 hot</span>';
-                if (it.known) badges += ' <span class="wa-finder-known">in leads</span>';
-                var signal = (it.signals && it.signals.length) ? '<span class="wa-finder-signals">' + escHtml(it.signals.join(' · ')) + '</span>' : '';
-                var maps = it.maps ? '<a href="' + escHtml(it.maps) + '" target="_blank" rel="noopener" title="View on map">📍</a>' : '';
-                var social = it.social ? '<a href="' + escHtml(it.social) + '" target="_blank" rel="noopener" title="' + escHtml(it.social_net || 'Social') + ' page">🔗</a>' : '';
-                tr.innerHTML =
-                    '<td class="wa-finder-col-check"><input type="checkbox" class="wa-finder-check" data-i="' + i + '"' + (it.known ? ' disabled title="Already in your leads"' : '') + '></td>' +
-                    '<td class="wa-finder-name">' + escHtml(it.name) + badges + '<span class="wa-finder-cat">' + escHtml(it.category) + '</span>' + signal + '</td>' +
-                    '<td>' + (it.phone ? '<a href="tel:' + escHtml(it.phone.replace(/\s+/g, '')) + '">' + escHtml(it.phone) + '</a>' : '<span class="wa-finder-nophone">—</span>') + '</td>' +
-                    '<td class="wa-finder-addr">' + escHtml(it.address || '—') + '</td>' +
-                    '<td class="wa-finder-col-map">' + maps + social + '</td>';
-                bodyEl.appendChild(tr);
-            });
-            var fresh = items.filter(function (it) { return !it.known; }).length;
-            var hot   = items.filter(function (it) { return it.hot; }).length;
-            summary.innerHTML = '<strong>' + items.length + '</strong> found near ' + escHtml(areaLabel) +
-                ' · <strong>' + fresh + '</strong> new' + (hot ? ' · <strong>' + hot + '</strong> 🔥 hot' : '');
-            resultsW.hidden = false;
-            allBox.checked = false;
-            applyNewOnly();
-            refreshSelection();
-        }
-
-        function applyNewOnly() {
-            if (!tableEl) return;
-            tableEl.classList.toggle('newonly', newOnly && newOnly.checked);
-        }
-
-        if (newOnly) newOnly.addEventListener('change', applyNewOnly);
-
-        bodyEl.addEventListener('change', function (e) {
-            if (e.target.classList.contains('wa-finder-check')) refreshSelection();
-        });
-
-        allBox.addEventListener('change', function () {
-            // Only toggle rows that are visible (respects "New only").
-            bodyEl.querySelectorAll('.wa-finder-row:not(.is-known) .wa-finder-check:not(:disabled), .wa-finder-check:not(:disabled)').forEach(function (c) {
-                var row = c.closest('.wa-finder-row');
-                if (row && row.offsetParent === null) return; // hidden by New only
-                c.checked = allBox.checked;
-            });
-            refreshSelection();
-        });
-
-        importBtn.addEventListener('click', function () {
-            var picked = [];
-            bodyEl.querySelectorAll('.wa-finder-check:checked').forEach(function (c) {
-                var it = finderResults[+c.getAttribute('data-i')];
-                if (it) picked.push({ name: it.name, phone: it.phone, address: it.address, category: it.category, social: it.social || '' });
-            });
-            if (!picked.length) return;
-            importBtn.disabled = true;
-            importBtn.textContent = 'Adding…';
-            post({ action: 'dpowered_finder_import', items: JSON.stringify(picked) }).then(function (res) {
-                if (!res || !res.success) {
-                    toast((res && res.data && res.data.msg) || 'Import failed.', 'error');
-                    importBtn.disabled = false;
-                    refreshSelection();
-                    return;
-                }
-                var added = res.data.added, skipped = res.data.skipped;
-                toast('Added ' + added + ' lead' + (added === 1 ? '' : 's') + (skipped ? ' · ' + skipped + ' already existed' : '') + '. Reloading leads…');
-                setTimeout(function () { window.location.reload(); }, 1300);
-            }).catch(function () {
-                toast('Import failed.', 'error');
-                importBtn.disabled = false;
-                refreshSelection();
-            });
-        });
-
-        /* ── Saved searches ── */
-        function renderSaved() {
-            if (!savedWrap || !savedList) return;
-            savedList.innerHTML = '';
-            if (!savedSearches.length) { savedWrap.hidden = true; return; }
-            savedWrap.hidden = false;
-            savedSearches.forEach(function (s) {
-                var chip = document.createElement('span');
-                chip.className = 'wa-finder-chip';
-                chip.setAttribute('data-id', s.id);
-                chip.innerHTML = '<button type="button" class="wa-finder-chip-run" title="Run this search">' + escHtml(s.label) + '</button>' +
-                                 '<button type="button" class="wa-finder-chip-del" aria-label="Delete saved search" title="Delete">&times;</button>';
-                savedList.appendChild(chip);
-            });
-        }
-
-        if (savedList) savedList.addEventListener('click', function (e) {
-            var chip = e.target.closest('.wa-finder-chip');
-            if (!chip) return;
-            var id = +chip.getAttribute('data-id');
-            var s  = savedSearches.filter(function (x) { return x.id === id; })[0];
-            if (!s) return;
-            if (e.target.closest('.wa-finder-chip-del')) {
-                post({ action: 'dpowered_delete_search', search_id: id }).then(function (res) {
-                    if (res && res.success) { savedSearches = res.data.searches || []; renderSaved(); }
-                });
-                return;
-            }
-            if (e.target.closest('.wa-finder-chip-run') && s.params) {
-                areaInput.value = s.params.area || '';
-                if (s.params.category) catInput.value = s.params.category;
-                if (s.params.radius)   radInput.value = s.params.radius;
-                runSearch();
-            }
-        });
-
-        if (saveBtn) saveBtn.addEventListener('click', function () {
-            var area = areaInput.value.trim();
-            if (!area) { toast('Run a search first, then save it.', 'error'); return; }
-            saveBtn.disabled = true;
-            post({ action: 'dpowered_save_search', area: area, category: catInput.value, radius: radInput.value })
-                .then(function (res) {
-                    saveBtn.disabled = false;
-                    if (!res || !res.success) { toast((res && res.data && res.data.msg) || 'Could not save.', 'error'); return; }
-                    savedSearches = res.data.searches || [];
-                    renderSaved();
-                    toast('Search saved.');
-                }).catch(function () { saveBtn.disabled = false; toast('Could not save.', 'error'); });
-        });
-
-        renderSaved();
-    }
-
-    /* ── Scratchpad ──────────────────────────────────────── */
     var padToggle = document.getElementById('waPadToggle');
     var padBody   = document.getElementById('waPadBody');
     var pad       = document.getElementById('waPad');
@@ -802,7 +592,7 @@
             .then(function (res) { if (res && res.success) pad.value = res.data.content || ''; });
     }
 
-    /* ── Pages ───────────────────────────────────────────── */
+
     var pagesData        = Array.isArray(cfg.pages) ? cfg.pages : [];
     var activePage       = null;
     var pagesLoaded      = false;
@@ -1063,7 +853,7 @@
         if (modal) modal.hidden = false;
     }, true); // capture so this fires before the existing listener
 
-    /* ── Sortable columns ────────────────────────────────── */
+
     var STATUS_ORDER = { new: 0, called: 1, interested: 2, quoted: 3, won: 4, dead: 5 };
     var sortKey = null, sortDir = 1;
     function sortValue(row, key) {
@@ -1100,7 +890,7 @@
         });
     });
 
-    /* ── CSV export (of the leads currently in view) ─────── */
+
     var exportBtn = document.getElementById('waExportBtn');
     function csvCell(v) { v = String(v == null ? '' : v); return '"' + v.replace(/"/g, '""') + '"'; }
     function exportCsv() {
@@ -1143,7 +933,7 @@
     }
     if (exportBtn) exportBtn.addEventListener('click', exportCsv);
 
-    /* ── Click-to-call ───────────────────────────────────── */
+
     body.addEventListener('click', function (e) {
         var btn = e.target.closest('.wa-call-btn');
         if (!btn) return;
@@ -1169,7 +959,7 @@
         }
     });
 
-    /* ── Keyboard shortcuts ──────────────────────────────── */
+
     function typingInField(el) {
         if (!el) return false;
         var tag = el.tagName;
@@ -1189,7 +979,7 @@
         }
     });
 
-    /* ── Avatar rendering helper (mirrors PHP dpowered_avatar_html) ── */
+
     function avatarHtml(a, size, cls) {
         cls = cls || '';
         var s = 'width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.4) + 'px;';
@@ -1202,7 +992,7 @@
              + escHtml(a ? a.initials : '?') + '</span>';
     }
 
-    /* ── Profile photo upload ────────────────────────────── */
+
     var profileBtn  = document.getElementById('waProfileBtn');
     var avatarInput = document.getElementById('waAvatarInput');
     if (profileBtn && avatarInput) {
@@ -1230,7 +1020,7 @@
         });
     }
 
-    /* ── Presence + people panel ─────────────────────────── */
+
     (function () {
         var peopleList  = document.getElementById('waPeopleList');
         var onlineCount = document.getElementById('waOnlineCount');
@@ -1268,7 +1058,7 @@
         setInterval(pollPresence, 5000);
     })();
 
-    /* ── Live lead updates (no refresh needed) ───────────── */
+
     (function () {
         var lastSync = 0; // seeded from server on first poll → avoids clock skew
 
@@ -1351,7 +1141,7 @@
         setInterval(sync, 3000);
     })();
 
-    /* ── Multiplayer cursor presence ─────────────────────── */
+
     (function () {
         var CURSOR_COLORS = [
             '#22c55e', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4',
@@ -1478,7 +1268,7 @@
         setInterval(poll, 150);   // faster refresh
     })();
 
-    /* ── Init ────────────────────────────────────────────── */
+
     var hashMatch = (window.location.hash || '').match(/d=(\d{4}-\d{2}-\d{2})/);
     setDate(hashMatch ? hashMatch[1] : (activeDate || todayStr()));
     refreshCallButtons();

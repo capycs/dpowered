@@ -6,7 +6,7 @@ get_header(); ?>
     <div class="container inner-hero-content">
         <span class="section-tag">Our Story</span>
         <h1>About <span class="gradient-text">DPowered.online</span></h1>
-        <p>Built on one simple idea — every business deserves a great website.</p>
+        <p>Built on one simple idea: every business deserves a great website.</p>
     </div>
 </section>
 
@@ -14,8 +14,8 @@ get_header(); ?>
     <div class="container">
         <div class="about-intro reveal">
             <div class="about-text">
-                <h2>Who We Are</h2>
-                <p>DPowered.online is an independent web design agency focused on one thing — building websites that small and medium businesses are genuinely proud of. Professional quality, honest pricing, and none of the big-agency runaround.</p>
+                <h2>Who we are</h2>
+                <p>DPowered.online is an independent web design agency focused on one thing: building websites that small and medium businesses are genuinely proud of. Professional quality, honest pricing, and none of the big-agency runaround.</p>
                 <p>We work closely with every client because we care about getting it right. You deal directly with the person building your site, from first conversation to launch day and beyond.</p>
             </div>
             <div class="about-values">
@@ -23,7 +23,7 @@ get_header(); ?>
                     <div class="value-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                     </div>
-                    <h4>Purpose-Driven</h4>
+                    <h4>Purpose-driven</h4>
                     <p>Every decision we make is focused on what's best for your business.</p>
                 </div>
                 <div class="value-card">
@@ -44,8 +44,8 @@ get_header(); ?>
                     <div class="value-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                     </div>
-                    <h4>Growth-Focused</h4>
-                    <p>We build sites that don't just look good — they get results.</p>
+                    <h4>Growth-focused</h4>
+                    <p>We build sites that don't just look good, they get results.</p>
                 </div>
             </div>
         </div>
@@ -84,11 +84,11 @@ get_header(); ?>
     <div class="container">
         <div class="cta-inner reveal">
             <span class="section-tag">Ready To Start?</span>
-            <h2>Let's Work Together</h2>
+            <h2>Let's work together</h2>
             <p>Ready to power up your online presence? We'd love to hear about your project.</p>
             <div class="cta-actions">
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg">Get in Touch</a>
-                <a href="<?php echo esc_url(home_url('/services')); ?>" class="btn btn-outline btn-lg">View Services</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg">Get a quote</a>
+                <a href="<?php echo esc_url(home_url('/services')); ?>" class="btn btn-outline btn-lg">View services</a>
             </div>
         </div>
     </div>

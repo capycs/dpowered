@@ -5,7 +5,7 @@ get_header(); ?>
 <section class="inner-hero" id="main-content">
     <div class="container inner-hero-content">
         <span class="section-tag">Our Work</span>
-        <h1>Sites We've <span class="gradient-text">Built &amp; Launched</span></h1>
+        <h1>Sites we've <span class="gradient-text">built &amp; launched</span></h1>
         <p>A look at some of the businesses we've helped get online and grow.</p>
     </div>
 </section>
@@ -54,7 +54,7 @@ get_header(); ?>
                     <?php endif; ?>
                     <?php if ($url): ?>
                     <a href="<?php echo esc_url($url); ?>" class="project-visit" target="_blank" rel="noopener noreferrer" aria-label="Visit <?php echo esc_attr($name); ?>">
-                        Visit Site
+                        Visit site
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
                     </a>
                     <?php endif; ?>
@@ -106,9 +106,9 @@ get_header(); ?>
             <div class="reviews-empty-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
             </div>
-            <h2>Portfolio Coming Soon</h2>
-            <p>We're building up our portfolio — check back soon to see the sites we've launched for our clients.</p>
-            <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg">Start Your Project</a>
+            <h2>Portfolio coming soon</h2>
+            <p>We're building up our portfolio, so check back soon to see the sites we've launched for our clients.</p>
+            <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg">Get a quote</a>
         </div>
         <?php endif; ?>
     </div>
@@ -118,11 +118,11 @@ get_header(); ?>
     <div class="container">
         <div class="cta-inner reveal">
             <span class="section-tag">Ready To Start?</span>
-            <h2>Want a Site Like These?<br><span class="gradient-text">Let's Talk</span></h2>
+            <h2>Want a site like these?<br><span class="gradient-text">Let's talk</span></h2>
             <p>Get in touch today for a free, no-obligation quote and we'll get started.</p>
             <div class="cta-actions">
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg">Get a Free Quote</a>
-                <a href="<?php echo esc_url(home_url('/services')); ?>" class="btn btn-outline btn-lg">View Services</a>
+                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary btn-lg">Get a free quote</a>
+                <a href="<?php echo esc_url(home_url('/services')); ?>" class="btn btn-outline btn-lg">View services</a>
             </div>
         </div>
     </div>

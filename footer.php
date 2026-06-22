@@ -58,7 +58,7 @@
         <div class="footer-contact-col">
             <h4>Get In Touch</h4>
             <p>Ready to power up your online presence?</p>
-            <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary">Start a Project</a>
+            <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn btn-primary">Get a free quote</a>
         </div>
     </div>
     <div class="footer-wordmark" aria-hidden="true">
@@ -69,8 +69,8 @@
         $dp_wa_url   = function_exists('dpowered_work_area_url') ? dpowered_work_area_url() : home_url('/work-area');
         $dp_wa_label = (is_user_logged_in() && function_exists('dpowered_user_can_leads') && dpowered_user_can_leads()) ? 'Work Area' : 'Team Login';
         ?>
-        <p>&copy; <?php echo date('Y'); ?> DPowered.online &mdash; All rights reserved. <a href="<?php echo esc_url(home_url('/privacy-policy')); ?>">Privacy Policy</a> &middot; <a href="<?php echo esc_url(home_url('/terms')); ?>">Terms</a> &middot; <a href="<?php echo esc_url($dp_wa_url); ?>"><?php echo esc_html($dp_wa_label); ?></a></p>
-        <span class="footer-made"><span class="footer-clock-dot" aria-hidden="true"></span>Built in Liverpool, UK &middot; <span id="liveClock">--:--:--</span></span>
+        <p>&copy; <?php echo date('Y'); ?> DPowered.online. All rights reserved. <a href="<?php echo esc_url(home_url('/privacy-policy')); ?>">Privacy Policy</a> &middot; <a href="<?php echo esc_url(home_url('/terms')); ?>">Terms</a> &middot; <a href="<?php echo esc_url($dp_wa_url); ?>"><?php echo esc_html($dp_wa_label); ?></a></p>
+        <span class="footer-made">Built in Liverpool, UK</span>
     </div>
 </footer>
 

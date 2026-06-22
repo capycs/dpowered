@@ -1,11 +1,4 @@
 <?php
-/**
- * Leads / team work area.
- *
- * A lightweight in-house CRM. Sales-team users log in from the site and manage
- * leads on the front-end work-area page. Website contact-form submissions are
- * captured automatically as new leads. All data lives in this WP install.
- */
 
 if (!defined('ABSPATH')) exit;
 
@@ -27,14 +20,12 @@ function dpowered_lead_sources() {
         'website'   => 'Website',
         'cold-call' => 'Cold call',
         'referral'  => 'Referral',
-        'finder'    => 'Map finder',
         'other'     => 'Other',
     ];
 }
 
 // ── Access control ───────────────────────────────────────────────────────────
 
-/** True if the given (or current) user may use the work area. */
 function dpowered_user_can_leads($user_id = null) {
     $user = $user_id ? get_userdata($user_id) : wp_get_current_user();
     if (!$user || !$user->exists()) return false;
@@ -48,7 +39,6 @@ function dpowered_register_sales_role() {
 }
 add_action('init', 'dpowered_register_sales_role');
 
-/** Keep sales-only users out of wp-admin; send them to the work area instead. */
 function dpowered_block_sales_admin() {
     if (wp_doing_ajax() || !is_user_logged_in()) return;
     $user = wp_get_current_user();
@@ -80,7 +70,6 @@ add_filter('login_redirect', 'dpowered_sales_login_redirect', 10, 3);
 
 // ── Work-area page ───────────────────────────────────────────────────────────
 
-/** Find or create the work-area page and return its URL. */
 function dpowered_work_area_url() {
     $id = (int) get_option('dpowered_work_area_page_id');
     if ($id && get_post_status($id) === 'publish') {
@@ -175,7 +164,6 @@ function dpowered_register_meetings() {
 }
 add_action('init', 'dpowered_register_meetings');
 
-/** Normalised array of a meeting's data. */
 function dpowered_get_meeting_data($post_id) {
     $assigned = (int) get_post_meta($post_id, '_meeting_assigned', true);
     $user     = $assigned ? get_userdata($assigned) : null;
@@ -195,7 +183,6 @@ function dpowered_get_meeting_data($post_id) {
     ];
 }
 
-/** Normalised data for a single workspace page. */
 function dpowered_get_page_data($page_id) {
     $p = get_post($page_id);
     if (!$p) return null;
@@ -216,7 +203,6 @@ function dpowered_get_page_data($page_id) {
     ];
 }
 
-/** All workspace pages visible to a given user (filters other people's private pages). */
 function dpowered_get_visible_pages($uid) {
     $is_admin = user_can($uid, 'manage_options');
     $posts    = get_posts([
@@ -235,7 +221,6 @@ function dpowered_get_visible_pages($uid) {
     return $result;
 }
 
-/** Normalised array of a lead's data for rendering / JSON. */
 function dpowered_get_lead_data($post_id) {
     $assigned = (int) get_post_meta($post_id, '_lead_assigned', true);
     $assigned_user = $assigned ? get_userdata($assigned) : null;
@@ -266,14 +251,12 @@ function dpowered_get_lead_data($post_id) {
     ];
 }
 
-/** Record who last touched a lead, and when. */
 function dpowered_touch_lead($post_id, $uid = null) {
     $uid = $uid ?: get_current_user_id();
     update_post_meta($post_id, '_lead_edited_by', (int) $uid);
     update_post_meta($post_id, '_lead_edited_at', time());
 }
 
-/** Create a lead from an arbitrary set of fields. Returns post ID or WP_Error. */
 function dpowered_insert_lead($args) {
     $a = wp_parse_args($args, [
         'business'     => '',
@@ -325,7 +308,6 @@ function dpowered_insert_lead($args) {
     return $id;
 }
 
-/** Users who can be assigned leads. */
 function dpowered_lead_team_members() {
     return get_users([
         'role__in' => ['sales_team', 'administrator'],
@@ -743,7 +725,6 @@ function dpowered_work_area_assets() {
         ],
         'pages'         => dpowered_get_visible_pages($uid),
         'todayPad'      => (string) get_user_meta($uid, '_dpowered_pad_' . current_time('Y-m-d'), true),
-        'savedSearches' => function_exists('dpowered_get_saved_searches') ? dpowered_get_saved_searches() : [],
     ]);
 }
 add_action('wp_enqueue_scripts', 'dpowered_work_area_assets');
@@ -789,10 +770,6 @@ add_action('wp_ajax_dpowered_cursor_poll', 'dpowered_ajax_cursor_poll');
 //  People presence · avatars · last-edited · live updates
 // ══════════════════════════════════════════════════════════════════════════════
 
-/**
- * A user's signature colour. Same palette + order as work-area.js so a person's
- * cursor, avatar fallback and presence pip all match across every screen.
- */
 function dpowered_user_color($uid) {
     $palette = [
         '#22c55e', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4',
@@ -801,7 +778,6 @@ function dpowered_user_color($uid) {
     return $palette[((int) $uid) % count($palette)];
 }
 
-/** Initials from a display name, e.g. "Sarah Jones" → "SJ". */
 function dpowered_user_initials($name) {
     $parts = preg_split('/\s+/', trim((string) $name));
     $parts = array_filter($parts);
@@ -812,7 +788,6 @@ function dpowered_user_initials($name) {
     return strtoupper(mb_substr($first, 0, 1) . mb_substr($last, 0, 1));
 }
 
-/** Avatar descriptor for a user: custom upload URL if set, else colour + initials. */
 function dpowered_user_avatar($uid) {
     $uid  = (int) $uid;
     $user = $uid ? get_userdata($uid) : null;
@@ -828,7 +803,6 @@ function dpowered_user_avatar($uid) {
     ];
 }
 
-/** Render an avatar chip (HTML) at a given pixel size. */
 function dpowered_avatar_html($uid, $size = 32, $extra_class = '') {
     $a = dpowered_user_avatar($uid);
     $style = 'width:' . (int) $size . 'px;height:' . (int) $size . 'px;'
@@ -845,7 +819,6 @@ function dpowered_avatar_html($uid, $size = 32, $extra_class = '') {
 
 // ── Presence heartbeat ────────────────────────────────────────────────────────
 
-/** True if a user pinged within the last 35 seconds. */
 function dpowered_user_is_online($uid) {
     $seen = (int) get_transient('dpowered_seen_' . (int) $uid);
     return $seen && (time() - $seen) < 35;
@@ -859,7 +832,6 @@ function dpowered_ajax_presence_ping() {
 }
 add_action('wp_ajax_dpowered_presence_ping', 'dpowered_ajax_presence_ping');
 
-/** Build the team roster with live presence + avatar info. */
 function dpowered_team_presence() {
     $team = dpowered_lead_team_members();
     $now  = time();
@@ -929,7 +901,6 @@ function dpowered_ajax_upload_avatar() {
 }
 add_action('wp_ajax_dpowered_upload_avatar', 'dpowered_ajax_upload_avatar');
 
-/** Surface the custom avatar inside wp-admin's get_avatar() too. */
 function dpowered_filter_avatar_url($url, $id_or_email, $args) {
     $uid = 0;
     if (is_numeric($id_or_email)) {
@@ -953,10 +924,6 @@ add_filter('get_avatar_url', 'dpowered_filter_avatar_url', 10, 3);
 
 // ── Server-rendered lead row (shared by template + live updates) ───────────────
 
-/**
- * Render one lead's <tr> pair (main row + detail row) exactly as the template
- * does, so live updates can drop in fresh markup without duplicating it in JS.
- */
 function dpowered_render_lead_row($d, $statuses = null, $sources = null, $team = null) {
     $statuses = $statuses ?: dpowered_lead_statuses();
     $sources  = $sources  ?: dpowered_lead_sources();
