@@ -38,12 +38,9 @@
     document.body.style.overflow = '';
   }
 
-  const navClose = document.getElementById('navClose');
-
   navToggle  && navToggle.addEventListener('click', () => {
     navLinks && navLinks.classList.contains('open') ? closeNav() : openNav();
   });
-  navClose   && navClose.addEventListener('click', closeNav);
   navOverlay && navOverlay.addEventListener('click', closeNav);
   navLinks   && navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
   document.addEventListener('keydown', e => {
