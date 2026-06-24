@@ -1,6 +1,8 @@
 <?php
 require_once get_template_directory() . '/inc/leads.php';
+require_once get_template_directory() . '/inc/finder.php';
 
+// ── Terms / Client Agreement page (auto-created, slug "terms") ─────────────────
 function dpowered_ensure_terms_page() {
     $existing = get_page_by_path('terms');
     if ($existing) {
@@ -19,6 +21,7 @@ function dpowered_ensure_terms_page() {
 }
 add_action('after_switch_theme', 'dpowered_ensure_terms_page');
 
+// Runs once after deploy (theme already active, so after_switch_theme won't fire).
 function dpowered_maybe_create_terms_page() {
     if (get_option('dpowered_terms_page_done')) return;
     dpowered_ensure_terms_page();
@@ -57,6 +60,8 @@ function dpowered_serve_favicon_ico() {
     exit;
 }
 add_action('do_faviconico', 'dpowered_serve_favicon_ico');
+
+// ── REVIEWS CPT ──────────────────────────────────────────────────────────────
 
 function dpowered_register_reviews() {
     register_post_type('review', [
@@ -123,6 +128,8 @@ function dpowered_save_review_meta($post_id) {
     if (isset($_POST['review_rating']))  update_post_meta($post_id, '_review_rating', min(5, max(1, absint($_POST['review_rating']))));
 }
 add_action('save_post_review', 'dpowered_save_review_meta');
+
+// ── PORTFOLIO CPT ─────────────────────────────────────────────────────────────
 
 function dpowered_register_portfolio() {
     register_post_type('project', [
@@ -218,6 +225,8 @@ function dpowered_project_admin_column_content($column, $post_id) {
 }
 add_action('manage_project_posts_custom_column', 'dpowered_project_admin_column_content', 10, 2);
 
+// ── CONTACT FORM ──────────────────────────────────────────────────────────────
+
 function dpowered_handle_contact_form() {
     if (!isset($_POST['dpowered_contact_submit'])) return;
     $referer = wp_get_referer() ?: home_url('/contact');
@@ -225,20 +234,23 @@ function dpowered_handle_contact_form() {
         wp_redirect(add_query_arg('form_error', 'security', $referer)); exit;
     }
 
+    // ── Bot protection (silent — fake success so bots don't retry) ────────────
+    // 1. Honeypot: real users never see this field; bots autofill it.
     if (!empty($_POST['contact_website'])) {
         wp_redirect(add_query_arg('sent', '1', $referer)); exit;
     }
-
+    // 2. Timing: real humans take at least 3 seconds to fill a form.
     $form_time = (int) ($_POST['contact_time'] ?? 0);
     if ($form_time > 0 && (time() - $form_time) < 3) {
         wp_redirect(add_query_arg('sent', '1', $referer)); exit;
     }
-
+    // 3. Field sanity: no legitimate phone number or name contains a URL.
     $raw_name  = wp_unslash($_POST['contact_name']  ?? '');
     $raw_phone = wp_unslash($_POST['contact_phone'] ?? '');
     if (preg_match('#https?://#i', $raw_name . $raw_phone)) {
         wp_redirect(add_query_arg('sent', '1', $referer)); exit;
     }
+    // ─────────────────────────────────────────────────────────────────────────
 
     $name     = sanitize_text_field($_POST['contact_name'] ?? '');
     $email    = sanitize_email($_POST['contact_email'] ?? '');
@@ -249,7 +261,7 @@ function dpowered_handle_contact_form() {
     if (empty($name) || empty($email) || empty($message) || !is_email($email)) {
         wp_redirect(add_query_arg('form_error', 'validation', $referer)); exit;
     }
-
+    // Capture as a lead for the team work area (best-effort; never blocks the enquiry).
     if (function_exists('dpowered_insert_lead')) {
         dpowered_insert_lead([
             'business' => $business,
@@ -278,6 +290,8 @@ function dpowered_handle_contact_form() {
 }
 add_action('template_redirect', 'dpowered_handle_contact_form');
 
+// ── REVIEW SUBMISSION ─────────────────────────────────────────────────────────
+
 function dpowered_handle_review_submission() {
     if (!isset($_POST['dpowered_review_submit'])) return;
     $referer = wp_get_referer() ?: home_url('/reviews');
@@ -285,6 +299,7 @@ function dpowered_handle_review_submission() {
         wp_redirect(add_query_arg('review_error', 'security', $referer)); exit;
     }
 
+    // ── Bot protection ────────────────────────────────────────────────────────
     if (!empty($_POST['review_website'])) {
         wp_redirect(add_query_arg('review_sent', '1', $referer)); exit;
     }
@@ -296,6 +311,7 @@ function dpowered_handle_review_submission() {
     if (preg_match('#https?://#i', $raw_reviewer_name)) {
         wp_redirect(add_query_arg('review_sent', '1', $referer)); exit;
     }
+    // ─────────────────────────────────────────────────────────────────────────
 
     $name    = sanitize_text_field($_POST['reviewer_name'] ?? '');
     $company = sanitize_text_field($_POST['reviewer_company'] ?? '');

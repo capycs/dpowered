@@ -1,7 +1,10 @@
-
+/* ============================================================
+   Team Work Area — lead manager (v2 light theme)
+   ============================================================ */
 
 .work-area-section { padding-top: 40px; }
 
+/* secondary button (v2 only ships btn-primary) */
 .btn-secondary {
     display: inline-flex;
     align-items: center;
@@ -21,6 +24,7 @@
 }
 .btn-secondary:hover { background: var(--bg-alt); border-color: #d4cdc0; }
 
+/* ── Login ───────────────────────────────────────────────── */
 .wa-login {
     max-width: 430px;
     margin: 0 auto;
@@ -42,6 +46,7 @@
 }
 .wa-remember input { width: 16px; height: 16px; accent-color: var(--blue); }
 
+/* ── Top bar ─────────────────────────────────────────────── */
 .wa-bar {
     display: flex;
     align-items: center;
@@ -55,6 +60,7 @@
 .wa-bar-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .wa-bar-actions .btn { padding: 11px 20px; }
 
+/* ── Tabs + search ───────────────────────────────────────── */
 .wa-tabs {
     display: flex;
     align-items: center;
@@ -120,6 +126,7 @@
 }
 .wa-people:focus { outline: none; border-color: var(--blue); }
 
+/* ── Date navigator ──────────────────────────────────────── */
 .wa-datebar {
     display: flex;
     align-items: center;
@@ -190,6 +197,7 @@
     color: var(--ink-2);
 }
 
+/* ── Table ───────────────────────────────────────────────── */
 .wa-table-wrap {
     overflow-x: auto;
     border: 1px solid var(--border);
@@ -230,6 +238,7 @@
     white-space: nowrap;
 }
 
+/* inputs in the grid */
 .wa-input {
     width: 100%;
     min-width: 90px;
@@ -251,12 +260,13 @@
 }
 select.wa-input { cursor: pointer; }
 .wa-business { font-weight: 600; }
-
+/* Contact merged under the business name (saves a whole column) */
 .wa-contact-inline { font-size: 0.82rem; color: var(--ink-2); margin-top: 1px; font-weight: 400; }
 .wa-contact-inline::placeholder { color: var(--border); }
 
 .wa-check { width: 18px; height: 18px; accent-color: var(--blue); cursor: pointer; }
 
+/* status pill select */
 .wa-status {
     width: 100%;
     max-width: 138px;
@@ -278,6 +288,7 @@ select.wa-input { cursor: pointer; }
 .status-won        { color: #047857; background: #ecfdf5; border-color: #a7f3d0; }
 .status-dead       { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
 
+/* expand toggle + delete */
 .wa-expand, .wa-delete {
     border: none;
     background: transparent;
@@ -313,6 +324,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-delete:hover { color: #b91c1c; background: #fef2f2; }
 
+/* detail row */
 .wa-detail td { background: var(--bg); padding: 4px 16px 16px !important; }
 .wa-detail-grid {
     display: grid;
@@ -340,12 +352,14 @@ select.wa-input { cursor: pointer; }
 
 .wa-empty { text-align: center; padding: 40px 20px; color: var(--ink-2); }
 
+/* tiny save flash */
 .wa-saved { animation: waFlash 0.9s var(--ease-out); }
 @keyframes waFlash {
     0% { box-shadow: inset 0 0 0 2px #34d399; }
     100% { box-shadow: inset 0 0 0 0 transparent; }
 }
 
+/* ── Add Lead modal ──────────────────────────────────────── */
 .wa-modal[hidden] { display: none; }
 .wa-modal {
     position: fixed;
@@ -387,6 +401,7 @@ select.wa-input { cursor: pointer; }
     margin: 0 0 14px;
 }
 
+/* ── Responsive: stack rows into cards ───────────────────── */
 @media (max-width: 860px) {
     .wa-table-wrap { overflow-x: visible; border: none; background: transparent; }
     .wa-table { min-width: 0; }
@@ -444,6 +459,7 @@ select.wa-input { cursor: pointer; }
     .wa-editor-toolbar { overflow-x: auto; }
 }
 
+/* ── Workspace navigation ──────────────────────────────── */
 .wa-workspace-nav {
     display: flex;
     gap: 4px;
@@ -477,6 +493,7 @@ select.wa-input { cursor: pointer; }
     box-shadow: 0 1px 4px rgba(12,12,12,0.10);
 }
 
+/* ── Scratchpad ─────────────────────────────────────────── */
 .wa-scratchpad {
     margin-bottom: 18px;
     border: 1px solid var(--border);
@@ -536,6 +553,7 @@ select.wa-input { cursor: pointer; }
     transition: opacity 0.3s;
 }
 
+/* ── Callback badge ─────────────────────────────────────── */
 .wa-callback-badge {
     display: inline-block;
     font-size: 0.72rem;
@@ -548,9 +566,10 @@ select.wa-input { cursor: pointer; }
     margin-top: 4px;
     margin-left: 2px;
 }
-
+/* the class display rule otherwise overrides the [hidden] attribute the JS toggles */
 .wa-callback-badge[hidden] { display: none; }
 
+/* ── Private lead lock button ───────────────────────────── */
 .wa-col-actions { white-space: nowrap; }
 .wa-private-btn {
     width: 28px; height: 28px;
@@ -569,6 +588,7 @@ select.wa-input { cursor: pointer; }
 .wa-private-btn.is-private { color: var(--blue); }
 .is-private-lead td { opacity: 0.8; }
 
+/* ── Pages view layout ──────────────────────────────────── */
 .wa-pages-layout {
     display: flex;
     gap: 0;
@@ -613,6 +633,7 @@ select.wa-input { cursor: pointer; }
 .wa-page-item-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wa-page-item-badge { font-size: 0.72rem; flex-shrink: 0; }
 
+/* ── Pages main area ────────────────────────────────────── */
 .wa-pages-main {
     flex: 1;
     min-width: 0;
@@ -639,6 +660,7 @@ select.wa-input { cursor: pointer; }
     padding: 28px 36px 36px;
 }
 
+/* Page title bar */
 .wa-page-titlebar {
     display: flex;
     align-items: center;
@@ -671,6 +693,7 @@ select.wa-input { cursor: pointer; }
 .wa-page-title-input:focus { outline: none; }
 .wa-page-title-input::placeholder { color: var(--border); }
 
+/* Meta bar: privacy + saved + delete */
 .wa-page-metabar {
     display: flex;
     align-items: center;
@@ -720,6 +743,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-page-delete-btn:hover { color: #b91c1c; background: #fef2f2; }
 
+/* Formatting toolbar */
 .wa-editor-toolbar {
     display: flex;
     align-items: center;
@@ -754,6 +778,7 @@ select.wa-input { cursor: pointer; }
     flex-shrink: 0;
 }
 
+/* Content editable area */
 .wa-editor-content {
     flex: 1;
     min-height: 320px;
@@ -779,6 +804,7 @@ select.wa-input { cursor: pointer; }
 .wa-editor-content i, .wa-editor-content em { font-style: italic; }
 .wa-editor-content u { text-decoration: underline; }
 
+/* Icon picker popover */
 .wa-icon-picker {
     position: fixed;
     z-index: 999;
@@ -802,6 +828,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-icon-opt:hover { background: var(--bg-alt); }
 
+/* ── Workspace tab badge (meeting count) ────────────────── */
 .wa-workspace-tab-badge {
     display: inline-flex;
     align-items: center;
@@ -819,6 +846,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-workspace-tab.is-active .wa-workspace-tab-badge { background: rgba(255,255,255,0.3); }
 
+/* ── Meetings view ──────────────────────────────────────── */
 .wa-meetings-bar {
     display: flex;
     align-items: flex-start;
@@ -845,6 +873,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-meetings-list { display: flex; flex-direction: column; gap: 10px; }
 
+/* Meeting card */
 .wa-meeting-card {
     background: var(--white);
     border: 1px solid var(--border);
@@ -863,6 +892,7 @@ select.wa-input { cursor: pointer; }
     padding: 14px 16px;
 }
 
+/* Date column */
 .wa-meeting-date-col {
     display: flex;
     flex-direction: column;
@@ -879,6 +909,7 @@ select.wa-input { cursor: pointer; }
 .wa-meeting-month { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); }
 .wa-meeting-time  { font-size: 0.72rem; color: var(--blue); font-weight: 600; margin-top: 3px; }
 
+/* Info column */
 .wa-meeting-info { flex: 1; min-width: 0; }
 .wa-meeting-input {
     display: block;
@@ -897,6 +928,7 @@ select.wa-input { cursor: pointer; }
 .wa-meeting-meta-item { font-size: 0.8rem; color: var(--ink-2); }
 .wa-meeting-notes-preview { font-size: 0.82rem; color: var(--ink-2); margin: 3px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* Actions column */
 .wa-meeting-actions {
     display: flex;
     align-items: center;
@@ -906,6 +938,7 @@ select.wa-input { cursor: pointer; }
     justify-content: flex-end;
 }
 
+/* Status badges */
 .wa-meeting-status-badge {
     font-size: 0.76rem;
     font-weight: 700;
@@ -959,6 +992,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-meeting-delete-btn:hover { color: #b91c1c; background: #fef2f2; }
 
+/* Meeting detail panel */
 .wa-meeting-detail { border-top: 1px solid var(--border); padding: 16px; background: var(--bg); }
 .wa-meeting-detail-grid {
     display: grid;
@@ -983,11 +1017,18 @@ select.wa-input { cursor: pointer; }
 }
 .wa-meeting-notes-label { grid-column: 1 / -1; }
 
+/* Responsive */
 @media (max-width: 640px) {
     .wa-meeting-card-main { flex-wrap: wrap; }
     .wa-meeting-actions   { width: 100%; justify-content: flex-start; }
 }
 
+/* ============================================================
+   Enhancements: stats, sorting, export, click-to-call,
+   toasts, confirm dialog, overdue callbacks
+   ============================================================ */
+
+/* ── Stats bar ───────────────────────────────────────────── */
 .wa-stats {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -1028,6 +1069,7 @@ select.wa-input { cursor: pointer; }
 .wa-stat-card[data-tone="callback"].has-due .wa-stat-num { color: var(--blue-dark); }
 .wa-stat-card[data-tone="rate"]       { border-left-color: var(--ink); }
 
+/* Clickable filter cards */
 .wa-stat-card[data-filter] {
     cursor: pointer;
     user-select: none;
@@ -1062,6 +1104,7 @@ select.wa-input { cursor: pointer; }
     .wa-stat-num { font-size: 1.25rem; }
 }
 
+/* ── Export button ───────────────────────────────────────── */
 .wa-export {
     display: inline-flex;
     align-items: center;
@@ -1081,6 +1124,7 @@ select.wa-input { cursor: pointer; }
 .wa-export:hover { background: var(--bg-alt); border-color: #d4cdc0; color: var(--ink); }
 @media (max-width: 860px) { .wa-export { margin-left: 0; } }
 
+/* ── Sortable headers ────────────────────────────────────── */
 .wa-th-sort {
     display: inline-flex;
     align-items: center;
@@ -1108,6 +1152,7 @@ select.wa-input { cursor: pointer; }
 .wa-th-sort.sort-desc .wa-sort-caret { opacity: 1; border-top: 5px solid var(--blue); }
 .wa-th-sort.sort-asc, .wa-th-sort.sort-desc { color: var(--ink); }
 
+/* ── Click-to-call ───────────────────────────────────────── */
 .wa-phone-cell { white-space: nowrap; }
 .wa-phone-cell .wa-input { width: calc(100% - 32px); min-width: 108px; display: inline-block; vertical-align: middle; }
 .wa-call-btn {
@@ -1131,9 +1176,11 @@ select.wa-input { cursor: pointer; }
     .wa-phone-cell .wa-input { width: auto; max-width: 55%; }
 }
 
+/* ── Overdue callback ────────────────────────────────────── */
 .wa-row.is-overdue td:nth-child(2) { box-shadow: inset 3px 0 0 #ef4444; }
 .wa-callback-badge.is-overdue { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 
+/* ── Toasts ──────────────────────────────────────────────── */
 .wa-toast-wrap {
     position: fixed;
     bottom: 24px; right: 24px;
@@ -1170,6 +1217,7 @@ select.wa-input { cursor: pointer; }
 @keyframes waToastIn  { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes waToastOut { to   { opacity: 0; transform: translateY(12px); } }
 
+/* ── Confirm dialog ──────────────────────────────────────── */
 .wa-confirm-overlay {
     position: fixed;
     inset: 0;
@@ -1203,8 +1251,9 @@ select.wa-input { cursor: pointer; }
 }
 .wa-confirm-yes:hover { background: #991b1b; }
 
+/* ── Remote cursor presence ─────────────────────────────────── */
 .wa-remote-cursor {
-    position: absolute;
+    position: absolute;            /* anchored in document space so it tracks the same content + scrolls with the page */
     pointer-events: none;
     z-index: 9999;
     top: 0;
@@ -1212,7 +1261,7 @@ select.wa-input { cursor: pointer; }
     width: 14px;
     height: 14px;
     transform: translate(-50%, -50%);
-
+    /* left/top set by JS in document pixels */
 }
 .wa-rc-dot {
     position: absolute;
@@ -1240,6 +1289,7 @@ select.wa-input { cursor: pointer; }
     letter-spacing: 0.01em;
 }
 
+/* ── Online presence bar ────────────────────────────────────── */
 .wa-online-bar {
     display: inline-flex;
     align-items: center;
@@ -1259,6 +1309,11 @@ select.wa-input { cursor: pointer; }
     box-shadow: 0 0 0 2px rgba(255,255,255,0.7);
 }
 
+/* ════════════════════════════════════════════════════════════
+   People presence · avatars · live updates  (Discord-vibe)
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Avatar primitive ───────────────────────────────────────── */
 .wa-avatar {
     display: inline-flex;
     align-items: center;
@@ -1272,6 +1327,7 @@ select.wa-input { cursor: pointer; }
 .wa-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .wa-avatar-initials { color: #fff; font-weight: 700; line-height: 1; letter-spacing: 0.01em; }
 
+/* ── Workspace layout: main + people rail ───────────────────── */
 .wa-workspace-layout {
     display: flex;
     align-items: flex-start;
@@ -1335,12 +1391,12 @@ select.wa-input { cursor: pointer; }
     width: 11px;
     height: 11px;
     border-radius: 50%;
-    background: #c2c0b8;
+    background: #c2c0b8;                 /* offline grey */
     border: 2px solid var(--white);
     box-sizing: content-box;
 }
 .wa-person.is-online .wa-person-dot {
-    background: #22c55e;
+    background: #22c55e;                 /* online green */
     box-shadow: 0 0 0 0 rgba(34,197,94,0.5);
     animation: waPulseDot 2.4s var(--ease-out) infinite;
 }
@@ -1374,6 +1430,7 @@ select.wa-input { cursor: pointer; }
 .wa-person-status { font-size: 0.74rem; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wa-person.is-online .wa-person-status { color: #15803d; font-weight: 600; }
 
+/* ── Profile button (avatar + camera) in the top bar ────────── */
 .wa-bar-user { display: flex; align-items: center; gap: 12px; }
 .wa-bar-user-text { line-height: 1.3; }
 .wa-profile-btn {
@@ -1417,9 +1474,13 @@ select.wa-input { cursor: pointer; }
 }
 @keyframes waSpin { to { transform: rotate(360deg); } }
 
+/* ── Assigned-cell avatar ───────────────────────────────────── */
 .wa-assigned-cell { display: flex; align-items: center; gap: 7px; }
 .wa-assigned-cell .wa-input { min-width: 70px; max-width: 100px; }
 
+/* ── "edited by" meta line ──────────────────────────────────── */
+/* Own line, wraps freely — must never force the Business column wider
+   (that was pushing the whole table + people panel off-screen). */
 .wa-edited {
     display: block;
     margin-top: 2px;
@@ -1431,12 +1492,15 @@ select.wa-input { cursor: pointer; }
 }
 .wa-edited-avatar { vertical-align: -3px; margin-right: 3px; }
 
+/* ── Remote-update row flash ────────────────────────────────── */
 .wa-row-remote td { animation: waRemoteFlash 1.8s var(--ease-out); }
 @keyframes waRemoteFlash {
     0%   { background: var(--blue-light); }
     100% { background: transparent; }
 }
 
+/* ── Responsive: stack the people rail above the table on medium
+   screens so the table gets the full width (no horizontal scroll) ── */
 @media (max-width: 1180px) {
     .wa-workspace-layout { flex-direction: column; }
     .wa-people-panel {
@@ -1452,6 +1516,11 @@ select.wa-input { cursor: pointer; }
     .wa-person { flex-basis: 100%; }
 }
 
+/* ════════════════════════════════════════════════════════════
+   Pages workspace — upgraded editor
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Sidebar search ─────────────────────────────────────────── */
 .wa-pages-search-wrap { position: relative; }
 .wa-pages-search-icon {
     position: absolute;
@@ -1472,6 +1541,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-pages-search:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-light); }
 
+/* ── Two-line page list items ───────────────────────────────── */
 .wa-page-item { align-items: flex-start; }
 .wa-page-item-icon { margin-top: 1px; }
 .wa-page-item-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
@@ -1496,6 +1566,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-page-item.is-active .wa-page-item-sub { color: var(--ink-2); }
 
+/* ── Document column (centred, comfortable reading width) ───── */
 .wa-page-titlebar,
 .wa-page-metabar,
 .wa-editor-toolbar,
@@ -1505,6 +1576,7 @@ select.wa-input { cursor: pointer; }
     align-self: center;
 }
 
+/* ── Edited-by meta in the metabar ──────────────────────────── */
 .wa-page-edited-meta {
     display: inline-flex;
     align-items: center;
@@ -1514,6 +1586,7 @@ select.wa-input { cursor: pointer; }
 }
 .wa-page-edited-meta[hidden] { display: none; }
 
+/* ── Sticky toolbar so formatting is always reachable ───────── */
 .wa-editor-toolbar {
     position: sticky;
     top: 70px;
@@ -1521,6 +1594,7 @@ select.wa-input { cursor: pointer; }
     box-shadow: 0 2px 8px rgba(12,12,12,0.04);
 }
 
+/* ── Richer editor content styles ───────────────────────────── */
 .wa-editor-content a { color: var(--blue); text-decoration: underline; }
 .wa-editor-content a:hover { color: var(--blue-dark, #1e40af); }
 .wa-editor-content s, .wa-editor-content strike { text-decoration: line-through; color: var(--ink-2); }
@@ -1534,6 +1608,7 @@ select.wa-input { cursor: pointer; }
     font-style: italic;
 }
 
+/* ── Checklist (class-based so it survives sanitisation) ────── */
 .wa-editor-content .wa-checklist { list-style: none; padding-left: 0; margin: 0 0 0.6em; }
 .wa-editor-content .wa-task {
     position: relative;
@@ -1571,3 +1646,130 @@ select.wa-input { cursor: pointer; }
 @media (max-width: 860px) {
     .wa-editor-toolbar { position: static; }
 }
+
+/* ═══════════════════════════════════════════ FIND LEADS (free OSM finder) */
+.wa-finder-intro { margin-bottom: 22px; }
+.wa-finder-title { font-family: var(--font-display); color: var(--ink); font-size: 1.5rem; margin: 0 0 6px; }
+.wa-finder-sub { color: var(--ink-2); font-family: var(--font-body); max-width: 60ch; margin: 0; line-height: 1.55; }
+
+.wa-finder-form {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+    background: var(--bg-alt); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px; margin-bottom: 22px;
+}
+.wa-finder-field { display: flex; flex-direction: column; gap: 6px; }
+.wa-finder-field-area { flex: 1 1 260px; }
+.wa-finder-field-radius { flex: 0 0 110px; }
+.wa-finder-field label {
+    font-family: var(--font-body); font-size: .72rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2);
+}
+.wa-finder-field input,
+.wa-finder-field select {
+    border: 1px solid var(--border); background: var(--white); color: var(--ink);
+    font-family: var(--font-body); font-size: .95rem; border-radius: 9px;
+    padding: 11px 12px; transition: border-color .15s var(--ease-out), box-shadow .15s var(--ease-out);
+}
+.wa-finder-field input:focus,
+.wa-finder-field select:focus {
+    outline: none; border-color: var(--blue);
+    box-shadow: 0 0 0 3px var(--blue-light);
+}
+.wa-finder-go { flex: 0 0 auto; }
+
+.wa-finder-state { padding: 8px 0; }
+.wa-finder-loading,
+.wa-finder-empty {
+    background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px; text-align: center; color: var(--ink-2); font-family: var(--font-body);
+}
+.wa-finder-loading::before {
+    content: ''; display: inline-block; width: 16px; height: 16px; margin-right: 9px;
+    vertical-align: -2px; border: 2px solid var(--blue-light); border-top-color: var(--blue);
+    border-radius: 50%; animation: wa-finder-spin .7s linear infinite;
+}
+@keyframes wa-finder-spin { to { transform: rotate(360deg); } }
+
+.wa-finder-resultsbar {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 12px 4px; margin-bottom: 6px;
+}
+.wa-finder-selectall {
+    display: flex; align-items: center; gap: 8px; cursor: pointer;
+    font-family: var(--font-body); font-size: .9rem; color: var(--ink);
+}
+.wa-finder-summary { color: var(--ink-2); font-family: var(--font-body); font-size: .9rem; }
+.wa-finder-summary strong { color: var(--ink); }
+.wa-finder-import { margin-left: auto; }
+
+.wa-finder-table-wrap {
+    border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--white);
+}
+.wa-finder-table { width: 100%; border-collapse: collapse; font-family: var(--font-body); }
+.wa-finder-table thead th {
+    text-align: left; font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--ink-2); background: var(--bg-alt);
+    padding: 11px 14px; border-bottom: 1px solid var(--border);
+}
+.wa-finder-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--ink); font-size: .92rem; vertical-align: middle; }
+.wa-finder-table tr:last-child td { border-bottom: none; }
+.wa-finder-col-check, .wa-finder-col-map { width: 1%; white-space: nowrap; text-align: center; }
+.wa-finder-row.is-known { opacity: .55; }
+.wa-finder-name { font-weight: 600; }
+.wa-finder-cat { display: block; font-weight: 400; font-size: .76rem; color: var(--ink-2); margin-top: 2px; }
+.wa-finder-known {
+    display: inline-block; font-size: .66rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .03em; color: var(--blue); background: var(--blue-light);
+    padding: 1px 7px; border-radius: 20px; vertical-align: 1px;
+}
+.wa-finder-addr { color: var(--ink-2); }
+.wa-finder-nophone { color: var(--ink-2); }
+.wa-finder-table a { color: var(--blue); text-decoration: none; }
+.wa-finder-table a:hover { text-decoration: underline; }
+.wa-finder-col-map a { font-size: 1.05rem; text-decoration: none; }
+
+@media (max-width: 720px) {
+    .wa-finder-import { margin-left: 0; width: 100%; }
+    .wa-finder-addr { display: none; }
+    .wa-finder-actions-right { margin-left: 0; width: 100%; }
+}
+
+/* ── Hot leads + signals ── */
+.wa-finder-row.is-hot .wa-finder-name { font-weight: 700; }
+.wa-finder-hot {
+    display: inline-block; font-size: .66rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .03em; color: #b42318; background: #fee4e2;
+    padding: 1px 7px; border-radius: 20px; vertical-align: 1px;
+}
+.wa-finder-signals { display: block; font-size: .72rem; color: var(--blue); margin-top: 3px; }
+
+/* ── Results bar right-hand group ── */
+.wa-finder-actions-right { margin-left: auto; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.wa-finder-newonly { display: flex; align-items: center; gap: 7px; cursor: pointer; font-family: var(--font-body); font-size: .88rem; color: var(--ink); white-space: nowrap; }
+.wa-finder-savebtn { white-space: nowrap; }
+
+/* ── "New only" hides businesses already in leads ── */
+.wa-finder-table.newonly .wa-finder-row.is-known { display: none; }
+
+/* ── Saved searches ── */
+.wa-finder-saved { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: -8px 0 22px; }
+.wa-finder-saved-label {
+    font-family: var(--font-body); font-size: .72rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--ink-2);
+}
+.wa-finder-saved-list { display: flex; gap: 8px; flex-wrap: wrap; }
+.wa-finder-chip {
+    display: inline-flex; align-items: stretch; border: 1px solid var(--border);
+    background: var(--white); border-radius: 20px; overflow: hidden;
+    transition: border-color .15s var(--ease-out), box-shadow .15s var(--ease-out);
+}
+.wa-finder-chip:hover { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-light); }
+.wa-finder-chip-run {
+    border: none; background: none; cursor: pointer; font-family: var(--font-body);
+    font-size: .82rem; color: var(--ink); padding: 6px 4px 6px 13px;
+}
+.wa-finder-chip-del {
+    border: none; background: none; cursor: pointer; color: var(--ink-2);
+    font-size: 1rem; line-height: 1; padding: 0 11px 0 6px;
+}
+.wa-finder-chip-del:hover { color: #b42318; }

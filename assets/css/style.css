@@ -418,9 +418,25 @@ h1 em, h2 em, h3 em,
     to   { background-position: var(--fall-end); }
 }
 
+/* ─── SECURITY SHIELD ─────────────────────────────────────────────────────── */
+.v2-secure { background: var(--bg-dark); color: var(--white); padding: 100px 0; position: relative; overflow: hidden; }
+.v2-secure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.v2-secure-copy .section-tag { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.04); }
+.v2-secure-copy h2 { font-family: var(--font-display); font-size: clamp(1.8rem, 3.4vw, 2.8rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.12; color: var(--white); margin: 16px 0; }
+.v2-secure-copy h2 em { color: var(--blue-on-dark); font-style: normal; }
+.v2-secure-copy p { color: rgba(255,255,255,0.55); font-size: 0.95rem; line-height: 1.7; max-width: 440px; margin-bottom: 22px; }
+.v2-secure-list { display: flex; flex-direction: column; gap: 10px; }
+.v2-secure-list li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: rgba(255,255,255,0.8); }
+.v2-secure-list svg { color: var(--blue-on-dark); flex-shrink: 0; }
+.v2-secure-stage { position: relative; min-height: 360px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-dark); background: radial-gradient(120% 110% at 50% 100%, rgba(26,77,255,0.12), transparent 62%); }
+.v2-secure-rain { position: absolute; inset: 0; pointer-events: none; background-image: var(--fall-streaks); background-size: var(--fall-sizes); animation: dpFallBare 90s linear infinite; opacity: 0.75; -webkit-mask-image: radial-gradient(64% 52% at 50% 74%, transparent 0, transparent 44%, #000 74%); mask-image: radial-gradient(64% 52% at 50% 74%, transparent 0, transparent 44%, #000 74%); }
+.v2-secure-shield { position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); width: 116px; height: 136px; }
+.v2-secure-shield svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 24px rgba(26,77,255,0.5)); position: relative; z-index: 1; }
+.v2-secure-shield::before { content: ''; position: absolute; inset: -34%; border-radius: 50%; background: radial-gradient(circle, rgba(26,77,255,0.4), transparent 64%); animation: dpShieldPulse 3.6s ease-in-out infinite; }
+@keyframes dpShieldPulse { 0%, 100% { transform: scale(0.88); opacity: 0.45; } 50% { transform: scale(1.12); opacity: 0.85; } }
+
 /* Moving blue gradients on the dark cards & bands */
 .v2-why-glow,
-.v2-stats-band::before,
 .bundle-card::before,
 .insight-band::before {
     animation: dpGlowFloat 15s var(--ease-in-out) infinite;
@@ -438,23 +454,6 @@ h1 em, h2 em, h3 em,
     50%      { background-position: 14% 16%, -11% -13%; }
 }
 
-.v2-hero::after {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    pointer-events: none;
-    left: -8%;
-    bottom: 0;
-    width: 820px;
-    height: 560px;
-    background: radial-gradient(ellipse at center, rgba(26,77,255,0.17), transparent 66%);
-    filter: blur(10px);
-    animation: dpHeroGlowDrift 18s var(--ease-in-out) infinite alternate;
-}
-@keyframes dpHeroGlowDrift {
-    from { transform: translate3d(0, 0, 0) scale(1); opacity: 0.8; }
-    to   { transform: translate3d(34px, -22px, 0) scale(1.1); opacity: 1; }
-}
 .v2-hero-body {
     flex: 1;
     display: grid;
@@ -2102,6 +2101,7 @@ h3 { font-family: var(--font-display); font-weight: 700; }
     .contact-layout { grid-template-columns: 1fr; gap: 48px; }
     .bundle-card { grid-template-columns: 1fr; padding: 40px; }
     .about-intro { grid-template-columns: 1fr; gap: 48px; }
+    .v2-secure-grid { grid-template-columns: 1fr; gap: 36px; }
     .pricing-reality { grid-template-columns: 1fr; gap: 32px; }
     .pricing-guide { grid-template-columns: 1fr; gap: 40px; }
     .insight-band { grid-template-columns: 1fr; padding: 40px 36px; }
@@ -2222,7 +2222,7 @@ h3 { font-family: var(--font-display); font-weight: 700; }
     .v2-why-glow, .v2-stats-band::before, .bundle-card::before, .insight-band::before,
     .pricing-card.featured::before, .plan-card.featured::before { animation: none !important; }
     .v2-rain { animation: none !important; }
-    .v2-hero::after { animation: none !important; }
+    .v2-secure-rain, .v2-secure-shield::before { animation: none !important; }
     .v2-hero-body { animation: none !important; }
     .v2-statement-line--a, .v2-statement-line--b { animation: none !important; }
     .v2-why-card::before { animation: none !important; }

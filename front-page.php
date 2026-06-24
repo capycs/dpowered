@@ -82,7 +82,6 @@
 </section>
 
 <section class="v2-stats-band" aria-label="Performance stats">
-    <div class="v2-rain" aria-hidden="true"></div>
     <div class="container">
         <div class="v2-stats-grid">
             <div class="v2-stat">
@@ -135,6 +134,33 @@
                 <div class="v2-step-content">
                     <h3>Launch &amp; Support</h3>
                     <p>We get you live and stick around to make sure everything runs smoothly. You can also edit the site yourself, no tech skills needed.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECURITY -->
+<section class="v2-secure" aria-label="Security">
+    <div class="container">
+        <div class="v2-secure-grid reveal">
+            <div class="v2-secure-copy">
+                <span class="section-tag">Secure by default</span>
+                <h2>Bad traffic stopped<br>before it reaches <em>you.</em></h2>
+                <p>Every site ships with SSL, a hardened setup, and monitoring built in. Malicious requests get blocked at the door, so your business and your customers stay protected.</p>
+                <ul class="v2-secure-list">
+                    <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Free SSL on every page</li>
+                    <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Security monitoring and updates</li>
+                    <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Automatic backups</li>
+                </ul>
+            </div>
+            <div class="v2-secure-stage" aria-hidden="true">
+                <div class="v2-secure-rain"></div>
+                <div class="v2-secure-shield">
+                    <svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M60 6 L108 24 V64 C108 98 86 122 60 134 C34 122 12 98 12 64 V24 Z" fill="rgba(26,77,255,0.14)" stroke="#7B9BFF" stroke-width="3" stroke-linejoin="round"/>
+                        <polyline points="42 70 55 84 80 54" fill="none" stroke="#7B9BFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
             </div>
         </div>
