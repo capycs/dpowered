@@ -69,6 +69,7 @@ get_header(); ?>
             </div>
 
             <div class="pricing-card pricing-card--growth featured reveal">
+                <div class="v2-rain" aria-hidden="true"></div>
                 <div class="pricing-badge">Most popular</div>
                 <div class="pricing-card-top">
                     <div>
@@ -165,6 +166,7 @@ get_header(); ?>
             </div>
 
             <div class="plan-card featured reveal">
+                <div class="v2-rain" aria-hidden="true"></div>
                 <div class="pricing-badge">Best Value</div>
                 <div class="plan-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
@@ -190,6 +192,7 @@ get_header(); ?>
 <section class="section bundle-section">
     <div class="container">
         <div class="bundle-card pricing-bundle-card reveal">
+            <div class="v2-rain" aria-hidden="true"></div>
             <div class="bundle-left">
                 <span class="section-tag" style="margin-bottom:16px">Low-Stress Route</span>
                 <h2>Website + care<br><span class="gradient-text">without the big agency bill</span></h2>

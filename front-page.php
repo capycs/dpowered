@@ -82,6 +82,7 @@
 </section>
 
 <section class="v2-stats-band" aria-label="Performance stats">
+    <div class="v2-rain" aria-hidden="true"></div>
     <div class="container">
         <div class="v2-stats-grid">
             <div class="v2-stat">
@@ -154,6 +155,7 @@
         <div class="v2-why-grid reveal-group">
             <div class="v2-why-card v2-why-card--featured">
                 <div class="v2-why-glow" aria-hidden="true"></div>
+                <div class="v2-rain" aria-hidden="true"></div>
                 <div class="v2-why-num">01</div>
                 <h3>Live in 7–14 days</h3>
                 <p>No 6-week timelines or endless back-and-forth. We move fast. Most projects go from brief to live in under two weeks, without cutting a single corner.</p>

@@ -399,6 +399,24 @@ h1 em, h2 em, h3 em,
     from { background-position: 0 0; }
     to   { background-position: 0 624px; }
 }
+/* Same falling trails, dimmed + darkened, layered over the dark cards' blue gradient */
+.v2-rain {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background-image: var(--fall-streaks);
+    background-size: var(--fall-sizes);
+    animation: dpFallBare 150s linear infinite;
+    opacity: 0.5;
+    filter: brightness(0.6) saturate(0.85);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 92%);
+            mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 92%);
+}
+@keyframes dpFallBare {
+    from { background-position: var(--fall-start); }
+    to   { background-position: var(--fall-end); }
+}
 
 /* Moving blue gradients on the dark cards & bands */
 .v2-why-glow,
@@ -2203,6 +2221,7 @@ h3 { font-family: var(--font-display); font-weight: 700; }
     .v2-cta-section::after, .cta-section::after { animation: none !important; }
     .v2-why-glow, .v2-stats-band::before, .bundle-card::before, .insight-band::before,
     .pricing-card.featured::before, .plan-card.featured::before { animation: none !important; }
+    .v2-rain { animation: none !important; }
     .v2-hero::after { animation: none !important; }
     .v2-hero-body { animation: none !important; }
     .v2-statement-line--a, .v2-statement-line--b { animation: none !important; }

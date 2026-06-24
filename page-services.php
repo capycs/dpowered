@@ -144,6 +144,7 @@ get_header(); ?>
 <section class="section insight-section">
     <div class="container">
         <div class="insight-band reveal">
+            <div class="v2-rain" aria-hidden="true"></div>
             <div>
                 <span class="section-tag">What Changes</span>
                 <h2>Before and after your site starts doing its <em>job.</em></h2>
