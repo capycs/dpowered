@@ -323,10 +323,36 @@ h1 em, h2 em, h3 em,
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(26,77,255,0.30) 1px, transparent 1px);
     background-size: 24px 24px;
+    animation: dpFallDots 70s linear infinite;
     -webkit-mask-image: radial-gradient(120% 110% at 30% 35%, #000 35%, transparent 78%);
             mask-image: radial-gradient(120% 110% at 30% 35%, #000 35%, transparent 78%);
+}
+/* Falling dots — brand-blue dotted field drifting down (replaces static dot grid) */
+@keyframes dpFallDots {
+    from { background-position: 0 0; }
+    to   { background-position: 0 624px; }
+}
+
+/* Moving blue gradients on the dark cards & bands */
+.v2-why-glow,
+.v2-stats-band::before,
+.bundle-card::before,
+.insight-band::before {
+    animation: dpGlowFloat 22s var(--ease-in-out) infinite;
+}
+.pricing-card.featured::before,
+.plan-card.featured::before {
+    animation: dpGlowDrift 24s var(--ease-in-out) infinite;
+}
+@keyframes dpGlowFloat {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    50%      { transform: translate3d(4%, 5%, 0) scale(1.14); }
+}
+@keyframes dpGlowDrift {
+    0%, 100% { background-position: 0% 0%, 0% 0%; }
+    50%      { background-position: 8% 10%, -6% -8%; }
 }
 
 .v2-hero::after {
@@ -485,42 +511,6 @@ h1 em, h2 em, h3 em,
     to   { opacity: 1; }
 }
 
-.v2-marquee-wrap {
-    background: var(--bg-alt);
-    overflow: hidden;
-    padding: 14px 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-            mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-}
-.v2-marquee-track {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    width: max-content;
-    animation: marqueeScroll 32s linear infinite;
-}
-.v2-marquee-wrap:hover .v2-marquee-track { animation-play-state: paused; }
-.v2-marquee-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 20px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-2);
-    white-space: nowrap;
-}
-.v2-marquee-item svg { color: var(--ink-2); opacity: 0.55; }
-.v2-marquee-sep { color: var(--ink-2); opacity: 0.3; font-size: 0.85rem; }
-
-@keyframes marqueeScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-33.333%); }
-}
 
 .v2-services-strip { padding: 0; border-bottom: 1px solid var(--border); }
 .v2-services-strip .container {
@@ -997,10 +987,48 @@ h1 em, h2 em, h3 em,
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(26,77,255,0.26) 1px, transparent 1px);
     background-size: 26px 26px;
+    animation: dpFallDots 76s linear infinite;
     -webkit-mask-image: radial-gradient(70% 90% at 50% 0%, #000 20%, transparent 75%);
             mask-image: radial-gradient(70% 90% at 50% 0%, #000 20%, transparent 75%);
+}
+/* Closing-CTA aurora — soft blue blobs drift slowly behind the headline */
+.v2-cta-aurora {
+    position: absolute;
+    inset: -25% -12%;
+    z-index: 0;
+    pointer-events: none;
+}
+.v2-cta-aurora::before,
+.v2-cta-aurora::after {
+    content: '';
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(64px);
+}
+.v2-cta-aurora::before {
+    width: 46%;
+    left: 8%;
+    top: -6%;
+    background: radial-gradient(circle, rgba(26,77,255,0.30), transparent 70%);
+    animation: dpCtaAuroraA 21s var(--ease-in-out) infinite alternate;
+}
+.v2-cta-aurora::after {
+    width: 40%;
+    right: 6%;
+    bottom: -12%;
+    background: radial-gradient(circle, rgba(123,155,255,0.20), transparent 70%);
+    animation: dpCtaAuroraB 26s var(--ease-in-out) infinite alternate;
+}
+@keyframes dpCtaAuroraA {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(70px, 36px, 0) scale(1.22); }
+}
+@keyframes dpCtaAuroraB {
+    from { transform: translate3d(0, 0, 0) scale(1.12); }
+    to   { transform: translate3d(-60px, -28px, 0) scale(1); }
 }
 .v2-cta-inner { text-align: center; position: relative; z-index: 1; }
 .v2-cta-inner h2 {
@@ -1036,8 +1064,9 @@ h1 em, h2 em, h3 em,
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(26,77,255,0.30) 1px, transparent 1px);
     background-size: 26px 26px;
+    animation: dpFallDots 76s linear infinite;
     -webkit-mask-image: radial-gradient(110% 130% at 22% 30%, #000 30%, transparent 76%);
             mask-image: radial-gradient(110% 130% at 22% 30%, #000 30%, transparent 76%);
 }
@@ -1659,8 +1688,9 @@ h3 { font-family: var(--font-display); font-weight: 700; }
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(26,77,255,0.26) 1px, transparent 1px);
     background-size: 26px 26px;
+    animation: dpFallDots 76s linear infinite;
     -webkit-mask-image: radial-gradient(70% 90% at 50% 0%, #000 20%, transparent 75%);
             mask-image: radial-gradient(70% 90% at 50% 0%, #000 20%, transparent 75%);
 }
@@ -2101,7 +2131,11 @@ h3 { font-family: var(--font-display); font-weight: 700; }
         transition: none !important;
         stroke-dashoffset: 0 !important;
     }
-    .v2-marquee-track { animation: none !important; }
+    .v2-cta-aurora::before, .v2-cta-aurora::after { animation: none !important; }
+    .v2-hero::before, .inner-hero::before,
+    .v2-cta-section::after, .cta-section::after { animation: none !important; }
+    .v2-why-glow, .v2-stats-band::before, .bundle-card::before, .insight-band::before,
+    .pricing-card.featured::before, .plan-card.featured::before { animation: none !important; }
     .v2-hero::after { animation: none !important; }
     .v2-hero-body { animation: none !important; }
     .v2-statement-line--a, .v2-statement-line--b { animation: none !important; }
