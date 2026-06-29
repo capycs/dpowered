@@ -290,6 +290,57 @@ function dpowered_handle_contact_form() {
 }
 add_action('template_redirect', 'dpowered_handle_contact_form');
 
+// ── PRIVACY PAGE OPT-IN ───────────────────────────────────────────────────────
+// A lightweight consent form on the Privacy Policy page: tick to agree, leave an
+// email (and optional phone), and the details drop straight into the team work
+// area as a lead (source: Privacy opt-in).
+
+function dpowered_handle_privacy_optin() {
+    if (!isset($_POST['dpowered_privacy_submit'])) return;
+    $referer = wp_get_referer() ?: home_url('/privacy-policy');
+    if (!isset($_POST['privacy_nonce']) || !wp_verify_nonce($_POST['privacy_nonce'], 'dpowered_privacy')) {
+        wp_redirect(add_query_arg('optin_error', 'security', $referer) . '#optin'); exit;
+    }
+
+    // ── Bot protection (silent — fake success so bots don't retry) ────────────
+    if (!empty($_POST['privacy_website'])) {
+        wp_redirect(add_query_arg('optin', '1', $referer) . '#optin'); exit;
+    }
+    $form_time = (int) ($_POST['privacy_time'] ?? 0);
+    if ($form_time > 0 && (time() - $form_time) < 3) {
+        wp_redirect(add_query_arg('optin', '1', $referer) . '#optin'); exit;
+    }
+
+    $email = sanitize_email($_POST['privacy_email'] ?? '');
+    $phone = sanitize_text_field($_POST['privacy_phone'] ?? '');
+
+    // Must agree (the tick) and leave a valid email or a phone number.
+    if (empty($_POST['privacy_consent'])) {
+        wp_redirect(add_query_arg('optin_error', 'consent', $referer) . '#optin'); exit;
+    }
+    if ((empty($email) || !is_email($email)) && empty($phone)) {
+        wp_redirect(add_query_arg('optin_error', 'validation', $referer) . '#optin'); exit;
+    }
+    if (preg_match('#https?://#i', $phone)) {
+        wp_redirect(add_query_arg('optin', '1', $referer) . '#optin'); exit;
+    }
+
+    if (function_exists('dpowered_insert_lead')) {
+        dpowered_insert_lead([
+            'contact' => $email ?: $phone,
+            'phone'   => $phone,
+            'email'   => $email,
+            'status'  => 'new',
+            'source'  => 'privacy',
+            'notes'   => 'Agreed to be contacted via the privacy policy page.',
+        ]);
+    }
+
+    wp_redirect(add_query_arg('optin', '1', $referer) . '#optin');
+    exit;
+}
+add_action('template_redirect', 'dpowered_handle_privacy_optin');
+
 // ── REVIEW SUBMISSION ─────────────────────────────────────────────────────────
 
 function dpowered_handle_review_submission() {

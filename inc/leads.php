@@ -25,6 +25,7 @@ function dpowered_lead_statuses() {
 function dpowered_lead_sources() {
     return [
         'website'   => 'Website',
+        'privacy'   => 'Privacy opt-in',
         'cold-call' => 'Cold call',
         'referral'  => 'Referral',
         'finder'    => 'Map finder',
