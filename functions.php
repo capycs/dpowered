@@ -326,14 +326,24 @@ function dpowered_handle_privacy_optin() {
     }
 
     if (function_exists('dpowered_insert_lead')) {
-        dpowered_insert_lead([
+        // Record the agreement so there's a defensible audit trail: who, what, when, from where.
+        $stamp = current_time('mysql');
+        $ip    = sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? '');
+        $note  = 'Agreed to the Terms of Service and Privacy Policy on ' . $stamp;
+        if ($ip) $note .= ' (IP ' . $ip . ')';
+        $id = dpowered_insert_lead([
             'contact' => $email ?: $phone,
             'phone'   => $phone,
             'email'   => $email,
             'status'  => 'new',
             'source'  => 'privacy',
-            'notes'   => 'Agreed to be contacted via the privacy policy page.',
+            'notes'   => $note,
         ]);
+        if ($id && !is_wp_error($id)) {
+            update_post_meta($id, '_lead_consent', 1);
+            update_post_meta($id, '_lead_consent_at', $stamp);
+            update_post_meta($id, '_lead_consent_ip', $ip);
+        }
     }
 
     wp_redirect(add_query_arg('optin', '1', $referer) . '#optin');

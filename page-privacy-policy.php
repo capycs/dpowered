@@ -55,13 +55,13 @@ get_header(); ?>
             <strong>Location:</strong> Liverpool, UK</p>
 
             <div class="privacy-optin" id="optin">
-                <h2>Happy to be contacted?</h2>
-                <p>If you'd like us to reach out about a website, tick the box and leave your details. We'll only use them to get in touch — nothing else.</p>
+                <h2>Agree to our terms</h2>
+                <p>To confirm you've read and accept how we handle your data, tick the box below and leave your details. This records your agreement to our <a href="<?php echo esc_url(home_url('/terms')); ?>">Terms of Service</a> and this Privacy Policy.</p>
 
                 <?php if (isset($_GET['optin'])): ?>
                 <div class="form-notice form-success" role="alert">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    <p><strong>Thanks!</strong> We've got your details and will be in touch.</p>
+                    <p><strong>Thanks — your agreement has been recorded.</strong></p>
                 </div>
                 <?php else: ?>
                     <?php if (isset($_GET['optin_error'])): ?>
@@ -71,7 +71,7 @@ get_header(); ?>
                             <?php
                             $oerr = $_GET['optin_error'];
                             if ($oerr === 'consent') {
-                                echo '<strong>Please tick the box</strong> to confirm you\'re happy for us to contact you.';
+                                echo '<strong>Please tick the box</strong> to confirm you agree to the terms.';
                             } elseif ($oerr === 'validation') {
                                 echo '<strong>Please add a contact.</strong> Leave a valid email or a phone number so we can reach you.';
                             } else {
@@ -108,10 +108,10 @@ get_header(); ?>
                             <span class="privacy-consent-box" aria-hidden="true">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                             </span>
-                            <span class="privacy-consent-text">I agree to DPowered storing the details above so they can contact me about my enquiry.</span>
+                            <span class="privacy-consent-text">I have read and agree to the <a href="<?php echo esc_url(home_url('/terms')); ?>">Terms of Service</a> and <a href="<?php echo esc_url(home_url('/privacy-policy')); ?>">Privacy Policy</a>.</span>
                         </label>
 
-                        <button type="submit" class="btn btn-primary">Agree &amp; send my details &rarr;</button>
+                        <button type="submit" class="btn btn-primary">Confirm my agreement &rarr;</button>
                     </form>
                 <?php endif; ?>
             </div>
