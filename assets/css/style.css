@@ -383,7 +383,7 @@ h1 em, h2 em, h3 em,
     z-index: 0;
     pointer-events: none;
     background-image:
-        radial-gradient(circle at 50% 50%, transparent 0, transparent 1.8px, var(--bg) 1.9px),
+        radial-gradient(circle at 50% 50%, transparent 0, transparent 1.4px, var(--bg) 2.6px),
         var(--fall-streaks);
     background-size: 8px 8px, var(--fall-sizes);
     animation: dpFall 150s linear infinite;
@@ -429,7 +429,7 @@ h1 em, h2 em, h3 em,
 .v2-secure-list li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: rgba(255,255,255,0.8); }
 .v2-secure-list svg { color: var(--blue-on-dark); flex-shrink: 0; }
 .v2-secure-stage { position: relative; min-height: 360px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-dark); background: radial-gradient(120% 110% at 50% 100%, rgba(26,77,255,0.12), transparent 62%); }
-.v2-secure-rain { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle at 50% 50%, transparent 0, transparent 1.8px, var(--bg-dark) 1.9px), var(--fall-streaks); background-size: 8px 8px, var(--fall-sizes); animation: dpFall 150s linear infinite; -webkit-mask-image: radial-gradient(64% 52% at 50% 74%, transparent 0, transparent 44%, #000 74%); mask-image: radial-gradient(64% 52% at 50% 74%, transparent 0, transparent 44%, #000 74%); }
+.v2-secure-rain { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle at 50% 50%, transparent 0, transparent 1.4px, var(--bg-dark) 2.6px), var(--fall-streaks); background-size: 8px 8px, var(--fall-sizes); animation: dpFall 150s linear infinite; -webkit-mask-image: radial-gradient(64% 52% at 50% 74%, transparent 0, transparent 44%, #000 74%); mask-image: radial-gradient(64% 52% at 50% 74%, transparent 0, transparent 44%, #000 74%); }
 .v2-secure-shield { position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); width: 116px; height: 136px; }
 .v2-secure-shield svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 24px rgba(26,77,255,0.5)); position: relative; z-index: 1; }
 .v2-secure-shield::before { content: ''; position: absolute; inset: -34%; border-radius: 50%; background: radial-gradient(circle, rgba(26,77,255,0.4), transparent 64%); animation: dpShieldPulse 3.6s ease-in-out infinite; }
@@ -1147,7 +1147,7 @@ h1 em, h2 em, h3 em,
     inset: 0;
     pointer-events: none;
     background-image:
-        radial-gradient(circle at 50% 50%, transparent 0, transparent 1.8px, var(--bg) 1.9px),
+        radial-gradient(circle at 50% 50%, transparent 0, transparent 1.4px, var(--bg) 2.6px),
         var(--fall-streaks);
     background-size: 8px 8px, var(--fall-sizes);
     animation: dpFall 150s linear infinite;
