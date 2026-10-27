@@ -1,23 +1,30 @@
 # ZYON — Spotify promo banners
 
-Print-ready large-format artwork for ZYON (@zyon_333). Every QR code goes to https://linktr.ee/Zyonmusic. I checked each one by decoding it from the final PDF.
+Print-ready large-format artwork for ZYON (@zyon_333). Every QR code goes to https://linktr.ee/Zyonmusic. I checked each one by decoding it from the final PDF, for all three sets.
 
-## v2 (use these)
+## v3 (use these): the loudest set
 
-| File | Format | Trim size | Bleed | Concept |
-|---|---|---|---|---|
-| `print/v2/v2_A_rollup_850x2000mm.pdf` | Pull-up / roll-up stand | 850 × 2000 mm | 10 mm | Magazine cover: his head in front of a giant "ZYON" |
-| `print/v2/v2_B_pvc_banner_1830x915mm.pdf` | PVC banner with eyelets, 6 × 3 ft | 1830 × 915 mm | 10 mm | Billboard: green duotone close-up, his cap tucks over the N |
-| `print/v2/v2_C_poster_A1_now_playing.pdf` | A1 poster | 594 × 841 mm | 3 mm | The whole poster is a Spotify "Now Playing" screen, with a designed cover |
-| `print/v2/v2_D_poster_A1_riso.pdf` | A1 poster | 594 × 841 mm | 3 mm | Two-colour riso print, black + green overprint on paper stock |
+| File | Format | Trim size | Bleed | Photo | Concept |
+|---|---|---|---|---|---|
+| `print/v3/v3_A_rollup_850x2000mm.pdf` | Pull-up / roll-up stand | 850 × 2000 mm | 10 mm | 1 | Green field, his head over a giant black "ZYON", echo outlines, NEW MUSIC starburst, black player panel |
+| `print/v3/v3_B_pvc_banner_1830x915mm.pdf` | PVC banner, 6 × 3 ft | 1830 × 915 mm | 10 mm | 4 | Green field, sound-wave rings coming off the mic, sticker-cut close-up |
+| `print/v3/v3_C_poster_A1_now_playing.pdf` | A1 poster | 594 × 841 mm | 3 mm | 3 | Spotify "Now Playing" screen with a neon glow, sticker-cut cover, NEW sticker, equaliser bars |
+| `print/v3/v3_D_poster_A1_riso.pdf` | A1 poster | 594 × 841 mm | 3 mm | 8 | Riso print: green "sun" behind his head, two-colour halftone, overprinted name |
 
-`previews/v2/` holds quick-look images. The `_GUIDES` versions show the trim line in magenta and the safe zone as a dashed line.
+What v3 adds to v2 to make it more eye-catching:
+- **Big flat fields of Spotify green.** Bright colour carries further than dark, especially on a dark venue wall.
+- **Black-and-white subject on green.** This is the highest-contrast pairing available.
+- **Sticker-cut white border and drop shadow** round each cut-out, so the subject jumps forward.
+- **Starburst "NEW MUSIC" stickers** as an instant focal point.
+- **One extra device per layout:** sound-wave rings, echo type, the neon glow or the green sun.
 
-The v1 set (halftone-only) is still in `print/v1/` and `previews/v1/`.
+The 8/8 photo has camera shake in the original. At roll-up size the upscaler turns that blur into streaks, so it's used on the riso poster, where the halftone dots hide it.
 
-Send the printer the PDF and tell them the trim size. The background runs into the bleed. All text and QR codes sit inside the safe zone:
-- Roll-up: the bottom 150 mm is kept clear because the stand's base hides it.
-- PVC: everything is 50 mm or more from the edges, clear of hems and eyelets.
+`previews/v3/` holds quick-look images; `_GUIDES` versions show the trim and safe zone. The older sets are in `print/v2/` and `print/v1/`.
+
+## v2
+
+Same four concepts with darker, green-duotone photos: `print/v2/`, `previews/v2/`.
 
 ## What changed from v1, and why
 
@@ -58,7 +65,9 @@ The upscaling is AI, so it invents some fine detail: skin is a little smoothed w
 ```
 cd build
 python3 prep_photos.py      # once: upscale + cut-outs (needs torch, spandrel, rembg; model links in the file)
-python3 build_v2.py         # writes v2_*.html + img/
-node render.js v2_          # writes print/v2/*.pdf and previews/v2/*.jpg
+python3 crop_screenshot.py shot.png name   # new IG screenshot -> source-photos/name.png
+python3 build_v3.py         # writes v3_*.html + img/
+node render.js v3_          # writes print/v3/*.pdf and previews/v3/*.jpg
+python3 build_v2.py && node render.js v2_   # v2 set
 python3 build.py && node render.js A_   # v1 set
 ```

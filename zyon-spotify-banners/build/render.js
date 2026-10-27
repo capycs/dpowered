@@ -32,7 +32,7 @@ async function open(browser, file, opts = {}) {
   const files = fs.readdirSync(here).filter(f => f.endsWith('.html') && (!only || f.includes(only)));
   for (const f of files) {
     const name = f.replace('.html', '');
-    const sub = name.startsWith('v2_') ? 'v2' : 'v1';
+    const sub = (name.match(/^(v\d+)_/) || [null, 'v1'])[1];
     for (const d of ['print', 'previews']) fs.mkdirSync(path.join(out, d, sub), { recursive: true });
     const page = await open(browser, f);
     const { w, h } = await page.evaluate(() => {
