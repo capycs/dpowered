@@ -2,7 +2,27 @@
 
 Print-ready large-format artwork for ZYON (@zyon_333). Every QR code goes to https://linktr.ee/Zyonmusic. I checked each one by decoding it from the final PDF, for all three sets.
 
-## v3 (use these): the loudest set
+## FINAL: the one to print
+
+**`print/final/final_ZYON_banner_1830x915mm_bleed5.pdf`**: a 6 × 3 ft (1830 × 915 mm) hung PVC/vinyl banner. A 25 mm-bleed copy (`..._bleed25.pdf`) is there for printers such as Instantprint that ask for it. Tell the printer the trim size is 1830 × 915 mm.
+
+Built to outdoor-banner rules:
+
+| Rule | Source | How the banner meets it |
+|---|---|---|
+| Passers-by glance for a second or two; keep primary copy to about 7 words | [4OVER4](https://www.4over4.com/faqs/banners/what-are-the-best-practices-for-outdoor-banner-design), [banners.com](https://banners.com/c/how-to-design-a-custom-banner), [Vistaprint](https://www.vistaprint.com/hub/signage-design-tips) | ZYON / LISTEN ON SPOTIFY / SCAN TO STREAM, plus the handle. The "NEW MUSIC" sticker, "NOW PLAYING" label and URL are removed. |
+| One focal point with a clear hierarchy, so not everything is the same size | [Gilroy Blackout](https://gilroyblackout.com/blog/custom-banner-design-tips-what-works/) | Name, then face, then call to action, then QR and handle, read left to right |
+| High contrast | [4OVER4](https://www.4over4.com/faqs/banners/what-are-the-best-practices-for-outdoor-banner-design) | Black on Spotify green; black-and-white photo with a white sticker-cut border |
+| About 1 inch of letter height per 10 ft of viewing distance | [banners.com](https://banners.com/c/how-far-away-can-someone-read-a-banner-complete-banner-font-size-guide) | "ZYON" is about 440 mm tall (readable from about 50 m); "LISTEN ON SPOTIFY" is about 41 mm (about 5 m) |
+| QR width about 1/10 of the scanning distance | [Delivr](https://delivr.com/faq/1289/qr-code-printing-guidelines-best-practices), [Scanova](https://scanova.io/blog/qr-code-max-size/) | 250 mm QR, so it scans from about 2.5 m. Decoded from the final PDF. |
+| Keep text 36–50 mm from the edges for hems and eyelets (eyelets about 20 mm in, roughly every 500 mm) | [Instantprint](https://www.instantprint.co.uk/printspiration/be-inspired/how-to-set-up-artwork-for-pvc-banners), [WTTB](https://wttb.co.uk/support-guides/preparing-files-with-eyelets), [Hampshire Flag](https://hampshireflag.co.uk/wp-content/uploads/2023/05/Non_Template_Artwork_Submission-Guidelines_v4.0.pdf) | Everything sits inside a 50 mm safe zone. The `_GUIDES` preview shows the eyelet positions in red. |
+| Images at 150 dpi or more at 100 % size | [Hampshire Flag](https://hampshireflag.co.uk/wp-content/uploads/2023/05/Non_Template_Artwork_Submission-Guidelines_v4.0.pdf) | Photo embedded at 150 ppi; type, logo and QR are vector. Fonts are embedded. |
+
+**Colour warning.** Spotify green `#1ED760` is brighter than standard CMYK can print, and bright greens are a known problem colour ([Adobe community](https://community.adobe.com/t5/indesign-discussions/can-t-reproduce-certain-colors-in-cmyk/m-p/9252638)). The PDF is RGB. Ask the printer to print from RGB on a wide-gamut large-format printer, or to send a printed proof, so the green doesn't come out flat.
+
+The design is 2:1, so it also scales cleanly to 8 × 4 ft or 10 × 5 ft.
+
+## v3: the loudest set
 
 | File | Format | Trim size | Bleed | Photo | Concept |
 |---|---|---|---|---|---|
@@ -68,6 +88,7 @@ python3 prep_photos.py      # once: upscale + cut-outs (needs torch, spandrel, r
 python3 crop_screenshot.py shot.png name   # new IG screenshot -> source-photos/name.png
 python3 build_v3.py         # writes v3_*.html + img/
 node render.js v3_          # writes print/v3/*.pdf and previews/v3/*.jpg
+python3 build_final.py && node render.js final_   # the final banner
 python3 build_v2.py && node render.js v2_   # v2 set
 python3 build.py && node render.js A_   # v1 set
 ```
