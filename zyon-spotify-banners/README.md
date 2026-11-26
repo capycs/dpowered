@@ -2,7 +2,22 @@
 
 Print-ready large-format artwork for ZYON (@zyon_333). Every QR code goes to https://linktr.ee/Zyonmusic. I checked each one by decoding it from the final PDF, for all three sets.
 
-## FINAL: the one to print
+## 6 × 2 ft banner (latest)
+
+**`print/final/final_ZYON_banner_6x2ft_1830x610mm.pdf`**: trim size 1830 × 610 mm, with 5 mm bleed (the file is 1840 × 620 mm). Preview: `previews/final/final_ZYON_banner_6x2ft_1830x610mm.jpg`; the `_GUIDES` version shows the 50 mm safe zone and eyelet positions.
+
+- **Layout.** A 3:1 strip, read left to right: name, face, black "scan me" card.
+- **Mirrored photo.** He shouts toward the QR code, so his gaze leads to the call to action. This also keeps his shoulder clear of the text.
+- **Polish over the 6 × 3.**
+  - A soft radial light behind his head gives the green depth.
+  - Hard drop-shadows sit on "ZYON" and the card.
+  - The shoulder ends in a clean arc that echoes the sound rings.
+- **Copy.** ZYON / LISTEN ON SPOTIFY / SCAN TO STREAM / @zyon_333. The QR code is 240 mm, so it scans from about 2.4 m.
+- **Checked in the PDF.** The QR code decodes, the photo is 150 ppi, and every font is embedded.
+
+Rebuild: `cd build && python3 build_6x2.py && node render.js final_ZYON_banner_6x2`
+
+## 6 × 3 ft banner
 
 **`print/final/final_ZYON_banner_1830x915mm_bleed5.pdf`**: a 6 × 3 ft (1830 × 915 mm) hung PVC/vinyl banner. A 25 mm-bleed copy (`..._bleed25.pdf`) is there for printers such as Instantprint that ask for it. Tell the printer the trim size is 1830 × 915 mm.
 
