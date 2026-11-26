@@ -2,7 +2,7 @@
 name -> face (mirrored so he shouts toward the call to action) -> black 'scan me' card.
 Same outdoor-banner rules as build_final.py: <= 8 words, 50 mm hem/eyelet safe zone,
 240 mm QR (~2.4 m scan), photo at 150 dpi.
-Run: python3 build_6x2.py && node render.js final_ZYON_banner_6x2
+Run: python3 build_6x2.py && node flatten.js zbg_6x2 img/f62_flat.jpg 150 && node render.js final_ZYON_banner_6x2
 """
 import numpy as np
 from PIL import Image, ImageOps
@@ -54,7 +54,9 @@ def banner():
     cx, cy, cw, ch = card
     ix, iw = cx + 25, cw - 50
 
-    body = f"""
+    # Photo, shadows, rings, glow and grain go into ONE flat 150 dpi JPEG (flatten.js renders zbg_6x2.html);
+    # type, card and QR stay vector on top. A plain JPEG + vectors opens in any PDF viewer and RIP.
+    bg_layers = f"""
 <defs>
   <radialGradient id="bg" cx="{mic[0] - 40}" cy="{mic[1] - 120}" r="1150" gradientUnits="userSpaceOnUse">
     <stop offset="0" stop-color="#3CEB86"/>
@@ -64,11 +66,16 @@ def banner():
 </defs>
 <rect x="{-B}" y="{-B}" width="{W + 2 * B}" height="{H + 2 * B}" fill="url(#bg)"/>
 {rings(*mic, [120, 215, 320, 435, 560, 695, 840, 995, 1160, 1335], 24, BLACK, 0.12)}
-{t(SAFE + 8, 0, "ZYON", 400, DEEP, "Anton", 400, ls=3, fit=760, captop=70)}
-{t(SAFE, 0, "ZYON", 400, BLACK, "Anton", 400, ls=3, fit=760, captop=62)}
 {image(shd, (rect[0] + 9, rect[1] + 10, rect[2], rect[3]))}
 {image(subj, rect)}
 {grain_layer(grain_href(), B, W, H, opacity=0.4)}
+"""
+    page("zbg_6x2", W, H, B, bg_layers)
+
+    body = f"""
+{image("img/f62_flat.jpg", (-B, -B, W + 2 * B, H + 2 * B))}
+{t(SAFE + 8, 0, "ZYON", 400, DEEP, "Anton", 400, ls=3, fit=760, captop=70)}
+{t(SAFE, 0, "ZYON", 400, BLACK, "Anton", 400, ls=3, fit=760, captop=62)}
 {spotify_icon(SAFE, 442, 62, BLACK)}
 {t(SAFE + 78, 0, "LISTEN ON SPOTIFY", 60, BLACK, "Archivo", 400, fit=682, captop=452)}
 <rect x="{cx + 8}" y="{cy + 8}" width="{cw}" height="{ch}" rx="18" fill="{DEEP}"/>
